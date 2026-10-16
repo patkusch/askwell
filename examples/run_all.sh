@@ -10,6 +10,7 @@ run "acceptance-criteria"         python3 $S/acceptance-criteria/scripts/check.p
 run "requirements-traceability"   python3 $S/requirements-traceability/scripts/check.py $D/matrix.csv --tests $D/tests.csv
 run "raid-log"                    python3 $S/raid-log/scripts/raid.py $D/raid.csv --today 2026-10-16
 run "kpi-definition"              python3 $S/kpi-definition/scripts/check.py $D/kpis.json
+run "use-cases"                   python3 $S/use-cases/scripts/check.py $D/usecase.txt
 run "process-mapping"             python3 $S/process-mapping/scripts/check.py $D/process.mmd
 run "vendor-selection"            python3 $S/vendor-selection/scripts/score.py $D/scorecard.json
 run "backlog moscow"              python3 $S/backlog-prioritisation/scripts/score.py moscow $D/moscow.csv

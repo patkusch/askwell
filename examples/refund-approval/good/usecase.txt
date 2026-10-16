@@ -1,0 +1,18 @@
+Name: Approve a large refund
+Actor: Finance manager
+Goal: Decide on a refund request over 500
+Trigger: A refund over 500 arrives in the waiting list
+Preconditions: The manager is signed in and the order exists
+Main flow:
+  1. Manager opens the waiting list.
+  2. System shows each request with order, amount and reason.
+  3. Manager selects a request.
+  4. System shows the order history and earlier refunds.
+  5. Manager approves the refund.
+  6. System records the approver, time and amount.
+  7. System emails the customer the decision.
+Alternative flows:
+  5a. If the manager rejects the refund, the manager gives a reason and the flow continues at step 6.
+Exceptions:
+  7e. If the email cannot be sent, the system retries and alerts support after three failures.
+Postconditions: The refund is decided, recorded and the customer informed.

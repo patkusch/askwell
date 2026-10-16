@@ -1,0 +1,10 @@
+Name: Refund
+Actor: Manager
+Goal: Decide
+Main flow:
+  1. Manager clicks the Refunds button on the home page.
+  2. If the list is empty, show a message, otherwise show the list.
+Alternative flows:
+  9a. If rejected, give a reason.
+Exceptions:
+Postconditions: Done

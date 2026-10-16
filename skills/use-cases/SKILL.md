@@ -48,3 +48,13 @@ Walk it with someone who does the job. Ask at each step "what else could happen 
 ## Use with
 
 Use `user-stories` for the backlog and use cases for the detail behind complex ones. Use `process-mapping` to see how several fit together.
+
+## Check it
+
+Save the use case in the template above to a text file, then run:
+
+```bash
+python scripts/check.py use_case.txt
+```
+
+It finds missing sections, main flows that are too thin (under 3 steps) or too long (over 12), steps that describe the screen instead of the action, branches buried in the main flow, and alternatives that point at a step that does not exist.

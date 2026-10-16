@@ -30,6 +30,7 @@ raid = load(SKILLS / "raid-log/scripts/raid.py")
 kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
+usecase = load(SKILLS / "use-cases/scripts/check.py")
 import datetime, subprocess, sys
 
 EX = ROOT / "examples" / "refund-approval"
@@ -248,6 +249,25 @@ class Minutes(unittest.TestCase):
         self.assertNotIn("Agreed to launch in November.", got)  # a decision, not an action
 
 
+class UseCases(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(usecase.check(read("usecase.txt", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(usecase.check(read("usecase.txt", "bad")))
+        for bit in ("missing 'Trigger'", "missing 'Preconditions'", "'Exceptions' is empty", "verb and an object",
+                    "too thin", "('button')", "contains a branch", "9a branches from step 9"):
+            self.assertIn(bit, out)
+
+    def test_too_long_and_misnumbered(self):
+        base = "Name: Do a thing\nActor: a\nGoal: g\nTrigger: t\nPreconditions: p\nMain flow:\n"
+        steps = "".join(f"  {i}. Step {i}.\n" for i in range(1, 14))
+        out = usecase.check(base + steps + "Alternative flows:\n  2a. x\nExceptions:\n  3e. y\nPostconditions: z")
+        self.assertTrue(any("split it" in p for p in out))
+        out = usecase.check(base + "  1. a\n  3. b\n  4. c\nAlternative flows:\n  1a. x\nExceptions:\n  1e. y\nPostconditions: z")
+        self.assertTrue(any("not numbered" in p for p in out))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -302,7 +322,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 10, r.stdout[-1500:])  # all ten gated checks find something
+        self.assertEqual(r.returncode, 11, r.stdout[-1500:])  # all eleven gated checks find something
 
 
 if __name__ == "__main__":
