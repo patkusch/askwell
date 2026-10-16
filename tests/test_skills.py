@@ -30,6 +30,7 @@ raid = load(SKILLS / "raid-log/scripts/raid.py")
 kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
+ddict = load(SKILLS / "data-dictionary/scripts/check.py")
 usecase = load(SKILLS / "use-cases/scripts/check.py")
 import datetime, subprocess, sys
 
@@ -268,6 +269,21 @@ class UseCases(unittest.TestCase):
         self.assertTrue(any("not numbered" in p for p in out))
 
 
+class DataDictionary(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(ddict.check(rows("dictionary.csv", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(ddict.check(rows("dictionary.csv", "bad")))
+        for bit in ("too short", "refund_amount: no source", "no owner", "no currency", "financial data with no retention",
+                    "refund_status: no meaning", "none are given", "no time zone", "free text", "defined twice"):
+            self.assertIn(bit, out)
+
+    def test_circular_meaning(self):
+        r = [dict(field="customer_name", meaning="The name of the customer", type="text", source="crm", owner="x")]
+        self.assertTrue(any("repeats the field name" in p for p in ddict.check(r)))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -322,7 +338,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 11, r.stdout[-1500:])  # all eleven gated checks find something
+        self.assertEqual(r.returncode, 12, r.stdout[-1500:])  # all twelve gated checks find something
 
 
 if __name__ == "__main__":

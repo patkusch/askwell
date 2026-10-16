@@ -1,0 +1,6 @@
+field,meaning,type,allowed_values,required,source,owner,rules,sensitivity,retention
+refund_amount,Refund amount,decimal,,yes,,,,financial,
+refund_status,,text,,yes,refunds table,Head of Finance,,none,
+requested_at,When the customer asked for the refund to be made,datetime,,yes,refunds table,Head of Finance,,none,
+customer_notes,Anything the agent typed about the customer during the call,free text,,no,crm,Customer Services,,personal,
+refund_amount,Second definition of the same field with extra words,decimal,,yes,refunds table,Finance,GBP,none,

@@ -41,3 +41,13 @@ Capture also:
 - Definitions that repeat the word ("Customer: a person who is a customer").
 - Free-text fields that should be lists.
 - Dates without a time zone; amounts without a currency.
+
+## Check the dictionary
+
+Keep it as a CSV with columns `field,meaning,type,allowed_values,required,source,owner,rules,sensitivity,retention`, then run:
+
+```bash
+python scripts/check.py dictionary.csv
+```
+
+It flags fields with no meaning, no owner or no source; meanings that just repeat the field name; times with no time zone; amounts with no currency; personal, sensitive or financial data with no retention period; free-text fields that may hold sensitive data; and status or type fields with no list of allowed values.

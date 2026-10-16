@@ -1,0 +1,6 @@
+field,meaning,type,allowed_values,required,source,owner,rules,sensitivity,retention
+refund_id,Unique number given to each refund request when it is created,integer,,yes,refunds table,Head of Finance,Never reused,none,
+refund_amount,Money the customer asks to get back for the order,decimal(10.2),,yes,refunds table,Head of Finance,Currency GBP; not more than the order total,financial,7 years after decision
+refund_status,Where the request is in the approval process,text,requested; approved; rejected; paid,yes,refunds table,Head of Finance,Changes only through the approval screen,none,
+requested_at,The moment the customer submitted the request,datetime,,yes,refunds table,Head of Finance,Stored in UTC,none,
+customer_email,Address used to tell the customer the decision,text,,yes,customer table,Customer Services,Must be a valid address,personal,7 years after last contact
