@@ -19,7 +19,7 @@ It is a business-analysis counterpart to the [scientific-agent-skills](https://g
 `business-case` · `options-analysis` · `vendor-selection` · `backlog-prioritisation`
 
 **Start here and specialise**
-`ba-start-here` (picks the right skills in the right order) · `domain-packs` (financial services, healthcare, SaaS, ERP/CRM, data/BI, privacy)
+`ba-start-here` (picks the right skills in the right order) · `domain-packs` (financial services, insurance, public sector, healthcare, SaaS, ERP/CRM, data/BI, privacy)
 
 **Run the work**
 `raid-log` · `decision-log` · `change-impact-assessment` · `user-acceptance-testing` · `stakeholder-communication` · `meeting-minutes`

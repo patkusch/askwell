@@ -1,6 +1,6 @@
 ---
 name: domain-packs
-description: Adds the rules, vocabulary and typical requirements of a specific field (financial services, healthcare, SaaS, ERP and CRM, data and BI, privacy) to business analysis work. Use when the project is in a regulated or specialist field, when requirements need compliance or industry checks, or when asked about domain-specific business analysis.
+description: Adds the rules, vocabulary and typical requirements of a specific field (financial services, insurance, public sector, healthcare, SaaS, ERP and CRM, data and BI, privacy) to business analysis work. Use when the project is in a regulated or specialist field, when requirements need compliance or industry checks, or when asked about domain-specific business analysis.
 license: MIT
 metadata:
   version: "1.0"
@@ -12,7 +12,9 @@ Generic BA method is not enough in a regulated or specialist field. Load the pac
 
 | If the work is about | Read |
 |---|---|
-| Banking, payments, lending, insurance, investment | `references/financial-services.md` |
+| Banking, payments, lending, investment | `references/financial-services.md` |
+| Policies, quotes, claims, underwriting | `references/insurance.md` |
+| Government, councils, agencies, services to the public | `references/public-sector.md` |
 | Patients, clinical systems, health data | `references/healthcare.md` |
 | Subscription software, product teams | `references/saas.md` |
 | ERP, CRM, replacing a core system | `references/erp-crm.md` |

@@ -393,6 +393,20 @@ class ProblemStatement(unittest.TestCase):
         self.assertTrue(any("under 120 words" in p for p in pstate.check("staff struggle because it costs 5. fixed when under 3. " * 15)))
 
 
+class DomainPacks(unittest.TestCase):
+    def test_every_pack_has_the_same_shape_and_is_linked(self):
+        pack = SKILLS / "domain-packs"
+        skill = (pack / "SKILL.md").read_text()
+        files = sorted((pack / "references").glob("*.md"))
+        self.assertGreaterEqual(len(files), 8)
+        for f in files:
+            text = f.read_text()
+            self.assertIn(f"references/{f.name}", skill, f"{f.name} not listed in domain-packs/SKILL.md")
+            self.assertIn("**Questions to add**", text, f.name)
+            self.assertIn("**Traps**", text, f.name)
+            self.assertTrue("**Rules to confirm**" in text or f.name in {"saas.md", "erp-crm.md", "data-bi.md"}, f.name)
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
