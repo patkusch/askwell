@@ -31,6 +31,7 @@ kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
+dlog = load(SKILLS / "decision-log/scripts/check.py")
 nfr = load(SKILLS / "nonfunctional-requirements/scripts/check.py")
 ddict = load(SKILLS / "data-dictionary/scripts/check.py")
 usecase = load(SKILLS / "use-cases/scripts/check.py")
@@ -323,6 +324,25 @@ class Stakeholders(unittest.TestCase):
         self.assertFalse(any("biggest stakeholder risk" in p for p in stake.check([dict(base, engagement="Manage closely weekly")])))
 
 
+class DecisionLog(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(dlog.check(rows("decisions.csv", "good"), TODAY), [])
+
+    def test_bad(self):
+        out = "\n".join(dlog.check(rows("decisions.csv", "bad"), TODAY))
+        for bit in ("D-003: id used twice", "D-001: the decision is a question", "D-001: fewer than two options",
+                    "D-001: reason is too short", "D-001: no one named", "D-001: review date 2026-10-01 has passed",
+                    "D-002: date missing", "D-002: superseded by D-009, which is not in the log",
+                    "D-003: names D-001 as its replacement", "D-003: proposed 26 days ago"):
+            self.assertIn(bit, out)
+
+    def test_superseded_by_an_earlier_decision(self):
+        r = [dict(id="A", date="2026-05-01", decision="x y", options="a;b", reason="a b c d e f g", decided_by="p",
+                  status="superseded", superseded_by="B"),
+             dict(id="B", date="2026-04-01", decision="y", options="a;b", reason="a b c d e f g", decided_by="p", status="decided")]
+        self.assertTrue(any("dated earlier" in p for p in dlog.check(r, TODAY)))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -377,7 +397,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 14, r.stdout[-1500:])  # all fourteen gated checks find something
+        self.assertEqual(r.returncode, 15, r.stdout[-1500:])  # all fifteen gated checks find something
 
 
 if __name__ == "__main__":

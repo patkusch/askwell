@@ -40,3 +40,13 @@ Show the entry. Ask: "has something changed since?" If yes, it's a new decision.
 ## Example
 
 D-014. Decision: Refunds over 500 need a manager's approval. Reason: 3 of 7 audit findings last year were large refunds paid without review; a threshold limits delay to about 4% of refunds. Alternatives: all refunds approved (too slow); no approval, audit only (too risky). Decided by: Head of Finance. Review: after 3 months of data.
+
+## Check the log
+
+Keep it as a CSV with columns `id,date,decision,options,reason,decided_by,status,superseded_by,review_by` (options separated by `;`), then run:
+
+```bash
+python scripts/check.py decisions.csv
+```
+
+It flags decisions written as questions, fewer than two options recorded, reasons too short to explain the choice later, no named decision maker, a superseded decision that doesn't say by what (or points at one that doesn't exist or is dated earlier), proposals undecided for over 14 days, and review dates that have passed.

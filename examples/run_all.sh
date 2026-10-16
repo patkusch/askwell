@@ -17,6 +17,7 @@ run "use-cases"                   python3 $S/use-cases/scripts/check.py $D/useca
 run "process-mapping"             python3 $S/process-mapping/scripts/check.py $D/process.mmd
 run "vendor-selection"            python3 $S/vendor-selection/scripts/score.py $D/scorecard.json
 run "backlog moscow"              python3 $S/backlog-prioritisation/scripts/score.py moscow $D/moscow.csv
+run "decision-log"                python3 $S/decision-log/scripts/check.py $D/decisions.csv --today 2026-10-16
 run "meeting-minutes"             python3 $S/meeting-minutes/scripts/actions.py $D/notes.txt
 [ -f $D/conflict.csv ] && run "conflict-check" python3 $S/requirements-conflict-check/scripts/conflicts.py $D/conflict.csv --terms $D/terms.json
 echo "== business-case"; python3 $S/business-case/scripts/case.py $D/case.json --sensitivity

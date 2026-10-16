@@ -1,0 +1,5 @@
+id,date,decision,options,reason,decided_by,status,superseded_by,review_by
+D-001,2026-09-02,Should we lower the threshold?,Lower,Because,,decided,,2026-10-01
+D-002,16/10/2026,Use vendor B,Vendor A; Vendor B,Better fit and a lower total cost over five years,Tom Reyes,superseded,D-009,
+D-003,2026-09-20,Move to weekly reports,Daily; Weekly,Managers asked for fewer emails and read them weekly,Priya,proposed,,
+D-003,2026-10-10,Keep the old process,Old; New,The new process is not ready until the spring,Priya,decided,D-001,

@@ -1,0 +1,3 @@
+id,date,decision,options,reason,decided_by,status,superseded_by,review_by
+D-001,2026-09-02,Refunds over 1000 need a manager's approval,Approve all refunds; Audit only; Threshold approval,Three of seven audit findings last year were large refunds paid with no review,Priya Nair (Head of Finance),superseded,D-014,
+D-014,2026-10-16,Refunds over 500 need a manager's approval,Keep 1000; Lower to 500; Approve all refunds,A 500 limit catches most findings and delays only about 4% of refunds,Priya Nair (Head of Finance),decided,,2027-01-31
