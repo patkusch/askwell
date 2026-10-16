@@ -1,0 +1,6 @@
+id,area,requirement,how_tested,priority
+N1,performance,The system is fast,,high
+N2,performance,Searches return within 2 seconds,Load test,must
+N3,availability,Always available,Uptime report,must
+N4,security,Secure,,must
+N5,looks-nice,Pretty screens,Opinion,could

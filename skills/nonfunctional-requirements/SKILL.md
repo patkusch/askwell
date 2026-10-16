@@ -39,3 +39,13 @@ For each, ask the question and push for a number.
 
 | ID | Area | Requirement (measurable) | How tested | Priority |
 |---|---|---|---|---|
+
+## Check your list
+
+Keep the list as a CSV with columns `id,area,requirement,how_tested,priority`, then run:
+
+```bash
+python scripts/check.py nfr.csv
+```
+
+It flags requirements with no number or unit, a speed with no load (how many users?), availability with no percentage or hours, anything with no test or a priority that isn't must/should/could/wont, and which of the twelve checklist areas nobody has covered yet. Where an area does not apply, add a row saying so with the reason, so the gap is a decision and not an oversight.

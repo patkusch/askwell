@@ -1,0 +1,13 @@
+id,area,requirement,how_tested,priority
+N1,performance,95% of searches return within 2 seconds with 500 users online,Load test with 500 users,must
+N2,availability,The system is available 99.9% of the time from 06:00 to 22:00,Monthly uptime report,must
+N3,capacity,Holds 2 million refund records growing 20% a year,Volume test at 4 million records,should
+N4,security,Staff see only refunds for their own region,Permission tests per role,must
+N5,privacy,Customer data is deleted 7 years after the last contact (GDPR),Deletion job test,must
+N6,audit,Every change to a refund records who when old and new value,Audit log inspection,must
+N7,accessibility,Meets WCAG 2.2 AA,Automated scan and manual review,should
+N8,usability,A new starter completes a refund review after 30 minutes of training,Observed session with 5 starters,should
+N9,compatibility,Works in the current and previous version of Chrome and Edge,Cross-browser test,should
+N10,recovery,No more than 15 minutes of data lost and back within 4 hours,Restore drill,must
+N11,support,Severity 1 faults are fixed within 1 business day,Support log review,should
+N12,legal,Follows the company refund policy and consumer law,Compliance review,must

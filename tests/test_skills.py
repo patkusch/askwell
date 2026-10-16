@@ -30,6 +30,7 @@ raid = load(SKILLS / "raid-log/scripts/raid.py")
 kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
+nfr = load(SKILLS / "nonfunctional-requirements/scripts/check.py")
 ddict = load(SKILLS / "data-dictionary/scripts/check.py")
 usecase = load(SKILLS / "use-cases/scripts/check.py")
 import datetime, subprocess, sys
@@ -284,6 +285,25 @@ class DataDictionary(unittest.TestCase):
         self.assertTrue(any("repeats the field name" in p for p in ddict.check(r)))
 
 
+class Nfr(unittest.TestCase):
+    def test_good_covers_all_twelve_areas(self):
+        self.assertEqual(nfr.check(rows("nfr.csv", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(nfr.check(rows("nfr.csv", "bad")))
+        for bit in ("N1: no measurable number", "N1: no way to test", "N1: priority must be", "N2: a speed with no load",
+                    "N3: availability with no percentage", "N4: too vague", "N5: area 'looks-nice'", "not covered yet: capacity"):
+            self.assertIn(bit, out)
+
+    def test_dropping_a_row_reports_the_gap(self):
+        rs = [r for r in rows("nfr.csv", "good") if r["area"] != "recovery"]
+        self.assertEqual(nfr.check(rs), ["not covered yet: recovery (ask, or record that it does not apply)"])
+
+    def test_business_days_count_as_a_number(self):
+        r = [dict(id="N", area="support", requirement="Faults fixed within 1 business day", how_tested="log", priority="must")]
+        self.assertNotIn("N: no measurable number", " ".join(nfr.check(r)))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -338,7 +358,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 12, r.stdout[-1500:])  # all twelve gated checks find something
+        self.assertEqual(r.returncode, 13, r.stdout[-1500:])  # all thirteen gated checks find something
 
 
 if __name__ == "__main__":
