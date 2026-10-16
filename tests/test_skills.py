@@ -23,6 +23,25 @@ vendor = load(SKILLS / "vendor-selection/scripts/score.py")
 trace = load(SKILLS / "requirements-traceability/scripts/check.py")
 lint = load(SKILLS / "requirements-writing/scripts/lint.py")
 validate = load(ROOT / "scripts/validate_skills.py")
+story = load(SKILLS / "user-stories/scripts/check.py")
+gwt = load(SKILLS / "acceptance-criteria/scripts/check.py")
+conf = load(SKILLS / "requirements-conflict-check/scripts/conflicts.py")
+raid = load(SKILLS / "raid-log/scripts/raid.py")
+kpi = load(SKILLS / "kpi-definition/scripts/check.py")
+flow = load(SKILLS / "process-mapping/scripts/check.py")
+acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
+import datetime, subprocess, sys
+
+EX = ROOT / "examples" / "refund-approval"
+TODAY = datetime.date(2026, 10, 16)
+
+
+def read(name, which):
+    return (EX / which / name).read_text()
+
+
+def rows(name, which):
+    return list(csv.DictReader(io.StringIO(read(name, which))))
 
 
 class Repo(unittest.TestCase):
@@ -32,15 +51,12 @@ class Repo(unittest.TestCase):
 
     def test_cross_references_point_at_real_skills(self):
         names = {d.name for d in SKILLS.iterdir() if d.is_dir()}
+        allowed = {"user-friendly", "state-of-the-art", "to-do"}
         for f in SKILLS.glob("*/SKILL.md"):
             for ref in re.findall(r"`([a-z]+(?:-[a-z]+)+)`", f.read_text()):
-                if ref in {"user-friendly", "state-of-the-art", "go-live", "one-to-many", "end-to-end"}:
+                if ref in allowed or ref.endswith(".py"):
                     continue
-                if f.parent.name != ref and re.fullmatch(r"[a-z]+(-[a-z]+)+", ref) and ref not in names:
-                    # only skill-looking refs inside parentheses or "the `x` skill" are checked
-                    ctx = f.read_text()
-                    if re.search(r"\(`%s`" % ref, ctx) or "the `%s` skill" % ref in ctx:
-                        self.fail(f"{f.parent.name} points at missing skill {ref}")
+                self.assertIn(ref, names, f"{f.parent.name} mentions `{ref}`, which is not a skill")
 
 
 class BusinessCase(unittest.TestCase):
@@ -129,6 +145,164 @@ class Lint(unittest.TestCase):
 
     def test_blank_line(self):
         self.assertEqual(lint.lint("   "), [])
+
+
+
+class Stories(unittest.TestCase):
+    def test_good_story(self):
+        self.assertEqual(story.check("As a finance manager, I want a list of waiting refunds, so that I can clear them before the audit."), [])
+
+    def test_planted_flaws(self):
+        out = {i: story.check(l) for i, l in enumerate(read("stories.txt", "bad").splitlines())}
+        self.assertTrue(any("too general" in p for p in out[0]))
+        self.assertTrue(any("repeats" in p for p in out[0]))
+        self.assertTrue(any("solution" in p for p in out[0]))
+        self.assertTrue(any("not in the form" in p for p in out[1]))
+        self.assertTrue(any("not a person" in p for p in out[2]))
+        self.assertTrue(any("two stories" in p for p in out[3]))
+
+
+class Criteria(unittest.TestCase):
+    def test_good_set_clean(self):
+        self.assertEqual(gwt.check(read("criteria.txt", "good")), ([], []))
+
+    def test_bad_set(self):
+        per, whole = gwt.check(read("criteria.txt", "bad"))
+        text = " ".join(p for _, p in per) + " ".join(whole)
+        for bit in ("missing 'When'", "properly", "more than one 'When'", "no scenario tests a failure"):
+            self.assertIn(bit, text)
+
+    def test_out_of_order(self):
+        per, _ = gwt.check("Then x. When y. Given z.\n\nGiven a, when b, then error c.\n\nGiven a, when b, then d.")
+        self.assertTrue(any("out of order" in p for _, p in per))
+
+
+class Conflicts(unittest.TestCase):
+    def test_bad_finds_each_kind(self):
+        found = conf.find(rows("conflict.csv", "bad"), json.loads(read("terms.json", "bad")))
+        kinds = {f[0] for f in found}
+        self.assertEqual(kinds, {"number clash", "duplicate", "opposite", "term drift"})
+        self.assertIn(("duplicate", "R1", "R3", "say nearly the same thing: merge"), found)
+
+    def test_unrelated_requirements_not_flagged(self):
+        r = [dict(id="A", text="The system shall email a receipt within 5 minutes"),
+             dict(id="B", text="Managers shall approve refunds over 500")]
+        self.assertEqual(conf.find(r), [])
+
+
+class Raid(unittest.TestCase):
+    def test_good_clean_bad_flagged(self):
+        flags, ranked = raid.review(rows("raid.csv", "good"), TODAY)
+        self.assertEqual(flags, [])
+        self.assertEqual(ranked[0][1], "K1")
+        flags, ranked = raid.review(rows("raid.csv", "bad"), TODAY)
+        joined = "\n".join(flags)
+        for bit in ("K1: no owner", "K1: overdue by 45 days", "K1: score 20", "K3: no due date", "K3: risk without"):
+            self.assertIn(bit, joined)
+        self.assertNotIn("K4", joined)  # closed items are ignored
+
+
+class Kpi(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(kpi.check(json.loads(read("kpis.json", "good"))), [])
+
+    def test_bad(self):
+        out = "\n".join(kpi.check(json.loads(read("kpis.json", "bad"))))
+        for bit in ("no source", "no owner", "no guard", "target has no number", "baseline has no number", "formula does not say"):
+            self.assertIn(bit, out)
+
+
+class Flow(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(flow.check(read("process.mmd", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(flow.check(read("process.mmd", "bad")))
+        for bit in ("2 starting points", "C: decision with 1 exit", "no label", "E: dead end", "F: dead end"):
+            self.assertIn(bit, out)
+
+    def test_unreachable_step(self):
+        out = flow.check("flowchart TD\n A([s]) --> B{q}\n B -- Yes --> C([e])\n B -- No --> C\n D[loop] --> E[loop2]\n E --> D")
+        self.assertTrue(any("cannot be reached" in p for p in out))
+
+    def test_mermaid_inline_label_forms(self):
+        self.assertEqual(flow.check("flowchart TD\n A([s]) --> B{q}\n B -->|Yes| C([e])\n B -- No --> C"), [])
+
+    def test_not_a_flowchart(self):
+        self.assertTrue(flow.check("hello"))
+
+
+class Minutes(unittest.TestCase):
+    def test_good_all_owned_and_dated(self):
+        actions, decisions = acts.extract(read("notes.txt", "good"))
+        self.assertEqual(len(decisions), 1)
+        self.assertEqual(len(actions), 2)
+        self.assertTrue(all(not m for _, _, m in actions))
+
+    def test_bad(self):
+        actions, _ = acts.extract(read("notes.txt", "bad"))
+        got = {s: m for _, s, m in actions}
+        self.assertEqual(got["Someone should chase the provider."], ["owner", "date"])
+        self.assertEqual(got["Priya will send the threshold."], ["date"])
+        self.assertEqual(got["ACTION: confirm file format"], ["owner", "date"])
+        self.assertNotIn("Agreed to launch in November.", got)  # a decision, not an action
+
+
+class Extras(unittest.TestCase):
+    def test_sensitivity(self):
+        c = json.loads(read("case.json", "good"))
+        s = case.sensitivity(c)
+        self.assertLess(s["npv_both"], 0)
+        self.assertGreater(s["npv_costs_up"], 0)
+        # benefits can fall by exactly the share that makes NPV zero
+        shrunk = dict(c, yearly_benefits=[b * (1 - s["benefits_can_fall_by"]) for b in c["yearly_benefits"]])
+        self.assertAlmostEqual(case.analyse(shrunk)["npv"], 0, delta=10)  # result is rounded to 4 places
+
+    def test_sensitivity_already_failing(self):
+        self.assertIsNone(case.sensitivity(json.loads(read("case.json", "bad")))["benefits_can_fall_by"])
+
+    def test_vendor_robustness(self):
+        safe = {"criteria": {"A": 50, "B": 50}, "scores": {"X": {"A": 5, "B": 5}, "Y": {"A": 1, "B": 1}}}
+        self.assertEqual(vendor.robustness(safe), [])
+        close = json.loads(read("scorecard.json", "good"))
+        self.assertTrue(vendor.robustness(close))
+        self.assertEqual(vendor.margin(close), 0.1)
+
+    def test_moscow(self):
+        shares, warns = rank.moscow(rows("moscow.csv", "good"))
+        self.assertEqual(warns, [])
+        shares, warns = rank.moscow(rows("moscow.csv", "bad"))
+        self.assertAlmostEqual(shares["must"], 14 / 18, places=2)
+        self.assertEqual(len(warns), 1)
+        with self.assertRaises(ValueError):
+            rank.moscow([dict(id="x", moscow="maybe", effort="1")])
+
+    def test_trace_with_tests(self):
+        tests = [r["test_id"] for r in rows("tests.csv", "bad")]
+        out = trace.check(rows("matrix.csv", "bad"), tests)
+        self.assertIn("R3: test T9 does not exist", out)
+        self.assertIn("T2: tests nothing (no requirement points at it)", out)
+        good = trace.check(rows("matrix.csv", "good"), [r["test_id"] for r in rows("tests.csv", "good")])
+        self.assertEqual(good, [])
+
+    def test_lint_new_rules(self):
+        out = " ".join(lint.lint("It shall be updated as needed. TBD"))
+        for bit in ("pronoun", "passive", "as required/needed", "TBD"):
+            self.assertIn(bit, out)
+
+
+class WorkedExample(unittest.TestCase):
+    def run_all(self, which):
+        return subprocess.run(["sh", str(ROOT / "examples/run_all.sh"), f"refund-approval/{which}"],
+                              capture_output=True, text=True)
+
+    def test_good_example_passes_every_check(self):
+        r = self.run_all("good")
+        self.assertEqual(r.returncode, 0, r.stdout[-1500:])
+
+    def test_bad_example_trips_every_check(self):
+        r = self.run_all("bad")
+        self.assertEqual(r.returncode, 10, r.stdout[-1500:])  # all ten gated checks find something
 
 
 if __name__ == "__main__":

@@ -49,3 +49,13 @@ Dependencies:
 - "As a system..." stories. Name the person who benefits.
 - Stories that are tasks ("create the table").
 - Missing error cases. Ask what happens when it goes wrong.
+
+## Check your stories
+
+One story per line in a text file, then run:
+
+```bash
+python scripts/check.py stories.txt
+```
+
+It flags stories not in the As a / I want / so that form, roles that are too general or are "the system", a "so that" that only repeats the "I want", solution words (database, button, API), and wording that signals a story is too big or is really two.

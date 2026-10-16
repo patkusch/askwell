@@ -37,3 +37,7 @@ The script checks weights add up to 100 and scores are in range.
 - Cost scored on licence only. Include implementation, training, support and exit.
 - Demos staged by the vendor. Give them your scenarios in advance, but not your scoring.
 - Conflicts of interest; record any.
+
+## Is the winner safe?
+
+The script also moves ten points of weight onto, and then off, each criterion in turn and reports every case where a different vendor would win. If the winner changes under small shifts, the vendors are close on what you said mattered, so decide on the factor you care about most. It also prints the lead over second place.

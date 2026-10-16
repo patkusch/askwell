@@ -1,0 +1,3 @@
+{"criteria": {"Fit": 40, "Cost": 30, "Support": 30},
+ "scores": {"Vendor A": {"Fit": 4, "Cost": 3, "Support": 4},
+            "Vendor B": {"Fit": 4, "Cost": 4, "Support": 3}}}

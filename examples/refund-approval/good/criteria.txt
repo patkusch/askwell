@@ -1,0 +1,7 @@
+Given a refund request of 650, when the customer submits it, then it appears in the finance manager's waiting list.
+
+Given a refund request of 500, when the customer submits it, then it is approved automatically and no manager sees it.
+
+Given a manager who has not approved within 2 working days, when the deadline passes, then the request is escalated to the head of finance.
+
+Given a refund request with no order number, when the customer submits it, then the form is rejected and the customer sees "Order number is required".

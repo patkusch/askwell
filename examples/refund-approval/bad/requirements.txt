@@ -1,0 +1,5 @@
+The system should be fast and easy to use, etc.
+Refunds are approved within a short time.
+It shall be updated as needed.
+The report shall list refunds and show totals and email the manager and be exported.
+Notification TBD.

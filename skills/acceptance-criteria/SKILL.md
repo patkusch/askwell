@@ -39,3 +39,13 @@ Story: reset my password.
 - Words like "quickly", "user-friendly", "easy": replace with a number or an observable fact.
 - Criteria that describe the screen layout instead of the behaviour.
 - Criteria that can't fail. If no case could break it, it isn't a test.
+
+## Check your scenarios
+
+Put scenarios in a text file, a blank line between each, then run:
+
+```bash
+python scripts/check.py scenarios.txt
+```
+
+It finds scenarios missing a Given, When or Then, steps out of order, two behaviours in one scenario, vague results ("works properly"), long chains of results, and sets that never test a failure or have fewer than three scenarios.

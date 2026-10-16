@@ -1,0 +1,6 @@
+[{"name": "Refund decision time", "purpose": "Are customers told quickly?",
+  "formula": "Median hours from request to decision, per month",
+  "source": "refunds table, requested_at and decided_at", "owner": "Head of Finance",
+  "frequency": "Monthly", "baseline": "71 hours (Jan-Mar 2026)", "target": "under 24 hours by Dec 2026",
+  "guard": "Also watch wrongly approved refunds, which must not rise",
+  "action": "Root cause review of any region over 48 hours"}]

@@ -1,0 +1,3 @@
+The system shall email the customer a decision within 5 minutes of a refund request being approved or rejected.
+The finance manager shall approve any refund over 500 within 2 working days.
+The system shall record who approved each refund, the time, and the amount.

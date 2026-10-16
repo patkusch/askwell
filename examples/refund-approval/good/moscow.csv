@@ -1,0 +1,6 @@
+id,name,moscow,effort
+S1,Waiting list,must,3
+S2,Decision email,must,2
+S3,Audit trail,should,5
+S4,Dashboard,could,4
+S5,Mobile app,wont,13

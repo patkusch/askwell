@@ -41,6 +41,12 @@ def validate(skill_dir):
         errs.append(f"{skill_dir.name}: body is too thin")
     if len(body.splitlines()) > 500:
         errs.append(f"{skill_dir.name}: body over 500 lines")
+    for script in sorted((skill_dir / "scripts").glob("*.py")) if (skill_dir / "scripts").is_dir() else []:
+        if f"scripts/{script.name}" not in body:
+            errs.append(f"{skill_dir.name}: scripts/{script.name} is not mentioned in SKILL.md")
+    for ref in sorted((skill_dir / "references").glob("*.md")) if (skill_dir / "references").is_dir() else []:
+        if f"references/{ref.name}" not in body:
+            errs.append(f"{skill_dir.name}: references/{ref.name} is not mentioned in SKILL.md")
     return errs
 
 

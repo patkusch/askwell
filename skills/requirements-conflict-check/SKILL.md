@@ -31,3 +31,13 @@ Read through once for each type, not once for everything. Put every pair you sus
 ## Resolve
 
 Don't pick a winner yourself. Bring the two owners to the same table with the options and the cost of each. Record the decision, who made it and why in the decision log (`decision-log`). Update every requirement that changed.
+
+## Find conflicts automatically
+
+Put the requirements in a CSV (`id,text`), then run:
+
+```bash
+python scripts/conflicts.py requirements.csv --terms terms.json
+```
+
+`terms.json` is optional and lists names that should mean one thing, for example `{"customer": ["client", "account holder"]}`. The script finds near-duplicates, pairs that talk about the same thing with different numbers (5 minutes vs 30 minutes), "must" against "must not", and a term used under several names. Treat each result as a lead to confirm with the source, not a verdict: it finds likely conflicts, not every conflict.

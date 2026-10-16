@@ -1,0 +1,7 @@
+id,text
+R1,The system shall email the customer a decision within 5 minutes of approval
+R2,The system shall email the customer a decision within 30 minutes of approval
+R3,The system shall email the customer a decision within 5 minutes of approval.
+R4,The system shall not email the customer a decision after approval
+R5,A client can see their refund status
+R6,The customer can see their refund status

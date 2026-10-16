@@ -39,3 +39,13 @@ A metric nobody can act on is decoration. Each one should change a decision.
 - Averages hiding a spread; show a percentile for time-based measures.
 - Percentages without counts: 100% of 3 is not 100% of 3,000.
 - Too many measures. If everything is a KPI, nothing is.
+
+## Check your KPIs
+
+Write each KPI as a JSON object with `name, purpose, formula, source, owner, frequency, baseline, target, guard, action`, then run:
+
+```bash
+python scripts/check.py kpis.json
+```
+
+It flags anything missing, a target or baseline with no number, a formula that does not say what is counted, duplicate names, and a list of more than eight.

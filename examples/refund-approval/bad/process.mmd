@@ -1,0 +1,8 @@
+flowchart TD
+  A([Request]) --> B[Check order]
+  B --> C{Over 500?}
+  C --> D[Manager reviews]
+  D --> E[Send email]
+  X[Orphan step] --> Y[Another orphan]
+  F[Nothing follows]
+  B --> F

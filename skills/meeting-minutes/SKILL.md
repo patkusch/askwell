@@ -53,3 +53,11 @@ Next meeting:
 - Actions in the minutes are chased at the next meeting, first item.
 - Decisions that matter go to the decision log (`decision-log`).
 - Ask attendees to reply with corrections within a day; silence is agreement.
+
+## Pull out actions automatically
+
+```bash
+python scripts/actions.py notes.txt
+```
+
+It lists decisions and actions from raw notes and marks each action that has no owner or no date. "Someone should..." counts as no owner. Fix every flagged line before sending the minutes; the exit code is 1 while any remain.

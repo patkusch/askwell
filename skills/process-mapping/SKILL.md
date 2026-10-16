@@ -55,3 +55,13 @@ The diagram, a table of steps with role, system, time and volume, and a short li
 
 - Mapping the procedure manual instead of the real thing (`current-state-analysis`).
 - Hiding exceptions. A loop labelled "rework" is where the cost is.
+
+## Check the diagram
+
+Save the Mermaid flowchart to a file, then run:
+
+```bash
+python scripts/check.py process.mmd
+```
+
+It finds a missing or doubled start, steps that lead nowhere, decisions with fewer than two exits or exits with no Yes/No label, and steps nothing can reach. Mark real endpoints with the stadium shape `([End])` so they are not reported as dead ends.

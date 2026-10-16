@@ -1,0 +1,4 @@
+As a user, I want a database table of refunds, so that I have a table of refunds.
+I want to manage all refunds.
+As the system, I want to log everything, so that logs exist for later.
+As a finance manager, I want to filter and export refunds, so that I can reconcile them with the ledger.

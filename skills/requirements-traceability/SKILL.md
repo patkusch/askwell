@@ -41,3 +41,11 @@ It reports requirements with no design, no test, duplicates, and anything marked
 - A test linked to a requirement but not actually covering it. Spot-check.
 - A matrix updated once and left. Update it whenever requirements, design or tests change.
 - Linking to a whole document. Link to a specific item.
+
+## Also check the tests
+
+```bash
+python scripts/check.py matrix.csv --tests tests.csv
+```
+
+`tests.csv` has one `test_id` column. This also finds tests that no requirement points at, and requirements pointing at a test that does not exist. Put several tests in one cell separated by `;`.

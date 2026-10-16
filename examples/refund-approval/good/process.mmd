@@ -1,0 +1,11 @@
+flowchart TD
+  A([Customer requests refund]) --> B[Check order exists]
+  B --> C{Over 500?}
+  C -- No --> D[Approve automatically]
+  C -- Yes --> E[Manager reviews]
+  E --> F{Approved?}
+  F -- Yes --> D
+  F -- No --> G[Send rejection]
+  D --> H[Send decision email]
+  G --> H
+  H --> I([End])

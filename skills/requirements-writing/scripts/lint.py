@@ -32,6 +32,14 @@ def lint(line):
         out.append("several 'and's: probably more than one requirement")
     if not re.search(r"\d", text) and re.search(r"\b(within|at least|at most|no more than)\b", low):
         out.append("a limit is mentioned but there is no number")
+    if re.search(r"\b(tbd|tbc|to be (decided|confirmed|determined))\b", low):
+        out.append("unfinished (TBD/TBC): find the answer or log it as an open question")
+    if re.match(r"\s*(it|this|that|they|these)\s+(shall|must)\b", low):
+        out.append("starts with a pronoun: name who or what must do this")
+    if re.search(r"\b(shall|must) be \w+(ed|en)\b", low) and not re.search(r"\bby\b", low):
+        out.append("passive voice with no actor: who does it?")
+    if re.search(r"\bas (required|needed|necessary|appropriate)\b", low):
+        out.append("'as required/needed': say when it is required")
     return out
 
 

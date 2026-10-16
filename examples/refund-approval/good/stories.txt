@@ -1,0 +1,2 @@
+As a finance manager, I want to see all refunds waiting over 500 in one list, so that I can clear them before the audit deadline.
+As a customer, I want an email when my refund is decided, so that I know whether to chase the shop.

@@ -44,3 +44,13 @@ Choose a response: **avoid** (change the plan), **reduce** (act to lower it), **
 - Vague risks ("things might slip").
 - No owner, or an owner who doesn't know.
 - A log filled once and never read. Bring the top five to every status meeting.
+
+## Check the log
+
+Keep the log as a CSV with columns `id,type,description,likelihood,impact,owner,due,status,last_reviewed`, then run:
+
+```bash
+python scripts/raid.py raid.csv
+```
+
+It ranks open risks by score and flags items with no owner, no due date, overdue, not reviewed in 30 days, risks missing a rating, and any score of 15 or more that needs the sponsor. Closed items are ignored. Use `--today 2026-10-16` to check a past or future date.

@@ -26,7 +26,37 @@ def score(data):
     return dict(sorted(out.items(), key=lambda kv: -kv[1]))
 
 
+def robustness(data, shift=10):
+    """Move `shift` weight points onto, then off, each criterion (others scale to
+    keep the total at 100). Returns the changes that make a different vendor win."""
+    base = next(iter(score(data)))
+    flips = []
+    w = data["criteria"]
+    for k in w:
+        for delta in (shift, -shift):
+            nk = min(100, max(0, w[k] + delta))
+            if nk == w[k] or w[k] == 100:
+                continue
+            scale = (100 - nk) / (100 - w[k])
+            new = {j: (nk if j == k else w[j] * scale) for j in w}
+            winner = next(iter(score({"criteria": new, "scores": data["scores"]})))
+            if winner != base:
+                flips.append(f"{'+' if delta > 0 else ''}{delta} on {k}: {winner} wins instead of {base}")
+    return flips
+
+
+def margin(data):
+    ranked = list(score(data).items())
+    return round(ranked[0][1] - ranked[1][1], 2) if len(ranked) > 1 else None
+
+
 if __name__ == "__main__":
     src = open(sys.argv[1]) if len(sys.argv) > 1 else sys.stdin
-    for v, s in score(json.load(src)).items():
-        print(f"{s:.2f}  {v}")
+    d = json.load(src)
+    for v, sc in score(d).items():
+        print(f"{sc:.2f}  {v}")
+    flips = robustness(d)
+    print(f"Lead over second place: {margin(d)}")
+    print("Winner holds under every 10-point weight shift." if not flips else "Close call, the winner changes if:")
+    for f in flips:
+        print("  " + f)

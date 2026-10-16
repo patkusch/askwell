@@ -42,3 +42,11 @@ RICE columns: `id,name,reach,impact,confidence,effort` (confidence 0 to 1). WSJF
 - Scores that are really opinions of the loudest person. Ask for evidence.
 - Effort left out. A big win that takes a year may lose to three small ones.
 - Legal and safety items: treat as must-do, outside the scoring.
+
+## Check a MoSCoW split
+
+```bash
+python scripts/score.py moscow items.csv
+```
+
+Columns: `id,name,moscow,effort`. It shows the share of planned effort in Must, Should and Could, and warns when Musts take more than 60%, which leaves no room for surprises.
