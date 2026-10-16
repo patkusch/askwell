@@ -1,4 +1,4 @@
-# ba-skills
+# askwell
 
 Skills that help an AI agent do a business analyst's work: find out what people need, write it down clearly, check it, and make the case for it.
 
@@ -56,15 +56,15 @@ examples/run_all.sh refund-approval/bad     # see what each check catches
 
 ## Other projects like this
 
-Others exist, such as [devfolorunso/business-analyst-agent-skill](https://github.com/devfolorunso/business-analyst-agent-skill) (one large skill with eleven industry guides), [GiangGiangTran/ba-skills](https://github.com/GiangGiangTran/ba-skills), [luckybajaj22031996/pm-ba-claude-skills](https://github.com/luckybajaj22031996/pm-ba-claude-skills) and [phucnt-bazone-vietnam/use-case-writer](https://github.com/phucnt-bazone-vietnam/use-case-writer). From their file lists, they are all written instructions and templates, with no scripts or tests. This project's difference is that the methods are backed by checks that run and are tested. Its industry guides are shorter than devfolorunso's and only list rule names to confirm; they are not legal advice.
+Others exist, such as [devfolorunso/business-analyst-agent-skill](https://github.com/devfolorunso/business-analyst-agent-skill) (one large skill with eleven industry guides), [GiangGiangTran/askwell](https://github.com/GiangGiangTran/askwell), [luckybajaj22031996/pm-ba-claude-skills](https://github.com/luckybajaj22031996/pm-ba-claude-skills) and [phucnt-bazone-vietnam/use-case-writer](https://github.com/phucnt-bazone-vietnam/use-case-writer). From their file lists, they are all written instructions and templates, with no scripts or tests. This project's difference is that the methods are backed by checks that run and are tested. Its industry guides are shorter than devfolorunso's and only list rule names to confirm; they are not legal advice.
 
 ## Install
 
 Copy the skills you want into your agent's skills folder. For Claude Code:
 
 ```bash
-git clone https://github.com/patkusch/ba-skills
-cp -r ba-skills/skills/* ~/.claude/skills/
+git clone https://github.com/patkusch/askwell
+cp -r askwell/skills/* ~/.claude/skills/
 ```
 
 ## Check it
