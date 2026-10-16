@@ -1,0 +1,7 @@
+name,role,cares_about,power,interest,stance,engagement,owner
+Priya Nair,Sponsor and Head of Finance,Fewer audit findings and faster refunds,high,high,supporter,Manage closely: weekly one-to-one,Asha
+Tom Reyes,IT architect,Keeping new work off the old billing system,high,low,neutral,Keep satisfied: short update each sprint,Asha
+Maria Costa,Refund agent,Not retyping details between two systems,low,high,supporter,Keep informed: demos each sprint,Ben
+Sam Okoye,Customer representative,Knowing quickly whether a refund is coming,low,high,neutral,Keep informed: survey and one interview,Ben
+Dana Whitlock,Compliance officer,Fears large refunds paid with no approver and a repeat audit finding,high,high,resistant,Manage closely: review each design with her,Asha
+Lee Park,Finance procurement,Cost of any new tool,low,low,neutral,Monitor,Ben

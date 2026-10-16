@@ -32,3 +32,13 @@ Find the people who can make the project succeed or fail, then decide how to wor
 - The person who does the work every day but is not on the org chart as a decision-maker. Ask the sponsor: "who will be upset if we get this wrong?"
 - Two people who both think they own the same thing. Name one owner.
 - Registers go stale. Review at each phase gate.
+
+## Check the register
+
+Keep it as a CSV with columns `name,role,cares_about,power,interest,stance,engagement,owner`, then run:
+
+```bash
+python scripts/check.py register.csv
+```
+
+It flags missing ratings, a stance that is not supporter, neutral or resistant, no engagement plan, no owner for the relationship, a resistant person whose reason isn't written down, a high-power resistant stakeholder who isn't managed closely (your biggest risk), a high-power high-interest person not managed closely, and groups nobody is listed for (sponsor, the people who do the work, customers, technology, risk or compliance, finance).

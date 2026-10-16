@@ -30,6 +30,7 @@ raid = load(SKILLS / "raid-log/scripts/raid.py")
 kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
+stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
 nfr = load(SKILLS / "nonfunctional-requirements/scripts/check.py")
 ddict = load(SKILLS / "data-dictionary/scripts/check.py")
 usecase = load(SKILLS / "use-cases/scripts/check.py")
@@ -304,6 +305,24 @@ class Nfr(unittest.TestCase):
         self.assertNotIn("N: no measurable number", " ".join(nfr.check(r)))
 
 
+class Stakeholders(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(stake.check(rows("stakeholders.csv", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(stake.check(rows("stakeholders.csv", "bad")))
+        for bit in ("Priya Nair: nobody on the team owns", "Tom Reyes: interest must be", "Tom Reyes: stance must be",
+                    "Tom Reyes: no plan", "Dana Whitlock: resistant but the reason", "Priya Nair: listed twice",
+                    "no one listed for: people who do the work; customers; finance"):
+            self.assertIn(bit, out)
+
+    def test_resistant_high_power_only_flagged_when_not_managed_closely(self):
+        base = dict(name="D", role="Compliance officer sponsor", cares_about="Fears repeat audit finding on refunds",
+                    power="high", interest="low", stance="resistant", owner="A")
+        self.assertTrue(any("biggest stakeholder risk" in p for p in stake.check([dict(base, engagement="Send newsletter")])))
+        self.assertFalse(any("biggest stakeholder risk" in p for p in stake.check([dict(base, engagement="Manage closely weekly")])))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -358,7 +377,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 13, r.stdout[-1500:])  # all thirteen gated checks find something
+        self.assertEqual(r.returncode, 14, r.stdout[-1500:])  # all fourteen gated checks find something
 
 
 if __name__ == "__main__":
