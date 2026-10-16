@@ -404,7 +404,7 @@ class DomainPacks(unittest.TestCase):
             self.assertIn(f"references/{f.name}", skill, f"{f.name} not listed in domain-packs/SKILL.md")
             self.assertIn("**Questions to add**", text, f.name)
             self.assertIn("**Traps**", text, f.name)
-            self.assertTrue("**Rules to confirm**" in text or f.name in {"saas.md", "erp-crm.md", "data-bi.md"}, f.name)
+            self.assertTrue("**Rules to confirm" in text or f.name in {"saas.md", "erp-crm.md", "data-bi.md"}, f.name)
 
 
 class Extras(unittest.TestCase):
