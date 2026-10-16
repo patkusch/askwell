@@ -40,3 +40,13 @@ Output a one-page result: scenarios run, passed, failed, defects by severity, ri
 - Testers too busy to test. Get time agreed in advance.
 - Using fake data too neat to find real problems.
 - Sign-off by someone who didn't test.
+
+## Get the go / no-go call from the results
+
+Keep scenario results and defects in two CSVs, then run:
+
+```bash
+python scripts/summary.py scenarios.csv defects.csv --requirements matrix.csv
+```
+
+`scenarios.csv` has `id,requirement,scenario,result,defect_id`; `defects.csv` has `defect_id,severity,status,kind` (kind is `defect` or `change request`). The script counts results and gives **NO-GO** if any critical or major defect is open or any scenario has not passed, **GO WITH CONDITIONS** if only minor defects are open, and **GO** otherwise. It also flags failures with no defect logged, a pass that still has an open defect against it, a defect id that doesn't exist, and (with `--requirements`) requirements no scenario covers. It informs the sign-off; a person still decides.

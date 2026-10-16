@@ -1,0 +1,4 @@
+defect_id,severity,status,kind
+D1,critical,open,defect
+D2,minor,open,defect
+D3,huge,open,defect

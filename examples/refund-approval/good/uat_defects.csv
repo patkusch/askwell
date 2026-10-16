@@ -1,0 +1,3 @@
+defect_id,severity,status,kind
+D1,minor,closed,defect
+D2,minor,open,change request

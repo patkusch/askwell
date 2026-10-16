@@ -31,6 +31,7 @@ kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
+uat = load(SKILLS / "user-acceptance-testing/scripts/summary.py")
 dlog = load(SKILLS / "decision-log/scripts/check.py")
 nfr = load(SKILLS / "nonfunctional-requirements/scripts/check.py")
 ddict = load(SKILLS / "data-dictionary/scripts/check.py")
@@ -343,6 +344,35 @@ class DecisionLog(unittest.TestCase):
         self.assertTrue(any("dated earlier" in p for p in dlog.check(r, TODAY)))
 
 
+class Uat(unittest.TestCase):
+    def go(self, which):
+        reqs = [r["req_id"] for r in rows("uat_requirements.csv", which)]
+        return uat.evaluate(rows("uat_scenarios.csv", which), rows("uat_defects.csv", which), reqs)
+
+    def test_good_is_go_and_open_change_request_does_not_block(self):
+        r = self.go("good")
+        self.assertEqual(r["call"], "GO")
+        self.assertTrue(any("change request" in n for n in r["notes"]))
+
+    def test_bad_is_no_go_with_every_problem(self):
+        r = self.go("bad")
+        self.assertEqual(r["call"], "NO-GO")
+        self.assertEqual(r["blocking"], ["D1 (critical)"])
+        out = "\n".join(r["problems"])
+        for bit in ("U1: failed with no defect", "U2: marked pass but D1", "U3: points at D9", "U4: result must be",
+                    "D3: severity must be", "R3: no UAT scenario"):
+            self.assertIn(bit, out)
+
+    def test_minor_open_defects_give_conditions(self):
+        sc = [dict(id="U1", requirement="R1", scenario="s", result="pass", defect_id="")]
+        df = [dict(defect_id="D1", severity="minor", status="open", kind="defect")]
+        self.assertEqual(uat.evaluate(sc, df)["call"], "GO WITH CONDITIONS")
+
+    def test_not_run_scenario_is_no_go(self):
+        sc = [dict(id="U1", requirement="R1", scenario="s", result="not run", defect_id="")]
+        self.assertEqual(uat.evaluate(sc, [])["call"], "NO-GO")
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -397,7 +427,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 15, r.stdout[-1500:])  # all fifteen gated checks find something
+        self.assertEqual(r.returncode, 16, r.stdout[-1500:])  # all sixteen gated checks find something
 
 
 if __name__ == "__main__":

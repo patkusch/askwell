@@ -1,0 +1,4 @@
+id,requirement,scenario,result,defect_id
+U1,R1,Customer gets decision email within 5 minutes,pass,
+U2,R2,Manager approves a 650 refund,pass,D1
+U3,R3,Approver is recorded,pass,
