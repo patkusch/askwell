@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""Check user stories, one per line, in the form
-As a <role>, I want <capability>, so that <benefit>.
-"""
+"""Check user stories, one per line: As a <role>, I want <capability>, so that <benefit>."""
 import re
 import sys
 

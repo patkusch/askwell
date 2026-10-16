@@ -45,6 +45,16 @@ Business analysis writing fails in predictable ways: vague requirements, stories
 
 A check that finds nothing does not prove a document is right. It only proves it is not wrong in these known ways.
 
+## One command for every check
+
+```bash
+python3 scripts/askwell.py list                          # every check, in one line each
+python3 scripts/askwell.py run requirements-writing reqs.txt
+python3 scripts/askwell.py skills                        # what each skill is for
+```
+
+A mistyped name gets a "did you mean" suggestion. The exit code is the check's own, so it works in CI.
+
 ## See it work
 
 `examples/refund-approval` is one small project written two ways. The `good` set passes every check. The `bad` set has flaws planted in it and every check finds them.

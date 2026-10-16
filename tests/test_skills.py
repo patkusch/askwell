@@ -407,6 +407,37 @@ class DomainPacks(unittest.TestCase):
             self.assertTrue("**Rules to confirm" in text or f.name in {"saas.md", "erp-crm.md", "data-bi.md"}, f.name)
 
 
+class Cli(unittest.TestCase):
+    def run_cli(self, *args):
+        return subprocess.run([sys.executable, str(ROOT / "scripts/askwell.py"), *args], capture_output=True, text=True)
+
+    def test_list_names_every_skill_with_a_script(self):
+        out = self.run_cli("list").stdout
+        for d in SKILLS.iterdir():
+            if (d / "scripts").is_dir():
+                self.assertIn(d.name, out)
+
+    def test_run_passes_files_and_exit_code_through(self):
+        good = self.run_cli("run", "requirements-writing", str(EX / "good/requirements.txt"))
+        bad = self.run_cli("run", "requirements-writing", str(EX / "bad/requirements.txt"))
+        self.assertEqual(good.returncode, 0)
+        self.assertEqual(bad.returncode, 1)
+        self.assertIn("vague word", bad.stdout)
+
+    def test_typo_gets_a_suggestion(self):
+        r = self.run_cli("run", "requirement-writing")
+        self.assertEqual(r.returncode, 2)
+        self.assertIn("requirements-writing", r.stderr)
+
+    def test_skills_lists_all(self):
+        out = self.run_cli("skills").stdout
+        self.assertIn("ba-start-here", out)
+        self.assertIn("domain-packs", out)
+
+    def test_unknown_command(self):
+        self.assertEqual(self.run_cli("nonsense").returncode, 2)
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
