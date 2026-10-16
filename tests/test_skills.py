@@ -31,6 +31,7 @@ kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
+pstate = load(SKILLS / "problem-statement/scripts/check.py")
 uat = load(SKILLS / "user-acceptance-testing/scripts/summary.py")
 dlog = load(SKILLS / "decision-log/scripts/check.py")
 nfr = load(SKILLS / "nonfunctional-requirements/scripts/check.py")
@@ -373,6 +374,25 @@ class Uat(unittest.TestCase):
         self.assertEqual(uat.evaluate(sc, [])["call"], "NO-GO")
 
 
+class ProblemStatement(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(pstate.check(read("problem.txt", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(pstate.check(read("problem.txt", "bad")))
+        for bit in ("too short", "mentions a solution (system, dashboard, ai)", "no number", "no cause", "no impact",
+                    "no success measure", "who struggles"):
+            self.assertIn(bit, out)
+
+    def test_lack_of_is_a_solution_in_disguise(self):
+        t = ("Account managers struggle to find customers who have not ordered for 90 days because there is a lack of a "
+             "proper view of orders, which costs about 12 lost sales a month. We will know it is fixed when fewer than 3 are lost.")
+        self.assertTrue(any("solution in disguise" in p for p in pstate.check(t)))
+
+    def test_too_long(self):
+        self.assertTrue(any("under 120 words" in p for p in pstate.check("staff struggle because it costs 5. fixed when under 3. " * 15)))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -427,7 +447,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 16, r.stdout[-1500:])  # all sixteen gated checks find something
+        self.assertEqual(r.returncode, 17, r.stdout[-1500:])  # all seventeen gated checks find something
 
 
 if __name__ == "__main__":

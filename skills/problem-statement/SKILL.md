@@ -34,3 +34,13 @@ Strong: "Account managers spend about 6 hours a week re-typing customer details 
 
 - No number available: say so, and make "measure the baseline" the first task.
 - Several problems in one: split them, and prioritise.
+
+## Check the statement
+
+Save the paragraph to a text file, then run:
+
+```bash
+python scripts/check.py problem.txt
+```
+
+It flags a statement that names a solution (system, dashboard, app, AI, CRM and so on), a "lack of a thing" that is really a solution in disguise, no number, no cause, no impact, no success measure, no clear "who struggles to do what", and one that is too short or too long.

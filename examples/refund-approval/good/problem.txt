@@ -1,0 +1,1 @@
+Refund agents spend about six hours a week retyping customer details between two billing screens, because the two screens do not share data. This results in roughly 40 wrongly paid refunds a month and a median of 71 hours before a customer hears a decision. We will know it is fixed when wrongly paid refunds fall below 5 a month and the median decision time is under 24 hours.
