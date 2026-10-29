@@ -1,0 +1,15 @@
+Objective: Cut wrongly paid refunds below 5 a month and decisions under 24 hours by December 2026
+In scope:
+- A waiting list for refunds over 500
+- Approval screen that records approver, time and amount
+- Decision email to the customer
+Out of scope:
+- Refunds under 500, which stay automatic
+- Changes to the billing system
+- Chargebacks from card providers
+- Mobile app version, deferred to Q2 2027, owner Head of Finance
+Assumptions:
+- Finance confirms the 500 limit in writing by 2026-10-30
+Constraints:
+- Live before the December month-end
+Change control: Anyone may request a change; the project lead assesses cost, time and risk; the sponsor approves.

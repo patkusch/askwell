@@ -31,6 +31,7 @@ kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
+scope = load(SKILLS / "scope-definition/scripts/check.py")
 pstate = load(SKILLS / "problem-statement/scripts/check.py")
 uat = load(SKILLS / "user-acceptance-testing/scripts/summary.py")
 dlog = load(SKILLS / "decision-log/scripts/check.py")
@@ -438,6 +439,22 @@ class Cli(unittest.TestCase):
         self.assertEqual(self.run_cli("nonsense").returncode, 2)
 
 
+class Scope(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(scope.check(read("scope.txt", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(scope.check(read("scope.txt", "bad")))
+        for bit in ("missing 'Assumptions'", "'Constraints' is empty", "an activity, not a deliverable",
+                    "vague ('etc')", "they contradict", "deferred with no date or owner",
+                    "does not say who approves", "does not say what is assessed"):
+            self.assertIn(bit, out)
+
+    def test_single_exclusion_is_not_enough(self):
+        t = read("scope.txt", "good").replace("- Changes to the billing system\n", "").replace("- Chargebacks from card providers\n", "").replace("- Mobile app version, deferred to Q2 2027, owner Head of Finance\n", "")
+        self.assertTrue(any("one item" in p for p in scope.check(t)))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -492,7 +509,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 17, r.stdout[-1500:])  # all seventeen gated checks find something
+        self.assertEqual(r.returncode, 18, r.stdout[-1500:])  # all eighteen gated checks find something
 
 
 if __name__ == "__main__":

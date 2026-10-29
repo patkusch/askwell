@@ -45,3 +45,13 @@ Change control: request -> impact -> decision by [name]
 - "Phase 2" used as a dumping ground without a date or owner.
 - Scope agreed verbally by one stakeholder. Get it signed by the sponsor.
 - Small additions piling up. Keep a visible change log.
+
+## Check the scope statement
+
+Write it with the headings `Objective`, `In scope`, `Out of scope`, `Assumptions`, `Constraints` and `Change control`, one item per line starting with `-`, then run:
+
+```bash
+python scripts/check.py scope.txt
+```
+
+It flags missing headings, in-scope items that are activities ("investigate...") instead of things that will exist, vague wording ("etc", "as needed"), an out-of-scope list with only one item, the same thing in scope and out of scope, "phase 2" with no date or owner, and a change process that doesn't say who approves or what is assessed.

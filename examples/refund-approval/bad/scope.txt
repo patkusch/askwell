@@ -1,0 +1,10 @@
+Objective: Improve refunds
+In scope:
+- Investigate the refund process
+- Support managers etc
+- Refund approval screen
+Out of scope:
+- Refund approval screen
+- Phase 2 features
+Constraints:
+Change control: Handled as needed
