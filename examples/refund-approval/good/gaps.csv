@@ -1,0 +1,6 @@
+area,current,target,gap,impact,effort,action,owner
+process,71 hours,24 hours,-47,H,M,Add escalation after 2 working days,Priya
+technology,2 separate screens,1 approval-to-payment link,1 link,H,M,Pass approved amount to payment screen,Tom
+data,0% of refunds with a recorded approver,100%,100,H,L,Record approver at approval,Tom
+people,0 agents trained,12 agents trained,12,M,L,Run two 30 minute sessions,Maria
+policy,0 written limits,1 written limit signed by Finance,1,H,L,Get the 500 limit signed,Priya

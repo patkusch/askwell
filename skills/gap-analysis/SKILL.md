@@ -33,3 +33,13 @@ Make each point specific and evidenced ("two of five regions have no trained sta
 - A target set by feel. Ask where the number came from.
 - Gaps that are really symptoms of one underlying gap. Group them.
 - Listing gaps with no owner.
+
+## Check the gap table
+
+Keep it as a CSV with columns `area,current,target,gap,impact,effort,action,owner`, then run:
+
+```bash
+python scripts/check.py gaps.csv
+```
+
+It flags rows with no current or target, current equal to target, figures with no number, a gap that doesn't match target minus current, impact or effort not H/M/L, no action or owner, and areas (people, process, technology, data, policy) nobody looked at. It then lists the three rows to close first: highest impact for the lowest effort.

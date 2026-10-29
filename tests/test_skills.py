@@ -31,6 +31,7 @@ kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
+gapa = load(SKILLS / "gap-analysis/scripts/check.py")
 rca = load(SKILLS / "root-cause-analysis/scripts/check.py")
 optn = load(SKILLS / "options-analysis/scripts/check.py")
 scope = load(SKILLS / "scope-definition/scripts/check.py")
@@ -499,6 +500,26 @@ class RootCause(unittest.TestCase):
         self.assertTrue(any("does not follow" in p for p in rca.check(t)))
 
 
+class GapAnalysis(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(gapa.check(rows("gaps.csv", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(gapa.check(rows("gaps.csv", "bad")))
+        for bit in ("row 1 (process): current or target has no number", "effort must be H, M or L", "no action", "no owner",
+                    "same, so there is no gap", "gap 20 does not match target - current = 30", "no gaps looked at for: people, policy"):
+            self.assertIn(bit, out)
+
+    def test_close_first_puts_high_impact_low_effort_first(self):
+        order = [r["area"] for r in gapa.close_first(rows("gaps.csv", "good"))]
+        self.assertEqual(order[:2], ["data", "policy"])
+        self.assertEqual(order[-1], "people")
+
+    def test_gap_sign_does_not_matter(self):
+        r = [dict(area="process", current="71", target="24", gap="47", impact="H", effort="L", action="a", owner="o")]
+        self.assertFalse(any("does not match" in p for p in gapa.check(r)))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -553,7 +574,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 20, r.stdout[-1500:])  # all twenty gated checks find something
+        self.assertEqual(r.returncode, 21, r.stdout[-1500:])  # all twenty-one gated checks find something
 
 
 if __name__ == "__main__":
