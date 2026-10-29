@@ -1,0 +1,5 @@
+Problem: Refunds go wrong
+Why 1: Agents were careless
+Why 3: They forgot to check the amount
+Root cause: Refunds go wrong
+Fix: Remind staff to be more careful

@@ -41,3 +41,13 @@ How we will know it worked:
 - Blaming a person. If the answer is "someone made a mistake", ask why the process allowed it.
 - Stopping at the first plausible answer.
 - More than one root cause: this is normal.
+
+## Check the write-up
+
+Write it as lines starting `Problem:`, `Why 1:` to `Why 7:`, `Evidence:`, `Root cause:`, `Fix:` and `Measure:`, then run:
+
+```bash
+python scripts/check.py rootcause.txt
+```
+
+It flags a problem with no number, stopping before three whys, a why that blames a person, a why that is not a "because", too little evidence for the number of whys, a root cause that doesn't follow from the last two whys or only restates the problem, and fixes that are reminders or retraining instead of a change to the process.

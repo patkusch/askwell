@@ -1,0 +1,11 @@
+Problem: 42 refunds were paid wrongly in March 2026, costing about 9,000
+Why 1: Because the amount paid did not match the amount approved
+Why 2: Because agents retype the approved amount into the payment screen
+Why 3: Because the approval screen and payment screen share no data
+Why 4: Because the two systems were bought separately and never linked
+Evidence: Of 42 cases, 38 were typing differences in the amount (March payment file against approvals)
+Evidence: Agents confirmed they retype it; screen recording of five cases
+Evidence: Architecture diagram shows no link between the two
+Root cause: The approval and payment screens share no data, so the amount is retyped
+Fix: Pass the approved amount into the payment screen automatically and block payment if it differs
+Measure: Wrongly paid refunds below 5 a month by December 2026

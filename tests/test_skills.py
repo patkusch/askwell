@@ -31,6 +31,7 @@ kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
+rca = load(SKILLS / "root-cause-analysis/scripts/check.py")
 optn = load(SKILLS / "options-analysis/scripts/check.py")
 scope = load(SKILLS / "scope-definition/scripts/check.py")
 pstate = load(SKILLS / "problem-statement/scripts/check.py")
@@ -481,6 +482,23 @@ class Options(unittest.TestCase):
         self.assertTrue(any("not free" in x for x in optn.check(p)))
 
 
+class RootCause(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(rca.check(read("rootcause.txt", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(rca.check(read("rootcause.txt", "bad")))
+        for bit in ("no Measure", "Problem has no number", "not numbered", "stopped too early", "blames a person ('careless')",
+                    "blames a person ('forgot')", "not a 'because' answer", "0 piece(s) of evidence",
+                    "just restates the problem", "changes behaviour, not the process"):
+            self.assertIn(bit, out)
+
+    def test_unrelated_root_cause_is_caught(self):
+        t = read("rootcause.txt", "good").replace("Root cause: The approval and payment screens share no data, so the amount is retyped",
+                                                   "Root cause: Understaffed night shift")
+        self.assertTrue(any("does not follow" in p for p in rca.check(t)))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -535,7 +553,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 19, r.stdout[-1500:])  # all nineteen gated checks find something
+        self.assertEqual(r.returncode, 20, r.stdout[-1500:])  # all twenty gated checks find something
 
 
 if __name__ == "__main__":
