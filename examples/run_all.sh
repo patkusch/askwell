@@ -25,6 +25,7 @@ run "vendor-selection"            python3 $S/vendor-selection/scripts/score.py $
 run "backlog moscow"              python3 $S/backlog-prioritisation/scripts/score.py moscow $D/moscow.csv
 run "user-acceptance-testing"     python3 $S/user-acceptance-testing/scripts/summary.py $D/uat_scenarios.csv $D/uat_defects.csv --requirements $D/uat_requirements.csv
 run "decision-log"                python3 $S/decision-log/scripts/check.py $D/decisions.csv --today 2026-10-16
+run "stakeholder-communication"   python3 $S/stakeholder-communication/scripts/check.py $D/summary.txt
 run "meeting-minutes"             python3 $S/meeting-minutes/scripts/actions.py $D/notes.txt
 [ -f $D/conflict.csv ] && run "conflict-check" python3 $S/requirements-conflict-check/scripts/conflicts.py $D/conflict.csv --terms $D/terms.json
 echo "== business-case"; python3 $S/business-case/scripts/case.py $D/case.json --sensitivity

@@ -51,3 +51,13 @@ Say it first, plainly. Give the facts, the impact, what you are doing, and what 
 ## Check
 
 Read the first three lines. Could the reader act from those alone? If not, rewrite.
+
+## Check the summary
+
+Save the summary or update to a text file, then run:
+
+```bash
+python scripts/check.py summary.txt
+```
+
+It flags a summary that does not say what the reader should decide in its first 60 words, one over 250 words, no figures, no cost or risk of the choice, no date, corporate jargon, long sentences, three or more hedges, and acronyms never explained. It cannot tell whether the content is right, only whether a busy reader can act on it.

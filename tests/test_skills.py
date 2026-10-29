@@ -31,6 +31,7 @@ kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
+comms = load(SKILLS / "stakeholder-communication/scripts/check.py")
 impact = load(SKILLS / "change-impact-assessment/scripts/check.py")
 gapa = load(SKILLS / "gap-analysis/scripts/check.py")
 rca = load(SKILLS / "root-cause-analysis/scripts/check.py")
@@ -541,6 +542,25 @@ class ChangeImpact(unittest.TestCase):
         self.assertTrue(any("no group is rated high" in p for p in impact.check(r)))
 
 
+class Communication(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(comms.check(read("summary.txt", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(comms.check(read("summary.txt", "bad")))
+        for bit in ("first 60 words", "no numbers", "no cost or risk", "no date", "jargon 'leverage'", "jargon 'robust'",
+                    "sentences average", "over 40 words", "hedges", "acronym PRM", "acronym SLA"):
+            self.assertIn(bit, out)
+
+    def test_defined_acronym_is_fine(self):
+        t = read("summary.txt", "good") + " The service level agreement (SLA) stays at 95%, so SLA reports are unchanged."
+        self.assertNotIn("acronym SLA", " ".join(comms.check(t)))
+
+    def test_too_long(self):
+        t = read("summary.txt", "good") + " " + "Another short sentence. " * 80
+        self.assertTrue(any("fit in 250" in p for p in comms.check(t)))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -595,7 +615,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 22, r.stdout[-1500:])  # all twenty-two gated checks find something
+        self.assertEqual(r.returncode, 23, r.stdout[-1500:])  # all twenty-three gated checks find something
 
 
 if __name__ == "__main__":

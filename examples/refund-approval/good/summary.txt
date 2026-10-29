@@ -1,0 +1,5 @@
+We recommend you approve buying product X for refunds by 15 November. It cuts wrongly paid refunds from about 40 a month to under 5, which saves roughly 60,000 a year, and it gives the auditors a record of who approved each large refund.
+
+It costs 40,000 to 70,000 to set up and 12,000 to 18,000 a year to run. The main risk is that it takes longer than planned to connect to the billing system. We will test that in a two-week trial before we sign.
+
+If we do nothing, the audit finding from last year will repeat and we keep losing about 5,000 a month.
