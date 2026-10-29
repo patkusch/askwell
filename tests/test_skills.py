@@ -561,6 +561,25 @@ class Communication(unittest.TestCase):
         self.assertTrue(any("fit in 250" in p for p in comms.check(t)))
 
 
+class Housekeeping(unittest.TestCase):
+    def test_every_script_is_exercised_by_the_worked_example(self):
+        runner = (ROOT / "examples/run_all.sh").read_text()
+        for script in SKILLS.glob("*/scripts/*.py"):
+            self.assertIn(f"{script.parent.parent.name}/scripts/{script.name}", runner,
+                          f"{script} is not run by examples/run_all.sh")
+
+    def test_every_script_is_listed_by_the_cli(self):
+        cli = load(ROOT / "scripts/askwell.py")
+        listed = {p.resolve() for p in cli.checks().values()}
+        for script in SKILLS.glob("*/scripts/*.py"):
+            self.assertIn(script.resolve(), listed)
+
+    def test_contributing_exists_and_names_the_rules(self):
+        text = (ROOT / "CONTRIBUTING.md").read_text()
+        for bit in ("Exit 0 when clean", "run_all.sh", "validate_skills.py"):
+            self.assertIn(bit, text)
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))

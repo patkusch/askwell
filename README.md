@@ -90,6 +90,10 @@ CI runs both on every push. The tests include a run of every check over the work
 
 It does not replace talking to people. The skills give the method; the facts have to come from the stakeholders and the data. Every skill says where it is easy to go wrong.
 
+## Adding to it
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to add a skill or a check, and what every check must do.
+
 ## Licence
 
 MIT.
