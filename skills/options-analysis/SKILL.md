@@ -35,3 +35,13 @@ Decision needed → recommendation → options compared → reasons → risks �
 - "Do nothing" described as free. It has costs: add them.
 - Quoting a cost with no range.
 - Hidden constraints, such as a contract end date, that rule out an option.
+
+## Check the options paper
+
+Hold the paper as JSON (decision, deadline, options with costs as ranges, risks and benefit, a recommendation, unknowns), then run:
+
+```bash
+python scripts/check.py options.json
+```
+
+It flags fewer than three or more than five options, no "do nothing" option, do-nothing treated as free, costs missing or given as a single figure instead of a range, options with no risks or benefit, a recommendation for something not in the list, no biggest risk or mitigation, a recommended option described at far greater length than the rest, and no list of unknowns. The JSON layout is at the top of `scripts/check.py`.

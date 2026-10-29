@@ -1,0 +1,13 @@
+{"decision": "How to speed up and control large refunds", "deadline": "2026-11-15",
+ "options": [
+  {"name": "Do nothing", "description": "Keep the manual process.", "cost_one_off": "0", "cost_running": "about 60k a year in wrong refunds and re-keying",
+   "benefit": "No change effort", "risks": ["Audit finding repeats"]},
+  {"name": "Fix the process only", "description": "Add a checklist and a shared waiting sheet.", "cost_one_off": "5-10k", "cost_running": "2-4k a year",
+   "benefit": "Quick and cheap; removes some errors", "risks": ["Still manual", "Depends on discipline"]},
+  {"name": "Buy product X", "description": "Configure an off-the-shelf approval tool.", "cost_one_off": "40-70k", "cost_running": "12-18k a year",
+   "benefit": "Full audit trail and escalation", "risks": ["Vendor lock-in", "Integration with billing"]},
+  {"name": "Build in-house", "description": "Build a small approval screen on the billing platform.", "cost_one_off": "60-110k", "cost_running": "8-12k a year",
+   "benefit": "Fits our rules exactly", "risks": ["Delivery date slips", "Key person dependency"]}],
+ "recommendation": {"option": "Buy product X", "reason": "It meets the audit trail need at a third less than building and is live before month-end",
+   "biggest_risk": "Integration with the billing system takes longer than planned", "mitigation": "Prove the integration in a two-week trial before signing"},
+ "unknowns": ["Whether product X can read the billing export (trial will show)"]}

@@ -1,0 +1,6 @@
+{"decision": "", "deadline": "",
+ "options": [
+  {"name": "Buy product X", "description": "Configure an off-the-shelf approval tool that gives us a full audit trail, escalation to the head of finance, reporting for the audit team, single sign-on, mobile approvals, email decisions, workflow rules held in tables the business can change without a developer, and a vendor support desk that answers within an hour for every severity one fault we may raise during the first year of use.",
+   "cost_one_off": 50000, "cost_running": "", "benefit": "Everything", "risks": []},
+  {"name": "Build in-house", "description": "Build it.", "cost_one_off": "lots", "cost_running": "10k", "benefit": "", "risks": ["Slips"]}],
+ "recommendation": {"option": "Buy product Y", "reason": "Better"}}

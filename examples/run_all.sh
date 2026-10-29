@@ -4,6 +4,7 @@
 cd "$(dirname "$0")/.." || exit 2
 D="examples/$1"; S=skills; fails=0
 run() { echo "== $1"; shift; "$@"; rc=$?; [ $rc -ne 0 ] && fails=$((fails+1)); echo; }
+run "options-analysis"            python3 $S/options-analysis/scripts/check.py $D/options.json
 run "scope-definition"            python3 $S/scope-definition/scripts/check.py $D/scope.txt
 run "problem-statement"           python3 $S/problem-statement/scripts/check.py $D/problem.txt
 run "stakeholder-mapping"          python3 $S/stakeholder-mapping/scripts/check.py $D/stakeholders.csv

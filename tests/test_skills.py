@@ -31,6 +31,7 @@ kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
+optn = load(SKILLS / "options-analysis/scripts/check.py")
 scope = load(SKILLS / "scope-definition/scripts/check.py")
 pstate = load(SKILLS / "problem-statement/scripts/check.py")
 uat = load(SKILLS / "user-acceptance-testing/scripts/summary.py")
@@ -455,6 +456,31 @@ class Scope(unittest.TestCase):
         self.assertTrue(any("one item" in p for p in scope.check(t)))
 
 
+class Options(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(optn.check(json.loads(read("options.json", "good"))), [])
+
+    def test_bad(self):
+        out = "\n".join(optn.check(json.loads(read("options.json", "bad"))))
+        for bit in ("no decision", "no deadline", "at least 3 real choices", "no 'do nothing' option",
+                    "cost_one_off is a single figure", "no cost_running", "no risks listed", "has no figure",
+                    "no benefit stated", "is not one of the options", "reason is too short",
+                    "no biggest risk", "no mitigation", "no unknowns"):
+            self.assertIn(bit, out)
+
+    def test_sales_pitch_detected(self):
+        p = json.loads(read("options.json", "good"))
+        for o in p["options"]:
+            if o["name"] == "Buy product X":
+                o["description"] = "word " * 80
+        self.assertTrue(any("sales pitch" in x for x in optn.check(p)))
+
+    def test_do_nothing_must_carry_a_figure(self):
+        p = json.loads(read("options.json", "good"))
+        p["options"][0]["cost_running"] = "none"
+        self.assertTrue(any("not free" in x for x in optn.check(p)))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -509,7 +535,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 18, r.stdout[-1500:])  # all eighteen gated checks find something
+        self.assertEqual(r.returncode, 19, r.stdout[-1500:])  # all nineteen gated checks find something
 
 
 if __name__ == "__main__":
