@@ -1,0 +1,5 @@
+group,what_changes,rating,communication,training,support,readiness,owner
+Refund agents,They stop retyping amounts and approve in one screen,high,Team briefing two weeks before go-live,Two 30 minute sessions,Floor walker for the first two weeks,medium,Maria
+Finance managers,They see a waiting list and approve in the same place,high,One-to-one with each manager,45 minute walk-through,Hotline for the first month,high,Priya
+Customers,They get a decision email within 5 minutes,low,Message on the refund page,,,high,Sam
+Auditors,They can see who approved each large refund,medium,Preview of the audit report,Report walk-through,,high,Dana

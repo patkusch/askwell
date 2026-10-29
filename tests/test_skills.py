@@ -31,6 +31,7 @@ kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
+impact = load(SKILLS / "change-impact-assessment/scripts/check.py")
 gapa = load(SKILLS / "gap-analysis/scripts/check.py")
 rca = load(SKILLS / "root-cause-analysis/scripts/check.py")
 optn = load(SKILLS / "options-analysis/scripts/check.py")
@@ -520,6 +521,26 @@ class GapAnalysis(unittest.TestCase):
         self.assertFalse(any("does not match" in p for p in gapa.check(r)))
 
 
+class ChangeImpact(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(impact.check(rows("impact.csv", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(impact.check(rows("impact.csv", "bad")))
+        for bit in ("say what actually changes", "no communication planned", "nobody owns", "high impact with no training",
+                    "high impact with no support", "high impact and low readiness", "readiness unknown",
+                    "listed twice", "rating must be high, medium or low", "readiness must be"):
+            self.assertIn(bit, out)
+
+    def test_attention_order(self):
+        order = [r["group"] for r in impact.attention_first(rows("impact.csv", "bad"))]
+        self.assertEqual(order[0], "Refund agents")
+
+    def test_nobody_rated_high_is_suspicious(self):
+        r = [dict(group="A", what_changes="A small tweak to a form", rating="low", communication="x", training="", support="", readiness="high", owner="o")]
+        self.assertTrue(any("no group is rated high" in p for p in impact.check(r)))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -574,7 +595,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 21, r.stdout[-1500:])  # all twenty-one gated checks find something
+        self.assertEqual(r.returncode, 22, r.stdout[-1500:])  # all twenty-two gated checks find something
 
 
 if __name__ == "__main__":

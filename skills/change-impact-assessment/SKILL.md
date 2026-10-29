@@ -43,3 +43,13 @@ Rate the effect: **high** (job changes), **medium** (steps change), **low** (awa
 ## Output
 
 Table by group: impact, rating, actions, owner, date. Highlight the three groups with the highest impact and the lowest readiness.
+
+## Check the impact table
+
+Keep part B as a CSV with columns `group,what_changes,rating,communication,training,support,readiness,owner`, then run:
+
+```bash
+python scripts/check.py impact.csv
+```
+
+It flags groups with no day-to-day description of the change, no communication, no owner, or an invalid rating; high-impact groups with no training or no support after go-live; and high-impact groups whose readiness is unknown or low. It ends with the three groups that need attention first (highest impact, lowest readiness).
