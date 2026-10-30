@@ -1,0 +1,7 @@
+{"purpose": "Decide the approval limit for large refunds", "date": "2026-11-05", "minutes": 45,
+ "attendees": 6, "pre_reads_sent": "2026-11-02",
+ "items": [
+  {"topic": "Actions from last meeting", "owner": "Chair", "minutes": 5, "outcome": "inform"},
+  {"topic": "Audit findings on large refunds", "owner": "Dana Whitlock", "minutes": 10, "outcome": "discuss"},
+  {"topic": "Set the approval limit", "owner": "Priya Nair", "minutes": 20, "outcome": "decide"},
+  {"topic": "Owners and dates for the change", "owner": "Chair", "minutes": 8, "outcome": "decide"}]}

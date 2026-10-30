@@ -29,6 +29,7 @@ conf = load(SKILLS / "requirements-conflict-check/scripts/conflicts.py")
 raid = load(SKILLS / "raid-log/scripts/raid.py")
 kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
+agenda = load(SKILLS / "meeting-minutes/scripts/agenda.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
 router = load(SKILLS / "ba-start-here/scripts/route.py")
@@ -752,11 +753,11 @@ class Audit(unittest.TestCase):
     def test_good_folder_is_clean(self):
         r = self.audit("refund-approval/good")
         self.assertEqual(r.returncode, 0, r.stdout)
-        self.assertIn("0 check(s) found something, 32 clean, 1 skipped", r.stdout)
+        self.assertIn("0 check(s) found something, 33 clean, 1 skipped", r.stdout)
 
     def test_bad_folder_exit_code_matches_run_all(self):
         r = self.audit("refund-approval/bad")
-        self.assertEqual(r.returncode, 31, r.stdout[-800:])
+        self.assertEqual(r.returncode, 32, r.stdout[-800:])
         self.assertIn("== problem-statement", r.stdout)
 
     def test_verbose_shows_clean_checks_too(self):
@@ -772,7 +773,7 @@ class Audit(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             shutil.copy(EX / "good/problem.txt", d)
             out = subprocess.run([sys.executable, str(ROOT / "scripts/askwell.py"), "audit", d], capture_output=True, text=True).stdout
-        self.assertIn("1 clean, 32 skipped", out.replace("0 check(s) found something, ", ""))
+        self.assertIn("1 clean, 33 skipped", out.replace("0 check(s) found something, ", ""))
 
     def test_every_check_script_is_in_the_audit_table(self):
         cli = load(ROOT / "scripts/askwell.py")
@@ -830,6 +831,36 @@ class Glossary(unittest.TestCase):
         r = [dict(term="Claim", definition="Claim is something a customer makes after a loss", avoid="", example="e", non_example="n", owner="o")]
         problems, _ = gloss.check(r)
         self.assertTrue(any("starts with the term" in p for p in problems))
+
+
+class Agenda(unittest.TestCase):
+    def test_good_sets(self):
+        for ex in ("refund-approval", "claims-triage"):
+            a = json.loads((ROOT / "examples" / ex / "good/agenda.json").read_text())
+            self.assertEqual(agenda.check(a), [], ex)
+
+    def test_bad(self):
+        out = "\n".join(agenda.check(json.loads(read("agenda.json", "bad"))))
+        for bit in ("does not name an outcome", "add up to 35 minutes but the meeting is 30", "no owner to lead it",
+                    "only 5 minutes set aside to decide", "outcome must be decide, discuss or inform", "one-way information",
+                    "first item should review the actions", "14 attendees for a decision", "less than two days ahead"):
+            self.assertIn(bit, out)
+
+    def test_all_inform_should_be_an_email(self):
+        a = json.loads(read("agenda.json", "good"))
+        for i in a["items"]:
+            i["outcome"] = "inform"
+        self.assertTrue(any("send it as an email" in p for p in agenda.check(a)))
+
+    def test_missing_pre_read_date(self):
+        a = json.loads(read("agenda.json", "good"))
+        del a["pre_reads_sent"]
+        self.assertTrue(any("no pre-read" in p for p in agenda.check(a)))
+
+    def test_too_many_items(self):
+        a = json.loads(read("agenda.json", "good"))
+        a["items"] = a["items"] * 2
+        self.assertTrue(any("seven" in p for p in agenda.check(a)))
 
 
 class Extras(unittest.TestCase):
@@ -895,7 +926,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 31, r.stdout[-1500:])  # all thirty-one gated checks find something
+        self.assertEqual(r.returncode, 32, r.stdout[-1500:])  # all thirty-two gated checks find something
 
 
 if __name__ == "__main__":

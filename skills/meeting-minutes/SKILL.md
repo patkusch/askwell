@@ -61,3 +61,13 @@ python scripts/actions.py notes.txt
 ```
 
 It lists decisions and actions from raw notes and marks each action that has no owner or no date. "Someone should..." counts as no owner. Fix every flagged line before sending the minutes; the exit code is 1 while any remain.
+
+## Check the agenda before the meeting
+
+Hold the agenda as JSON (the layout is at the top of `scripts/agenda.py`), then run:
+
+```bash
+python scripts/agenda.py agenda.json
+```
+
+It flags no purpose or a purpose with no outcome, items that don't fit the time or leave it mostly empty, more than seven items, items with no owner or an outcome that isn't decide, discuss or inform, under 10 minutes in total set aside to decide, an agenda that is all one-way information (send an email), too much time on information, no review of last time's actions, too many people for a decision, and pre-reads sent less than two days ahead.

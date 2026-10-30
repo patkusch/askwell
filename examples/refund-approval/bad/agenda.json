@@ -1,0 +1,5 @@
+{"purpose": "Refunds", "date": "2026-11-05", "minutes": 30, "attendees": 14, "pre_reads_sent": "2026-11-04",
+ "items": [
+  {"topic": "Update on the project", "owner": "", "minutes": 15, "outcome": "inform"},
+  {"topic": "Set the limit", "owner": "Priya", "minutes": 5, "outcome": "decide"},
+  {"topic": "Any other business", "owner": "Chair", "minutes": 15, "outcome": "chat"}]}

@@ -70,6 +70,7 @@ AUDIT = [
     ("change-impact-assessment", "check", ["impact.csv"], [], {}),
     ("user-acceptance-testing", "summary", ["uat_scenarios.csv", "uat_defects.csv"], [], {"uat_requirements.csv": "--requirements"}),
     ("stakeholder-communication", "check", ["summary.txt"], [], {}),
+    ("meeting-minutes", "agenda", ["agenda.json"], [], {}),
     ("meeting-minutes", "actions", ["notes.txt"], [], {}),
     ("vendor-selection", "score", ["scorecard.json"], [], {}),
     ("business-case", "case", ["case.json"], ["--sensitivity"], {}),
