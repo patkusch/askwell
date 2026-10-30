@@ -43,3 +43,5 @@ It flags missing "shall", "should", vague words, open-ended lists, stacked "and"
 
 - Before: The system should be fast and easy to use.
 - After: The system shall show search results within 2 seconds for 95% of searches. A new user shall complete a booking without help after a 30-minute training session.
+
+It also flags vague quantities ("some", "several", "many", "a lot of"): say how many.

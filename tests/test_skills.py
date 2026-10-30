@@ -166,6 +166,10 @@ class Lint(unittest.TestCase):
     def test_limit_without_number(self):
         self.assertTrue(any("no number" in p for p in lint.lint("The system shall respond within a short time.")))
 
+    def test_vague_quantity(self):
+        self.assertTrue(any("vague quantity 'several'" in p for p in lint.lint("The system shall notify several managers within 5 minutes.")))
+        self.assertEqual(lint.lint("The system shall notify the 3 managers on the rota within 5 minutes."), [])
+
     def test_blank_line(self):
         self.assertEqual(lint.lint("   "), [])
 

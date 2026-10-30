@@ -9,6 +9,7 @@ import sys
 VAGUE = ["fast", "quick", "quickly", "easy", "easily", "user-friendly", "intuitive",
          "flexible", "robust", "seamless", "efficient", "adequate", "appropriate",
          "as appropriate", "if possible", "as needed", "state-of-the-art", "modern"]
+QUANTITY = ["some", "several", "many", "few", "most", "numerous", "multiple", "various", "a lot of", "a number of", "a couple of"]
 OPEN_ENDED = ["etc", "and so on", "and/or", "including but not limited to", "such as"]
 
 
@@ -32,6 +33,10 @@ def lint(line):
         out.append("several 'and's: probably more than one requirement")
     if not re.search(r"\d", text) and re.search(r"\b(within|at least|at most|no more than)\b", low):
         out.append("a limit is mentioned but there is no number")
+    for q in QUANTITY:
+        if re.search(rf"\b{re.escape(q)}\b", low):
+            out.append(f"vague quantity '{q}': how many?")
+            break
     if re.search(r"\b(tbd|tbc|to be (decided|confirmed|determined))\b", low):
         out.append("unfinished (TBD/TBC): find the answer or log it as an open question")
     if re.match(r"\s*(it|this|that|they|these)\s+(shall|must)\b", low):
