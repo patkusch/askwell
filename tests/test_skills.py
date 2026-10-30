@@ -97,6 +97,20 @@ class BusinessCase(unittest.TestCase):
         self.assertIsNone(r["payback_years"])
         self.assertLess(r["npv"], 0)
 
+    def test_compare_orders_by_npv(self):
+        a = {"discount_rate": 0.1, "upfront_cost": 100, "yearly_benefits": [60, 60, 60], "yearly_costs": [0, 0, 0]}
+        b = {"discount_rate": 0.1, "upfront_cost": 100, "yearly_benefits": [30, 30, 30], "yearly_costs": [0, 0, 0]}
+        rows_ = case.compare({"small": b, "big": a})
+        self.assertEqual([r["option"] for r in rows_], ["big", "small"])
+        self.assertEqual(rows_[0]["npv"], 49.21)
+
+    def test_compare_cli(self):
+        r = subprocess.run([sys.executable, str(SKILLS / "business-case/scripts/case.py"), "--compare",
+                            str(EX / "good/case.json"), str(EX / "bad/case.json")], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0)
+        self.assertIn("Best on NPV: case", r.stdout)
+        self.assertIn("never", r.stdout)
+
     def test_mismatched_lists(self):
         with self.assertRaises(ValueError):
             case.cash_flows({"upfront_cost": 1, "yearly_benefits": [1, 2], "yearly_costs": [1]})

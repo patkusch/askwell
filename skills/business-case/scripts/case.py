@@ -87,6 +87,25 @@ def sensitivity(case, swing=0.3):
     }
 
 
+def compare(named_cases):
+    """named_cases: {name: case dict}. Returns rows sorted by NPV, best first."""
+    rows = []
+    for name, c in named_cases.items():
+        a = analyse(c)
+        rows.append({"option": name, "npv": a["npv"], "payback_years": a["payback_years"], "roi": a["roi"], "total_cost": a["total_cost"]})
+    return sorted(rows, key=lambda r: -r["npv"])
+
+
+if __name__ == "__main__" and "--compare" in sys.argv:
+    files = [a for a in sys.argv[1:] if a != "--compare"]
+    rows = compare({f.rsplit("/", 1)[-1].removesuffix(".json"): json.load(open(f)) for f in files})
+    print(f"{'option'.ljust(24)}{'NPV'.rjust(12)}{'payback (yrs)'.rjust(15)}{'ROI'.rjust(9)}")
+    for r in rows:
+        pb = "never" if r["payback_years"] is None else f"{r['payback_years']:.1f}"
+        print(f"{r['option'].ljust(24)}{r['npv']:>12,.0f}{pb.rjust(15)}{r['roi']:>9.0%}")
+    print(f"Best on NPV: {rows[0]['option']}")
+    sys.exit(0)
+
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if a != "--sensitivity"]
     src = open(args[0]) if args else sys.stdin

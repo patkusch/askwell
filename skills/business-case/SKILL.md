@@ -51,3 +51,11 @@ python scripts/case.py case.json --sensitivity
 ```
 
 This adds the NPV with benefits 30% lower, costs 30% higher, and both, plus how far benefits can fall before the case stops paying. If it shows `null` for that last figure, the case is already below break-even. A case that turns negative with a 30% swing in either direction should be presented as a risk, not a sure thing.
+
+## Compare options
+
+```bash
+python scripts/case.py --compare do_nothing.json buy.json build.json
+```
+
+Prints net present value, payback and ROI for each option, best first. Build one JSON per option, including do-nothing (its "benefit" is usually the cost that stops).
