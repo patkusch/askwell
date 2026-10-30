@@ -54,3 +54,5 @@ python scripts/raid.py raid.csv
 ```
 
 It ranks open risks by score and flags items with no owner, no due date, overdue, not reviewed in 30 days, risks missing a rating, and any score of 15 or more that needs the sponsor. Closed items are ignored. Use `--today 2026-10-16` to check a past or future date.
+
+Add `--grid` to print a text heat map with likelihood down the side and impact across the top, with each open risk's ID in its square, so the sponsor can see at a glance where the danger sits.

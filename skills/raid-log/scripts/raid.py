@@ -3,7 +3,7 @@
 
 CSV columns: id,type,description,likelihood,impact,owner,due,status,last_reviewed
 Dates are YYYY-MM-DD. likelihood and impact are 1-5 (risks only).
-Usage: raid.py log.csv [--today YYYY-MM-DD]
+Usage: raid.py log.csv [--today YYYY-MM-DD] [--grid]
 """
 import csv
 import sys
@@ -46,12 +46,36 @@ def review(rows, today):
     return flags, ranked
 
 
+def grid(rows):
+    """Text heat map: impact across, likelihood down (5 at the top). Open, rated risks only."""
+    cells = {}
+    for r in rows:
+        if (r.get("type") or "").strip().lower() != "risk" or (r.get("status") or "").strip().lower() in CLOSED:
+            continue
+        try:
+            l, i = int(r["likelihood"]), int(r["impact"])
+        except (ValueError, KeyError, TypeError):
+            continue
+        if 1 <= l <= 5 and 1 <= i <= 5:
+            cells.setdefault((l, i), []).append(r["id"])
+    width = max([len(",".join(v)) for v in cells.values()] + [4]) + 2
+    lines = ["Likelihood".ljust(11) + "".join(f"impact {i}".center(width) for i in range(1, 6))]
+    for l in range(5, 0, -1):
+        row = "".join((",".join(cells.get((l, i), [])) or ("*" if l * i >= 15 else ".")).center(width) for i in range(1, 6))
+        lines.append(f"{l}".ljust(11) + row)
+    lines.append("* = a high-score square (15 or more) with nothing in it; . = empty")
+    return "\n".join(lines)
+
+
 if __name__ == "__main__":
     today = date.today()
     if "--today" in sys.argv:
         today = d(sys.argv[sys.argv.index("--today") + 1])
     with open(sys.argv[1], newline="") as f:
-        flags, ranked = review(list(csv.DictReader(f)), today)
+        all_rows = list(csv.DictReader(f))
+    flags, ranked = review(all_rows, today)
+    if "--grid" in sys.argv:
+        print(grid(all_rows))
     print("Top risks:")
     for s, i, desc in ranked[:5]:
         print(f"  {s:>2}  {i}  {desc}")

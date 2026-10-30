@@ -895,6 +895,38 @@ class ProcessCompare(unittest.TestCase):
         self.assertEqual(m["handoffs"], 0)
 
 
+class RaidGrid(unittest.TestCase):
+    def test_grid_places_each_risk_by_likelihood_and_impact(self):
+        g = raid.grid(rows("raid.csv", "bad"))
+        lines = g.splitlines()
+        row4 = next(l for l in lines if l.startswith("4"))
+        row2 = next(l for l in lines if l.startswith("2"))
+        self.assertIn("K1", row4)           # likelihood 4
+        self.assertIn("K2", row2)           # likelihood 2
+        self.assertNotIn("K3", g)           # unrated
+        self.assertNotIn("K4", g)           # closed issue
+        self.assertEqual(row4.index("K1") > row2.index("K2"), True)  # K1 has the higher impact so sits further right
+
+    def test_two_risks_in_one_square_are_both_shown(self):
+        r = [dict(id="A", type="risk", likelihood="3", impact="3", status="open"),
+             dict(id="B", type="risk", likelihood="3", impact="3", status="open")]
+        self.assertIn("A,B", raid.grid(r))
+
+    def test_empty_high_squares_are_starred(self):
+        g = raid.grid([])
+        self.assertIn("*", next(l for l in g.splitlines() if l.startswith("5")))
+        self.assertNotIn("*", next(l for l in g.splitlines() if l.startswith("1")))
+
+    def test_cli_grid_flag_keeps_the_exit_code(self):
+        r = subprocess.run([sys.executable, str(SKILLS / "raid-log/scripts/raid.py"), str(EX / "bad/raid.csv"), "--today", "2026-10-16", "--grid"],
+                           capture_output=True, text=True)
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("Likelihood", r.stdout)
+        ok = subprocess.run([sys.executable, str(SKILLS / "raid-log/scripts/raid.py"), str(EX / "good/raid.csv"), "--today", "2026-10-16", "--grid"],
+                            capture_output=True, text=True)
+        self.assertEqual(ok.returncode, 0)
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
