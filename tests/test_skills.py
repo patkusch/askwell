@@ -651,6 +651,12 @@ class Housekeeping(unittest.TestCase):
         for script in SKILLS.glob("*/scripts/*.py"):
             self.assertIn(script.resolve(), listed)
 
+    def test_issue_templates_have_front_matter(self):
+        for name in ("new-check.md", "wrong-flag.md"):
+            text = (ROOT / ".github/ISSUE_TEMPLATE" / name).read_text()
+            self.assertTrue(text.startswith("---\nname:"), name)
+            self.assertIn("about:", text)
+
     def test_contributing_exists_and_names_the_rules(self):
         text = (ROOT / "CONTRIBUTING.md").read_text()
         for bit in ("Exit 0 when clean", "run_all.sh", "validate_skills.py"):
