@@ -49,3 +49,13 @@ ORDER BY 1;
 ## Deliver
 
 The number, the definition used, the date it was pulled, the reconciliation, and the query so it can be rerun.
+
+## Check the query file
+
+Save the query to a `.sql` file that starts with `-- Question:` and `-- Definition:` comments, then run:
+
+```bash
+python scripts/check.py analysis.sql
+```
+
+It flags a missing question or definition, statements that change data, `SELECT *`, a join with no `ON`, `BETWEEN` on dates, `= NULL`, a filter on the right side of a `LEFT JOIN` placed in `WHERE`, `COUNT` after a join without `DISTINCT`, `SELECT DISTINCT` with a join, division with no `NULLIF`, ambiguous date formats, and totals mixed with plain columns with no `GROUP BY`. It reads patterns, not meaning, so a clean result is not proof the number is right: still reconcile to a trusted total.

@@ -31,6 +31,7 @@ kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
+sqlc = load(SKILLS / "sql-for-analysis/scripts/check.py")
 interview = load(SKILLS / "stakeholder-interview/scripts/check.py")
 wshop = load(SKILLS / "workshop-facilitation/scripts/check.py")
 brd = load(SKILLS / "brd-writing/scripts/check.py")
@@ -664,6 +665,35 @@ class Interview(unittest.TestCase):
         self.assertFalse(any("has no detail" in p for p in interview.check(t)))
 
 
+class Sql(unittest.TestCase):
+    HEAD = "-- Question: q\n-- Definition: d\n"
+
+    def test_good(self):
+        self.assertEqual(sqlc.check(read("analysis.sql", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(sqlc.check(read("analysis.sql", "bad")))
+        for bit in ("no '-- Question:'", "no '-- Definition:'", "SELECT * pulls", "join with no ON", "BETWEEN on dates",
+                    "'= NULL' is never true", "LEFT JOIN table", "COUNT on a joined result", "SELECT DISTINCT with a join",
+                    "division with no NULLIF", "01/02/2026", "changes data", "no GROUP BY"):
+            self.assertIn(bit, out)
+
+    def test_cross_join_is_allowed_when_asked_for(self):
+        self.assertEqual(sqlc.check(self.HEAD + "SELECT a.id, b.id FROM a CROSS JOIN b;"), [])
+
+    def test_left_join_condition_in_on_is_fine(self):
+        q = self.HEAD + "SELECT a.id, b.x FROM a LEFT JOIN b ON b.a_id = a.id AND b.status = 'x' WHERE a.region = 'N';"
+        self.assertFalse(any("LEFT JOIN table" in p for p in sqlc.check(q)))
+
+    def test_comments_do_not_trigger_rules(self):
+        q = self.HEAD + "SELECT id FROM t; -- SELECT * and = NULL would be wrong here"
+        self.assertEqual(sqlc.check(q), [])
+
+    def test_is_null_test_on_left_join_is_the_anti_join_pattern(self):
+        q = self.HEAD + "SELECT a.id FROM a LEFT JOIN b ON b.a_id = a.id WHERE b.a_id IS NULL;"
+        self.assertFalse(any("LEFT JOIN table" in p for p in sqlc.check(q)))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -718,7 +748,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 27, r.stdout[-1500:])  # all twenty-seven gated checks find something
+        self.assertEqual(r.returncode, 28, r.stdout[-1500:])  # all twenty-eight gated checks find something
 
 
 if __name__ == "__main__":

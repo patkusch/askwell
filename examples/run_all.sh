@@ -20,6 +20,7 @@ run "user-stories"                python3 $S/user-stories/scripts/check.py $D/st
 run "acceptance-criteria"         python3 $S/acceptance-criteria/scripts/check.py $D/criteria.txt
 run "requirements-traceability"   python3 $S/requirements-traceability/scripts/check.py $D/matrix.csv --tests $D/tests.csv
 run "raid-log"                    python3 $S/raid-log/scripts/raid.py $D/raid.csv --today 2026-10-16
+run "sql-for-analysis"            python3 $S/sql-for-analysis/scripts/check.py $D/analysis.sql
 run "kpi-definition"              python3 $S/kpi-definition/scripts/check.py $D/kpis.json
 run "nonfunctional-requirements" python3 $S/nonfunctional-requirements/scripts/check.py $D/nfr.csv
 run "data-dictionary"             python3 $S/data-dictionary/scripts/check.py $D/dictionary.csv
