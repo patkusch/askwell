@@ -1,0 +1,6 @@
+id,name,moscow,effort
+S1,Triage bands,must,5
+S2,Received text,must,2
+S3,Band change history,should,4
+S4,Handler dashboard,could,5
+S5,Photo upload,wont,8

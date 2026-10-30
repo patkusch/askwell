@@ -1,0 +1,15 @@
+Objective: Contact urgent motor claims within 4 hours by March 2027
+In scope:
+- Triage bands for new motor claims
+- Rule table the business can change
+- Claim received text to the customer
+Out of scope:
+- Home and travel claims
+- Changes to the policy platform
+- Fraud scoring
+- Photo upload, deferred to Q3 2027, owner Head of Claims
+Assumptions:
+- The claims system accepts a band from another system, to be confirmed by 2026-10-30
+Constraints:
+- Live before the winter weather peak
+Change control: Anyone may request a change; the project lead assesses cost, time and risk; the sponsor approves.

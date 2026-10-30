@@ -1,0 +1,6 @@
+area,current,target,gap,impact,effort,action,owner
+process,19 hours,4 hours,-15,H,M,Contact urgent claims first,Helen
+technology,0 urgency fields,1 urgency field,1,H,M,Add band field and rule table,Raj
+data,40% of claims with injury answer captured,100%,60,H,L,Make injury question required,Raj
+people,0 handlers trained,25 handlers trained,25,M,L,Run two 30 minute sessions,Ravi
+policy,0 written triage rules,1 written rule set signed by Claims and Compliance,1,H,L,Get rules signed,Helen

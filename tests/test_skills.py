@@ -794,6 +794,15 @@ class WorkedExample(unittest.TestCase):
         r = self.run_all("good")
         self.assertEqual(r.returncode, 0, r.stdout[-1500:])
 
+    def test_second_example_in_another_field_also_passes_every_check(self):
+        r = self.run_all("../claims-triage/good")
+        self.assertEqual(r.returncode, 0, r.stdout[-1500:])
+
+    def test_both_examples_have_the_same_files(self):
+        a = {p.name for p in (ROOT / "examples/refund-approval/good").iterdir()}
+        b = {p.name for p in (ROOT / "examples/claims-triage/good").iterdir()}
+        self.assertEqual(a - b - {"conflict.csv", "terms.json"}, set(), "claims-triage is missing files refund-approval has")
+
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
         self.assertEqual(r.returncode, 29, r.stdout[-1500:])  # all twenty-nine gated checks find something

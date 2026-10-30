@@ -1,0 +1,6 @@
+id,need,type,source,who,date,status,priority
+N-01,Handlers need urgent claims at the top of their list,user,Interview,Ana Silva,2026-09-10,confirmed,must
+N-02,Injured customers need a first call within hours,business,Complaints log and interview,Pat Doyle,2026-09-12,confirmed,must
+N-03,Every band change must show who made it,business,Audit report 2025,Ines Duarte,2026-09-15,confirmed,must
+N-04,The injury answer must reach the triage step without retyping,system,Observation of five cases,Ana Silva,2026-09-18,confirmed,should
+N-05,Claim history must be kept for seven years,data,Records policy,Ines Duarte,2026-09-20,assumed,could

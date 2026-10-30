@@ -1,0 +1,13 @@
+{"decision": "How to get urgent claims to the front of the queue", "deadline": "2026-11-20",
+ "options": [
+  {"name": "Do nothing", "description": "Keep sorting by hand.", "cost_one_off": "0", "cost_running": "about 250k a year in handler time and complaints",
+   "benefit": "No change effort", "risks": ["Injured customers keep waiting"]},
+  {"name": "Sort by a written checklist", "description": "Give handlers a checklist and a shared sheet.", "cost_one_off": "5-10k", "cost_running": "20-30k a year",
+   "benefit": "Fast and cheap", "risks": ["Still manual", "Depends on discipline"]},
+  {"name": "Configure the existing claims system", "description": "Add triage rules to the system we already run.", "cost_one_off": "70-110k", "cost_running": "10-14k a year",
+   "benefit": "Rules the business can change; one system", "risks": ["Vendor release timing", "Rule table needs an owner"]},
+  {"name": "Buy a triage product", "description": "Add a separate triage tool.", "cost_one_off": "150-250k", "cost_running": "40-60k a year",
+   "benefit": "Advanced scoring", "risks": ["Another system to connect", "Lock-in"]}],
+ "recommendation": {"option": "Configure the existing claims system", "reason": "It meets the need at about half the cost of a new product and keeps claims in one system",
+   "biggest_risk": "The vendor release that carries the rule table slips", "mitigation": "Agree the release date in writing before we commit"},
+ "unknowns": ["Whether the claims system can take a band from the web form (a two-week test will show)"]}

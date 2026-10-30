@@ -1,0 +1,13 @@
+id,area,requirement,how_tested,priority
+N1,performance,95% of claims are banded within 2 minutes with 300 claims arriving per hour,Load test at 300 per hour,must
+N2,availability,The triage service is available 99.5% of the time from 07:00 to 21:00,Monthly uptime report,must
+N3,capacity,Holds 5 million claims growing 10% a year,Volume test at 8 million,should
+N4,security,Handlers see only claims for their own region,Permission tests per role,must
+N5,privacy,Injury data is deleted 7 years after the claim closes (GDPR),Deletion job test,must
+N6,audit,Every change to a band records who when old and new value,Audit log inspection,must
+N7,accessibility,Customer text and web pages meet WCAG 2.2 AA,Automated scan and manual review,should
+N8,usability,A new handler works a triage list unaided after 30 minutes of training,Observed session with 5 handlers,should
+N9,compatibility,Works in the current and previous version of Chrome and Edge,Cross-browser test,should
+N10,recovery,No more than 10 minutes of data lost and back within 2 hours,Restore drill,must
+N11,support,Severity 1 faults are fixed within 4 working hours,Support log review,should
+N12,legal,Follows the conduct regulator's customer outcome rules and complaint time limits,Compliance review,must

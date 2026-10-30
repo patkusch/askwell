@@ -1,0 +1,21 @@
+Interviewee: Ana Silva, claims handler
+Date: 2026-09-18
+Goal: Understand how new claims are sorted and picked up today
+Findings:
+- [heard] Claims arrive in the order they were reported with no urgency marker
+- [seen] She scans each new claim for the word injury, which takes about 4 minutes per batch of ten
+- [seen] She keeps a sticky note of claims she plans to call first
+- [inferred] Most late first calls happen when injury is in free text she did not read
+Pain points:
+- Sorting by hand takes about 5 hours a week and misses some injury claims
+- Team leaders cannot see what is waiting, so nobody knows who is late
+Workarounds:
+- Keeps her own spreadsheet of urgent claims
+Candidate requirements:
+- Injury claims appear at the top of the list
+- Team leaders can see claims waiting for first contact
+Open questions:
+- Ask Raj Patel whether the form can make the injury answer required
+Next interviews:
+- Helen Marsh (sponsor), Ines Duarte (compliance)
+Sent back to Ana on 2026-09-19 for corrections.

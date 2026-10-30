@@ -1,0 +1,3 @@
+The system shall assign every new motor claim a triage band within 2 minutes of first notice of loss.
+The claims handler shall contact the customer within 4 working hours of a claim in the urgent band.
+The system shall log each triage band change with the person, the time, the old band and the new band.

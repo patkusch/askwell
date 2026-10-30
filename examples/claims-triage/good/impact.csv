@@ -1,0 +1,5 @@
+group,what_changes,rating,communication,training,support,readiness,owner
+Claims handlers,They work from a banded list instead of sorting by hand,high,Team briefing two weeks before go-live,Two 30 minute sessions,Floor walker for two weeks,medium,Ravi
+Team leaders,They see alerts when an urgent claim has no contact,high,One-to-one with each leader,45 minute walk-through,Hotline for the first month,high,Helen
+Policyholders,They get a received text within minutes,low,Message on the claims page,,,high,Pat
+Compliance,They can see which rule banded each claim,medium,Preview of the rule report,Report walk-through,,high,Ines

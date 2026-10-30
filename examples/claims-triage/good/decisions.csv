@@ -1,0 +1,2 @@
+id,date,decision,options,reason,decided_by,status,superseded_by,review_by
+D-001,2026-09-05,Injury claims go to the urgent band,Injury only; Injury or hospital visit; All claims by hand,Injury claims are the ones where a late call causes the most harm to customers,Head of Claims,decided,,2027-01-31

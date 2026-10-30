@@ -1,0 +1,6 @@
+[{"name": "Time to first contact, urgent claims", "purpose": "Are injured customers reached quickly?",
+  "formula": "Median working hours from first notice of loss to first contact, per month",
+  "source": "claims table, notified_at and first_contact_at", "owner": "Head of Claims",
+  "frequency": "Monthly", "baseline": "19 hours (Jan-Mar 2026)", "target": "under 4 hours by March 2027",
+  "guard": "Also watch complaints about wrongly banded claims, which must not rise",
+  "action": "Review any team above 8 hours at the monthly claims meeting"}]

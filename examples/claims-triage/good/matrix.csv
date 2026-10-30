@@ -1,0 +1,4 @@
+req_id,requirement,design_ref,test_ref,status
+R1,Assign triage band within 2 minutes,D1,T1;T2,done
+R2,Contact urgent claims within 4 working hours,D2,T3,done
+R3,Record band changes,D3,T4,open

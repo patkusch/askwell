@@ -1,0 +1,4 @@
+id,requirement,scenario,result,defect_id
+U1,R1,Claim banded within 2 minutes,pass,
+U2,R2,Urgent claim contacted within 4 hours,pass,D1
+U3,R3,Band change recorded,pass,

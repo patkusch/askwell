@@ -1,0 +1,7 @@
+Given a claim reporting an injury, when it is received, then it is placed in the urgent band.
+
+Given a claim with a cracked windscreen only, when it is received, then it is placed in the standard band.
+
+Given a claim in the urgent band with no contact after 4 working hours, when the time passes, then the team leader is alerted.
+
+Given a claim with no policy number, when the customer submits it, then the form is rejected and the customer sees "Policy number is required".

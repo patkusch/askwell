@@ -1,0 +1,11 @@
+Problem: 30 complaints a month in Q1 2026 about slow first contact, median 19 hours
+Why 1: Because urgent claims wait in the same queue as windscreen claims
+Why 2: Because the queue is ordered by the time the claim was reported
+Why 3: Because the claims system has no field for urgency and handlers cannot filter by it
+Why 4: Because the system was set up before injury questions were added to the form
+Evidence: Of 120 slow-contact complaints, 104 were injury claims queued behind standard ones
+Evidence: Queue screen recording shows ordering by report time only
+Evidence: System configuration has no urgency field
+Root cause: The claims system has no urgency field, so injury claims queue behind standard ones
+Fix: Add an urgency band set by rules from the first notice of loss form, and sort the queue by it
+Measure: Median time to first contact for urgent claims under 4 hours by March 2027

@@ -1,0 +1,18 @@
+Name: Triage a new claim
+Actor: Claims system
+Goal: Place a new claim in the right urgency band
+Trigger: A customer reports a loss
+Preconditions: The policy exists and is in force
+Main flow:
+  1. Customer reports the loss and answers the injury question.
+  2. System checks the policy is in force.
+  3. System reads the injury answer and the repair estimate.
+  4. System applies the triage rules.
+  5. System records the band, the rule used and the time.
+  6. System texts the customer that the claim was received.
+  7. System places the claim in the right handler list.
+Alternative flows:
+  4a. If injury is reported, the band is urgent and the flow continues at step 5.
+Exceptions:
+  2e. If the policy is not in force, the system tells the customer and refers the claim to a person.
+Postconditions: The claim has a band, a record of why, and the customer has been told.

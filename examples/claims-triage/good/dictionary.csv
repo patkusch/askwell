@@ -1,0 +1,5 @@
+field,meaning,type,allowed_values,required,source,owner,rules,sensitivity,retention
+claim_id,Unique number given to each claim when it is first reported,integer,,yes,claims table,Head of Claims,Never reused,none,
+triage_band,The urgency group a claim is placed in on arrival,text,urgent; priority; standard,yes,claims table,Head of Claims,Changed only by the triage rules or a handler,none,
+notified_at,The moment the customer first reported the loss,datetime,,yes,claims table,Head of Claims,Stored in UTC,none,
+injury_flag,Whether anyone was reported hurt in the incident,text,yes; no; unknown,yes,claims table,Head of Claims,Set from the first notice of loss form,sensitive,7 years after claim closes

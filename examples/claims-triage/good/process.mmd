@@ -1,0 +1,12 @@
+flowchart TD
+  A([Claim reported]) --> B[Capture claim details]
+  B --> C{Injury reported?}
+  C -- Yes --> D[Urgent band]
+  C -- No --> E{Repair over 5000?}
+  E -- Yes --> F[Priority band]
+  E -- No --> G[Standard band]
+  D --> H[Handler calls customer]
+  F --> H
+  G --> I[Send claim received text]
+  H --> I
+  I --> J([End])

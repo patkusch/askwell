@@ -1,0 +1,3 @@
+{"criteria": {"Fit": 40, "Cost": 30, "Support": 30},
+ "scores": {"Configure existing claims system": {"Fit": 4, "Cost": 4, "Support": 4},
+            "Buy triage product": {"Fit": 4, "Cost": 2, "Support": 4}}}

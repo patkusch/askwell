@@ -57,11 +57,12 @@ A mistyped name gets a "did you mean" suggestion. The exit code is the check's o
 
 ## See it work
 
-`examples/refund-approval` is one small project written two ways. The `good` set passes every check. The `bad` set has flaws planted in it and every check finds them.
+`examples/refund-approval` is one small project written two ways. The `good` set passes every check. The `bad` set has flaws planted in it and every check finds them. `examples/claims-triage` is a second, in insurance, with only the `good` set: it shows the same documents in another field, and passes every check too.
 
 ```bash
 examples/run_all.sh refund-approval/good    # all clean
 examples/run_all.sh refund-approval/bad     # see what each check catches
+examples/run_all.sh claims-triage/good      # the same documents, in insurance
 ```
 
 ## Other projects like this

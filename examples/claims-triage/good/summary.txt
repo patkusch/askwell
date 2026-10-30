@@ -1,0 +1,5 @@
+We recommend you approve configuring the existing claims system for triage by 20 November. It brings the median first contact for injured customers from 19 hours to under 4, and removes about 30 complaints a month.
+
+It costs 70,000 to 110,000 to set up and 10,000 to 14,000 a year to run. The main risk is that the vendor release carrying the rule table slips. We will agree the release date in writing before we commit.
+
+If we do nothing, injured customers keep waiting and we keep paying about 250,000 a year in handler time and complaints.

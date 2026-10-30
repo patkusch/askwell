@@ -1,0 +1,1 @@
+Claims handlers spend about five hours a week sorting new motor claims by hand, because every claim arrives in the same order it was reported. This results in a median of 19 hours before an injured customer gets a first call, and 30 complaints a month about slow contact. We will know it is fixed when urgent claims are contacted within 4 hours and complaints fall below 10 a month.

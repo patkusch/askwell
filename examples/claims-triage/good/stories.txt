@@ -1,0 +1,2 @@
+As a claims handler, I want urgent claims at the top of my list, so that I can call injured customers before anyone else.
+As a policyholder, I want a text when my claim is received, so that I know it has reached the insurer.
