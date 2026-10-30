@@ -12,6 +12,7 @@ run "workshop-facilitation"       python3 $S/workshop-facilitation/scripts/check
 run "scope-definition"            python3 $S/scope-definition/scripts/check.py $D/scope.txt
 run "brd-writing"                 python3 $S/brd-writing/scripts/check.py $D/brd.md
 run "requirements-elicitation"    python3 $S/requirements-elicitation/scripts/check.py $D/needs.csv
+run "ba-start-here"               python3 $S/ba-start-here/scripts/route.py "$(cat $D/request.txt)"
 run "problem-statement"           python3 $S/problem-statement/scripts/check.py $D/problem.txt
 run "stakeholder-interview"        python3 $S/stakeholder-interview/scripts/check.py $D/interview.txt
 run "stakeholder-mapping"          python3 $S/stakeholder-mapping/scripts/check.py $D/stakeholders.csv

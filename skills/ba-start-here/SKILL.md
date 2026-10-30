@@ -55,3 +55,11 @@ Don't ask a list. State your assumption and carry on if the answer is likely.
 6. **Log decisions and open questions** instead of leaving them in chat.
 7. **Write for the reader.** Lead with the point and the decision needed (`stakeholder-communication`).
 8. **Don't pretend to have talked to people you haven't.** Mark anything not confirmed with a stakeholder as *assumed*.
+
+## Get a first guess from the request
+
+```bash
+python scripts/route.py "we need a dashboard so managers can see waiting refunds"
+```
+
+It prints up to four skills in order, with the words that matched, and names any domain pack that applies (bank, insurance, patient, council and so on). If nothing matches it prints the one question to ask. It matches words only, so it is a first guess: read each skill's description before you commit to it.

@@ -31,6 +31,7 @@ kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
+router = load(SKILLS / "ba-start-here/scripts/route.py")
 sqlc = load(SKILLS / "sql-for-analysis/scripts/check.py")
 interview = load(SKILLS / "stakeholder-interview/scripts/check.py")
 wshop = load(SKILLS / "workshop-facilitation/scripts/check.py")
@@ -694,6 +695,53 @@ class Sql(unittest.TestCase):
         self.assertFalse(any("LEFT JOIN table" in p for p in sqlc.check(q)))
 
 
+class Router(unittest.TestCase):
+    def picks(self, text):
+        return [s for s, _ in router.route(text)[0]]
+
+    def test_solution_led_request_goes_to_the_problem_first(self):
+        self.assertEqual(self.picks("we need a new system for refunds")[0], "problem-statement")
+
+    def test_obvious_requests(self):
+        cases = {
+            "write user stories for checkout": "user-stories",
+            "which vendor should we pick for payroll": "vendor-selection",
+            "draw the process as a swimlane": "process-mapping",
+            "is it worth doing, what is the payback": "business-case",
+            "how do we prioritise the backlog with moscow": "backlog-prioritisation",
+            "write the minutes from this transcript": "meeting-minutes",
+            "we need a UAT plan before go live": "user-acceptance-testing",
+        }
+        for text, want in cases.items():
+            self.assertIn(want, self.picks(text), text)
+
+    def test_domain_detected(self):
+        _, d = router.route("claims handling for an insurance company")
+        self.assertIn("insurance", d)
+        _, d = router.route("patient records and gdpr")
+        self.assertIn("healthcare", d)
+        self.assertIn("privacy", d)
+
+    def test_unknown_request_asks_the_one_question(self):
+        self.assertEqual(router.route("hello there")[0], [])
+        r = subprocess.run([sys.executable, str(SKILLS / "ba-start-here/scripts/route.py"), "hello there"], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 1)
+        self.assertIn(router.QUESTION, r.stdout)
+
+    def test_every_skill_can_be_reached(self):
+        names = {d.name for d in SKILLS.iterdir() if d.is_dir()} - {"ba-start-here", "domain-packs"}
+        self.assertEqual(names - set(router.RULES), set(), "a skill has no routing words")
+        self.assertEqual(set(router.RULES) - names, set(), "routing points at a skill that does not exist")
+
+    def test_every_routing_phrase_finds_its_own_skill(self):
+        for skill, phrases in router.RULES.items():
+            for ph in phrases:
+                self.assertIn(skill, self.picks(ph + " please"), f"'{ph}' should route to {skill}")
+
+    def test_word_start_matching_does_not_fire_inside_words(self):
+        self.assertNotIn("sql-for-analysis", self.picks("the squirrel scored a goal"))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -748,7 +796,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 28, r.stdout[-1500:])  # all twenty-eight gated checks find something
+        self.assertEqual(r.returncode, 29, r.stdout[-1500:])  # all twenty-nine gated checks find something
 
 
 if __name__ == "__main__":
