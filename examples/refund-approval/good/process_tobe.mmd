@@ -1,0 +1,18 @@
+flowchart TD
+  subgraph Customer
+    A([Request refund])
+  end
+  subgraph System
+    B[Check order] --> C{Over 500?}
+    C -- No --> D[Approve automatically]
+    C -- Yes --> E[Add to waiting list]
+    D --> H[Pay approved amount]
+    H --> I[Send decision email]
+  end
+  subgraph Manager
+    F[Approve on one screen]
+  end
+  A --> B
+  E --> F
+  F --> H
+  I --> J([End])

@@ -1,0 +1,18 @@
+flowchart TD
+  subgraph Customer
+    A([Request])
+  end
+  subgraph Agent
+    B[Check order] --> C{Over 500?}
+    C -- Yes --> D[Ask manager]
+    C -- No --> E[Pay]
+  end
+  subgraph Manager
+    F[Review]
+  end
+  A --> B
+  D --> F
+  F --> G{Happy?}
+  G -- No --> D
+  G -- Yes --> E
+  E --> H([End])

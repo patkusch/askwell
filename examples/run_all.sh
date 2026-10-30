@@ -29,6 +29,7 @@ run "nonfunctional-requirements" python3 $S/nonfunctional-requirements/scripts/c
 run "data-dictionary"             python3 $S/data-dictionary/scripts/check.py $D/dictionary.csv
 run "use-cases"                   python3 $S/use-cases/scripts/check.py $D/usecase.txt
 run "process-mapping"             python3 $S/process-mapping/scripts/check.py $D/process.mmd
+run "process-mapping compare"     python3 $S/process-mapping/scripts/compare.py $D/process_asis.mmd $D/process_tobe.mmd
 run "vendor-selection"            python3 $S/vendor-selection/scripts/score.py $D/scorecard.json
 run "backlog moscow"              python3 $S/backlog-prioritisation/scripts/score.py moscow $D/moscow.csv
 run "user-acceptance-testing"     python3 $S/user-acceptance-testing/scripts/summary.py $D/uat_scenarios.csv $D/uat_defects.csv --requirements $D/uat_requirements.csv

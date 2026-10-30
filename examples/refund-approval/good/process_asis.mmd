@@ -1,0 +1,22 @@
+flowchart TD
+  subgraph Customer
+    A([Request refund])
+  end
+  subgraph Agent
+    B[Check order] --> C{Over 500?}
+    C -- No --> D[Retype amount in payment screen]
+    C -- Yes --> E[Email manager]
+    G[Retype approved amount] --> H[Pay]
+    H --> J[Phone customer later]
+    D --> H
+  end
+  subgraph Manager
+    F[Reply by email]
+  end
+  subgraph Customer2 [Customer notice]
+    I([Hears decision by phone later])
+  end
+  A --> B
+  E --> F
+  F --> G
+  J --> I

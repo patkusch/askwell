@@ -1,0 +1,14 @@
+flowchart TD
+  subgraph Customer
+    A([Reports loss])
+  end
+  subgraph System
+    B[Check policy] --> C[Apply triage rules]
+    C --> D[Send claim received text]
+  end
+  subgraph Handler
+    E[Call customer from banded list] --> F[Record outcome]
+  end
+  A --> B
+  D --> E
+  F --> G([End])

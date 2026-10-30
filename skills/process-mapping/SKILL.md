@@ -65,3 +65,13 @@ python scripts/check.py process.mmd
 ```
 
 It finds a missing or doubled start, steps that lead nowhere, decisions with fewer than two exits or exits with no Yes/No label, and steps nothing can reach. Mark real endpoints with the stadium shape `([End])` so they are not reported as dead ends.
+
+## Is the to-be really simpler?
+
+Save the as-is and to-be flowcharts, using `subgraph` for each swimlane, then run:
+
+```bash
+python scripts/compare.py as_is.mmd to_be.mmd
+```
+
+It counts steps, decisions, handoffs between lanes, loops and the longest path for each, shows which steps were removed or added, and exits 1 if the to-be is worse on any measure. A to-be that adds steps is not wrong, but it should be able to say what it buys.

@@ -58,6 +58,7 @@ AUDIT = [
     ("requirements-traceability", "check", ["matrix.csv"], [], {"tests.csv": "--tests"}),
     ("brd-writing", "check", ["brd.md"], [], {}),
     ("process-mapping", "check", ["process.mmd"], [], {}),
+    ("process-mapping", "compare", ["process_asis.mmd", "process_tobe.mmd"], [], {}),
     ("data-dictionary", "check", ["dictionary.csv"], [], {}),
     ("data-dictionary", "glossary", ["glossary.csv"], [], {"requirements.txt": "--scan"}),
     ("sql-for-analysis", "check", ["analysis.sql"], [], {}),

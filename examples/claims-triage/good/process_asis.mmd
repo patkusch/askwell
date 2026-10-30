@@ -1,0 +1,17 @@
+flowchart TD
+  subgraph Customer
+    A([Reports loss])
+  end
+  subgraph Handler
+    B[Check policy] --> C[Sort new claims by hand]
+    C --> D[Scan each claim for injury]
+    D --> E[Call customer]
+    E --> F[Record outcome]
+    F --> G[Re-sort after a missed injury]
+  end
+  subgraph Leader
+    H[Chase late claims by email]
+  end
+  A --> B
+  G --> H
+  H --> I([End])

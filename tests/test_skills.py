@@ -28,6 +28,7 @@ gwt = load(SKILLS / "acceptance-criteria/scripts/check.py")
 conf = load(SKILLS / "requirements-conflict-check/scripts/conflicts.py")
 raid = load(SKILLS / "raid-log/scripts/raid.py")
 kpi = load(SKILLS / "kpi-definition/scripts/check.py")
+cmp = load(SKILLS / "process-mapping/scripts/compare.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 agenda = load(SKILLS / "meeting-minutes/scripts/agenda.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
@@ -753,11 +754,11 @@ class Audit(unittest.TestCase):
     def test_good_folder_is_clean(self):
         r = self.audit("refund-approval/good")
         self.assertEqual(r.returncode, 0, r.stdout)
-        self.assertIn("0 check(s) found something, 33 clean, 1 skipped", r.stdout)
+        self.assertIn("0 check(s) found something, 34 clean, 1 skipped", r.stdout)
 
     def test_bad_folder_exit_code_matches_run_all(self):
         r = self.audit("refund-approval/bad")
-        self.assertEqual(r.returncode, 32, r.stdout[-800:])
+        self.assertEqual(r.returncode, 33, r.stdout[-800:])
         self.assertIn("== problem-statement", r.stdout)
 
     def test_verbose_shows_clean_checks_too(self):
@@ -773,7 +774,7 @@ class Audit(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             shutil.copy(EX / "good/problem.txt", d)
             out = subprocess.run([sys.executable, str(ROOT / "scripts/askwell.py"), "audit", d], capture_output=True, text=True).stdout
-        self.assertIn("1 clean, 33 skipped", out.replace("0 check(s) found something, ", ""))
+        self.assertIn("1 clean, 34 skipped", out.replace("0 check(s) found something, ", ""))
 
     def test_every_check_script_is_in_the_audit_table(self):
         cli = load(ROOT / "scripts/askwell.py")
@@ -863,6 +864,37 @@ class Agenda(unittest.TestCase):
         self.assertTrue(any("seven" in p for p in agenda.check(a)))
 
 
+class ProcessCompare(unittest.TestCase):
+    def pair(self, ex, which):
+        base = ROOT / "examples" / ex / which
+        return (base / "process_asis.mmd").read_text(), (base / "process_tobe.mmd").read_text()
+
+    def test_good_pairs_are_no_worse(self):
+        for ex in ("refund-approval", "claims-triage"):
+            a, b, worse, _, _ = cmp.compare(*self.pair(ex, "good"))
+            self.assertEqual(worse, [], ex)
+
+    def test_known_numbers(self):
+        a, b, worse, removed, added = cmp.compare(*self.pair("refund-approval", "good"))
+        self.assertEqual(a, {"steps": 7, "decisions": 1, "handoffs": 4, "loops": 0, "longest path": 9})
+        self.assertEqual(b, {"steps": 6, "decisions": 1, "handoffs": 3, "loops": 0, "longest path": 8})
+        self.assertIn("phone customer later", removed)
+        self.assertIn("send decision email", added)
+
+    def test_bad_pair_is_worse_on_everything(self):
+        _, _, worse, _, _ = cmp.compare(*self.pair("refund-approval", "bad"))
+        self.assertEqual(worse, ["steps", "decisions", "handoffs", "loops", "longest path"])
+
+    def test_a_loop_is_counted_once_and_does_not_hang(self):
+        m, _ = cmp.measures("flowchart TD\n A([s]) --> B[x]\n B --> C{ok}\n C -- No --> B\n C -- Yes --> D([e])")
+        self.assertEqual(m["loops"], 1)
+        self.assertEqual(m["longest path"], 4)
+
+    def test_handoffs_need_lanes(self):
+        m, _ = cmp.measures("flowchart TD\n A([s]) --> B[x]\n B --> C([e])")
+        self.assertEqual(m["handoffs"], 0)
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -926,7 +958,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 32, r.stdout[-1500:])  # all thirty-two gated checks find something
+        self.assertEqual(r.returncode, 33, r.stdout[-1500:])  # all thirty-three gated checks find something
 
 
 if __name__ == "__main__":
