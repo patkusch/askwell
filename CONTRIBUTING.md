@@ -2,7 +2,7 @@
 
 ## A new skill
 
-1. Make `skills/<name>/SKILL.md`. The name is lower-case with hyphens and matches the folder.
+1. Run `python3 scripts/askwell.py new <name>` to start from a template, or make `skills/<name>/SKILL.md` yourself. The name is lower-case with hyphens and matches the folder.
 2. Start with this front matter:
 
 ```

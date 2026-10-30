@@ -4,6 +4,7 @@
   askwell.py list                     show every skill that has a check
   askwell.py run <skill> [args...]    run that skill's check with your files
   askwell.py skills                   list all skills with what they are for
+  askwell.py new <name>               start a new skill from a template
   askwell.py files                    which file name each check reads (what audit looks for)
   askwell.py audit <folder> [--today YYYY-MM-DD] [-v] [--json]
                                       run every check whose file is in the folder
@@ -17,7 +18,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent / "skills"
+import os
+
+ROOT = Path(os.environ.get("ASKWELL_SKILLS_DIR") or Path(__file__).resolve().parent.parent / "skills")
 
 
 def checks():
@@ -131,6 +134,56 @@ def audit(folder, today=None, verbose=False, as_json=False):
     return found
 
 
+TEMPLATE = """---
+name: {name}
+description: Say in one or two sentences what this skill does for a business analyst. Use when <the requests or situations that should make an agent pick it>.
+license: MIT
+metadata:
+  version: "1.0"
+---
+
+# {title}
+
+One sentence on why this matters and what goes wrong without it.
+
+## Steps
+
+1. First thing to do, and why.
+2. Second thing to do, and why.
+3. Third thing to do, and why.
+
+## Output
+
+```
+What the finished piece of work should contain.
+```
+
+## Check it
+
+Run the other skills that apply, and say here what a reader should be able to do with the result.
+
+## Watch for
+
+- The most common mistake, and how to spot it.
+- The second most common mistake.
+- What to do when the information you need is not available.
+"""
+
+
+def new_skill(name):
+    if not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", name):
+        print("A skill name is lower-case words joined by hyphens, like 'risk-appetite'.", file=sys.stderr)
+        return 2
+    target = ROOT / name
+    if target.exists():
+        print(f"'{name}' already exists.", file=sys.stderr)
+        return 2
+    target.mkdir(parents=True)
+    (target / "SKILL.md").write_text(TEMPLATE.format(name=name, title=name.replace("-", " ").capitalize()))
+    print(f"Created {target / 'SKILL.md'}. Fill it in, add the skill to the README, then run scripts/validate_skills.py.")
+    return 0
+
+
 def files_table():
     lines = ["| File | Check | Optional extra file |", "|---|---|---|"]
     for skill, stem, needs, _extra, optional in AUDIT:
@@ -156,6 +209,11 @@ def main(argv):
             desc = description(d)
             print(f"{d.name}\n    {desc[:150]}{'...' if len(desc) > 150 else ''}")
         return 0
+    if cmd == "new":
+        if len(rest) != 1:
+            print("new needs one name. Try: askwell.py new risk-appetite", file=sys.stderr)
+            return 2
+        return new_skill(rest[0])
     if cmd == "files":
         print(files_table())
         return 0
@@ -176,7 +234,7 @@ def main(argv):
             print(f"No check called '{name}'.{hint}", file=sys.stderr)
             return 2
         return subprocess.call([sys.executable, str(avail[name]), *rest[1:]])
-    print(f"Unknown command '{cmd}'. Use list, skills, run or audit.", file=sys.stderr)
+    print(f"Unknown command '{cmd}'. Use list, skills, run, audit, files or new.", file=sys.stderr)
     return 2
 
 

@@ -1046,6 +1046,35 @@ class Readme(unittest.TestCase):
             self.assertTrue((ROOT / path).exists(), path)
 
 
+class NewSkill(unittest.TestCase):
+    def run_new(self, tmp, *args):
+        import os
+        env = dict(os.environ, ASKWELL_SKILLS_DIR=tmp)
+        return subprocess.run([sys.executable, str(ROOT / "scripts/askwell.py"), "new", *args], capture_output=True, text=True, env=env)
+
+    def test_scaffold_has_the_right_shape_and_passes_the_validator(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            r = self.run_new(tmp, "risk-appetite")
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertEqual(validate.validate(Path(tmp) / "risk-appetite"), [])
+            text = (Path(tmp) / "risk-appetite/SKILL.md").read_text()
+            self.assertIn("name: risk-appetite", text)
+            self.assertIn("# Risk appetite", text)
+
+    def test_refuses_existing_and_bad_names(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertEqual(self.run_new(tmp, "risk-appetite").returncode, 0)
+            self.assertEqual(self.run_new(tmp, "risk-appetite").returncode, 2)
+            self.assertEqual(self.run_new(tmp, "Risk Appetite").returncode, 2)
+            self.assertEqual(self.run_new(tmp).returncode, 2)
+
+    def test_template_description_says_use_when(self):
+        cli = load(ROOT / "scripts/askwell.py")
+        self.assertIn("Use when", cli.TEMPLATE)
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
