@@ -1,0 +1,4 @@
+{"output": "Discuss refunds", "start": "09:00", "end": "11:00", "attendees": 20, "parking_lot": false,
+ "blocks": [
+  {"minutes": 100, "topic": "Discussion", "owner": "", "outcome": "", "method": ""},
+  {"minutes": 30, "topic": "More discussion", "owner": "Anyone", "outcome": "Alignment", "method": "Talk"}]}

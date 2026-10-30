@@ -1,0 +1,10 @@
+{"output": "A ranked list of the top five refund pain points, each with an owner",
+ "start": "09:30", "end": "12:00", "attendees": 8, "parking_lot": true,
+ "blocks": [
+  {"minutes": 10, "topic": "Opening", "owner": "Facilitator", "outcome": "Output, agenda and ground rules agreed", "method": "Talk"},
+  {"minutes": 30, "topic": "Walk through the current refund process", "owner": "Maria Costa", "outcome": "One agreed picture of today", "method": "One person narrates, group corrects, scribe draws"},
+  {"minutes": 25, "topic": "Pain points", "owner": "Facilitator", "outcome": "All pain points on the wall", "method": "Silent writing on sticky notes, then group by theme"},
+  {"minutes": 15, "topic": "Break", "owner": "", "outcome": "", "method": ""},
+  {"minutes": 30, "topic": "Rank the pain points", "owner": "Facilitator", "outcome": "Top five ranked", "method": "Dot voting, then discuss the top ten"},
+  {"minutes": 25, "topic": "Owners and next steps", "owner": "Priya Nair", "outcome": "Each of the top five has an owner and a date", "method": "Round the table"},
+  {"minutes": 10, "topic": "Close", "owner": "Facilitator", "outcome": "Actions read back", "method": "Read back"}]}

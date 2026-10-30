@@ -31,6 +31,7 @@ kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
+wshop = load(SKILLS / "workshop-facilitation/scripts/check.py")
 brd = load(SKILLS / "brd-writing/scripts/check.py")
 elic = load(SKILLS / "requirements-elicitation/scripts/check.py")
 comms = load(SKILLS / "stakeholder-communication/scripts/check.py")
@@ -618,6 +619,34 @@ class Brd(unittest.TestCase):
         self.assertTrue(any("no numbered requirements" in p for p in brd.check(md)))
 
 
+class Workshop(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(wshop.check(json.loads(read("workshop.json", "good"))), [])
+
+    def test_bad(self):
+        out = "\n".join(wshop.check(json.loads(read("workshop.json", "bad"))))
+        for bit in ("not something you can hold", "20 attendees", "adds up to 130 minutes but only 120", "no opening block",
+                    "no closing block", "'Discussion': no owner", "100 minutes in one block", "more than 90 minutes without a break",
+                    "no silent writing", "no parking lot"):
+            self.assertIn(bit, out)
+
+    def test_a_break_resets_the_clock(self):
+        p = json.loads(read("workshop.json", "good"))
+        p["blocks"] = [b for b in p["blocks"] if b["topic"] != "Break"]
+        p["blocks"][2]["minutes"] = 45
+        self.assertTrue(any("without a break" in x for x in wshop.check(p)))
+
+    def test_underfilled_agenda(self):
+        p = json.loads(read("workshop.json", "good"))
+        p["end"] = "15:00"
+        self.assertTrue(any("fills" in x for x in wshop.check(p)))
+
+    def test_bad_times(self):
+        p = json.loads(read("workshop.json", "good"))
+        p["start"] = "nine"
+        self.assertTrue(any("HH:MM" in x for x in wshop.check(p)))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -672,7 +701,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 25, r.stdout[-1500:])  # all twenty-five gated checks find something
+        self.assertEqual(r.returncode, 26, r.stdout[-1500:])  # all twenty-six gated checks find something
 
 
 if __name__ == "__main__":

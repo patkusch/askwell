@@ -42,3 +42,13 @@ Decisions made: 1. ... (agreed by ...)
 Actions: what | who | by when
 Parked: ...
 ```
+
+## Check the plan
+
+Hold the plan as JSON (the layout is at the top of `scripts/check.py`), then run:
+
+```bash
+python scripts/check.py workshop.json
+```
+
+It flags no stated output, or one you can't hold in your hand; too few or too many attendees; an agenda that doesn't fit the time or leaves too much empty; no opening or closing block; blocks with no owner, outcome or method; a block over 60 minutes or 90 minutes with no break; no silent writing step; and no parking lot.

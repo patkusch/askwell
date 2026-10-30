@@ -8,6 +8,7 @@ run "change-impact-assessment"    python3 $S/change-impact-assessment/scripts/ch
 run "gap-analysis"                python3 $S/gap-analysis/scripts/check.py $D/gaps.csv
 run "root-cause-analysis"         python3 $S/root-cause-analysis/scripts/check.py $D/rootcause.txt
 run "options-analysis"            python3 $S/options-analysis/scripts/check.py $D/options.json
+run "workshop-facilitation"       python3 $S/workshop-facilitation/scripts/check.py $D/workshop.json
 run "scope-definition"            python3 $S/scope-definition/scripts/check.py $D/scope.txt
 run "brd-writing"                 python3 $S/brd-writing/scripts/check.py $D/brd.md
 run "requirements-elicitation"    python3 $S/requirements-elicitation/scripts/check.py $D/needs.csv
