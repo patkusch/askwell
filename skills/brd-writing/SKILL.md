@@ -38,3 +38,13 @@ The BRD is the agreement between the business and the people building it. Write 
 ## Before you send
 
 Run `requirements-conflict-check`, and the linter in `requirements-writing`. Ask one reader who was not in the workshops to say, in their own words, what the project will deliver. Where their answer differs from yours, fix the document.
+
+## Check the structure
+
+Write the BRD in Markdown with `#` headings, then run:
+
+```bash
+python scripts/check.py brd.md
+```
+
+It flags missing sections (summary, problem, objectives, scope, stakeholders, requirements, risks and assumptions, sign-off, version history), a summary that doesn't come first or is too long or too short, objectives with no number, scope with no out-of-scope list, a sign-off with no name, role or date, requirement IDs with no priority or used twice, vague wording in a requirement, and leftover placeholders like `[Name]` or `TBD`. It checks the shape, not whether the content is right.

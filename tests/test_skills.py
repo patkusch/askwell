@@ -31,6 +31,7 @@ kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
+brd = load(SKILLS / "brd-writing/scripts/check.py")
 elic = load(SKILLS / "requirements-elicitation/scripts/check.py")
 comms = load(SKILLS / "stakeholder-communication/scripts/check.py")
 impact = load(SKILLS / "change-impact-assessment/scripts/check.py")
@@ -598,6 +599,25 @@ class Elicitation(unittest.TestCase):
         self.assertEqual(elic.check(r), [])
 
 
+class Brd(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(brd.check(read("brd.md", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(brd.check(read("brd.md", "bad")))
+        for bit in ("no 'stakeholders' section", "no 'risks' section", "no 'version history' section", "summary should come first",
+                    "objectives have no number", "out of scope", "too short", "sign-off needs", "ID used twice: BR-001",
+                    "vague wording", "unfinished placeholder"):
+            self.assertIn(bit, out)
+
+    def test_title_mentioning_approval_is_not_the_sign_off(self):
+        self.assertNotIn("sign-off needs", " ".join(brd.check(read("brd.md", "good"))))
+
+    def test_requirement_without_priority_is_not_counted(self):
+        md = read("brd.md", "good").replace("| Must |", "|  |")
+        self.assertTrue(any("no numbered requirements" in p for p in brd.check(md)))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -652,7 +672,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 24, r.stdout[-1500:])  # all twenty-four gated checks find something
+        self.assertEqual(r.returncode, 25, r.stdout[-1500:])  # all twenty-five gated checks find something
 
 
 if __name__ == "__main__":
