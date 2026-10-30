@@ -48,3 +48,13 @@ Candidate requirements:
 Open questions:
 Who to talk to next:
 ```
+
+## Check the write-up
+
+Write it with the headings `Interviewee`, `Date`, `Goal`, `Findings`, `Pain points`, `Workarounds`, `Candidate requirements`, `Open questions` and `Next interviews`, each finding starting `[heard]`, `[seen]` or `[inferred]`, then run:
+
+```bash
+python scripts/check.py interview.txt
+```
+
+It flags missing sections, findings with no label, more of your own reading than what was said, nothing you actually saw, pain points with no detail, candidate requirements that are really solutions, open questions with no one finding the answer, leading questions, and no sign that the findings went back to the interviewee to correct.

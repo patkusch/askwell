@@ -1,0 +1,13 @@
+Interviewee: Maria
+Date: 18/09
+Goal: Talk
+Findings:
+- She does not like the system
+- [inferred] Surely a dashboard would fix it, wouldn't a dashboard help?
+- [inferred] Everyone hates retyping
+Pain points:
+- Slow
+Candidate requirements:
+- She wants a new dashboard
+Open questions:
+- Why is it slow

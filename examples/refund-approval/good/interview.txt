@@ -1,0 +1,21 @@
+Interviewee: Maria Costa, refund agent
+Date: 2026-09-18
+Goal: Understand how a large refund moves from request to payment today
+Findings:
+- [heard] Large refunds wait in a shared inbox until a manager has time
+- [seen] She copies the approved amount from an email into the payment screen, which takes about 4 minutes each
+- [seen] She checks the order number in a second system before every refund
+- [inferred] Most wrong payments probably happen at the retyping step
+Pain points:
+- Retyping amounts takes about 6 hours a week and causes typing errors
+- Managers answer by email at different times, so no one knows what is waiting
+Workarounds:
+- Keeps her own spreadsheet of waiting refunds
+Candidate requirements:
+- Approved amount reaches the payment step without retyping
+- A single list of refunds waiting for approval
+Open questions:
+- Ask Tom Reyes whether the payment screen can accept an amount from another system
+Next interviews:
+- Priya Nair (sponsor), Dana Whitlock (compliance)
+Sent back to Maria on 2026-09-19 for corrections.

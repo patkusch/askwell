@@ -13,6 +13,7 @@ run "scope-definition"            python3 $S/scope-definition/scripts/check.py $
 run "brd-writing"                 python3 $S/brd-writing/scripts/check.py $D/brd.md
 run "requirements-elicitation"    python3 $S/requirements-elicitation/scripts/check.py $D/needs.csv
 run "problem-statement"           python3 $S/problem-statement/scripts/check.py $D/problem.txt
+run "stakeholder-interview"        python3 $S/stakeholder-interview/scripts/check.py $D/interview.txt
 run "stakeholder-mapping"          python3 $S/stakeholder-mapping/scripts/check.py $D/stakeholders.csv
 run "requirements-writing"        python3 $S/requirements-writing/scripts/lint.py $D/requirements.txt
 run "user-stories"                python3 $S/user-stories/scripts/check.py $D/stories.txt

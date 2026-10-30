@@ -31,6 +31,7 @@ kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
+interview = load(SKILLS / "stakeholder-interview/scripts/check.py")
 wshop = load(SKILLS / "workshop-facilitation/scripts/check.py")
 brd = load(SKILLS / "brd-writing/scripts/check.py")
 elic = load(SKILLS / "requirements-elicitation/scripts/check.py")
@@ -647,6 +648,22 @@ class Workshop(unittest.TestCase):
         self.assertTrue(any("HH:MM" in x for x in wshop.check(p)))
 
 
+class Interview(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(interview.check(read("interview.txt", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(interview.check(read("interview.txt", "bad")))
+        for bit in ("missing 'Next Interviews'", "Date is not YYYY-MM-DD", "Goal is too short", "not labelled",
+                    "more of your own reading", "nothing [seen]", "has no detail", "is a solution",
+                    "says no one is finding out", "leading question", "sent back"):
+            self.assertIn(bit, out)
+
+    def test_pain_point_with_a_number_is_fine(self):
+        t = read("interview.txt", "good").replace("- Managers answer by email at different times, so no one knows what is waiting", "- 3 days")
+        self.assertFalse(any("has no detail" in p for p in interview.check(t)))
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -701,7 +718,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 26, r.stdout[-1500:])  # all twenty-six gated checks find something
+        self.assertEqual(r.returncode, 27, r.stdout[-1500:])  # all twenty-seven gated checks find something
 
 
 if __name__ == "__main__":
