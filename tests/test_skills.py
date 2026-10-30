@@ -931,6 +931,32 @@ class RaidGrid(unittest.TestCase):
         self.assertEqual(ok.returncode, 0)
 
 
+class Readme(unittest.TestCase):
+    TEXT = (ROOT / "README.md").read_text()
+
+    def test_every_skill_is_named(self):
+        for d in SKILLS.iterdir():
+            if d.is_dir():
+                self.assertIn(f"`{d.name}`", self.TEXT, f"{d.name} is not in the README")
+
+    def test_every_skill_with_a_check_is_in_the_checks_table(self):
+        section = self.TEXT[self.TEXT.index("## Skills that check your work"):self.TEXT.index("## One command")]
+        listed = set(re.findall(r"^\| `([a-z-]+)` \|", section, re.M))
+        for d in SKILLS.iterdir():
+            if (d / "scripts").is_dir():
+                self.assertIn(d.name, listed, f"{d.name} has a check but is not in the README table")
+
+    def test_skill_count_in_the_heading_is_right(self):
+        n = sum(1 for d in SKILLS.iterdir() if d.is_dir())
+        self.assertIn(f"What's in it ({n} skills)", self.TEXT)
+
+    def test_commands_in_the_readme_exist(self):
+        for path in re.findall(r"python3 (scripts/[\w.]+)", self.TEXT):
+            self.assertTrue((ROOT / path).exists(), path)
+        for path in re.findall(r"(examples/run_all\.sh)", self.TEXT):
+            self.assertTrue((ROOT / path).exists(), path)
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))

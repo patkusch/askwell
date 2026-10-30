@@ -1,5 +1,7 @@
 # askwell
 
+[![ci](https://github.com/patkusch/askwell/actions/workflows/ci.yml/badge.svg)](https://github.com/patkusch/askwell/actions/workflows/ci.yml)
+
 Skills that help an AI agent do a business analyst's work: find out what people need, write it down clearly, check it, and make the case for it.
 
 It is a business-analysis counterpart to the [scientific-agent-skills](https://github.com/K-Dense-AI/scientific-agent-skills) library. Each skill is a folder with a `SKILL.md` the agent reads when the job matches, so it follows a good method instead of improvising. It works with Claude Code and any agent that reads the open Agent Skills format.
@@ -26,7 +28,7 @@ It is a business-analysis counterpart to the [scientific-agent-skills](https://g
 
 ## Skills that check your work
 
-Business analysis writing fails in predictable ways: vague requirements, stories that are really tasks, scenarios that never test a failure, risks with no owner, diagrams with dead ends. Eleven skills include a small script (plain Python, nothing to install) that finds these, so the agent can fix them before a person sees the document.
+Business analysis writing fails in predictable ways: vague requirements, stories that are really tasks, scenarios that never test a failure, risks with no owner, diagrams with dead ends. Most skills include a small script (plain Python, nothing to install) that finds these, so the agent can fix them before a person sees the document.
 
 | Skill | What the script finds or works out |
 |---|---|
@@ -42,6 +44,26 @@ Business analysis writing fails in predictable ways: vague requirements, stories
 | `business-case` | Payback, net present value, ROI, rate of return, and what happens if benefits fall 30% |
 | `vendor-selection` | Weighted totals, and whether a small change in weights changes the winner |
 | `backlog-prioritisation` | RICE and WSJF ranking; warns when Musts take over 60% of the effort |
+| `problem-statement` | A statement that names a solution, or has no number, cause, impact or success measure |
+| `stakeholder-mapping` | No owner or engagement plan, unexplained resistance, groups nobody is listed for |
+| `stakeholder-interview` | Findings not labelled heard, seen or inferred, nothing seen, leading questions |
+| `workshop-facilitation` | No stated output, no break in 90 minutes, no silent writing, no parking lot |
+| `requirements-elicitation` | Unnamed sources, technology posing as a need, Musts that are only assumed |
+| `scope-definition` | Activities posing as deliverables, contradictions, "phase 2" with no date |
+| `use-cases` | Missing sections, thin or overlong flows, screen-talk, branches buried in the main flow |
+| `nonfunctional-requirements` | No number or test, a speed with no load, checklist areas nobody covered |
+| `brd-writing` | Missing sections, summary not first, objectives with no number, duplicate IDs |
+| `data-dictionary` | Fields with no owner, no currency or time zone, personal data with no retention; glossary terms with no example, and banned words used in a document |
+| `sql-for-analysis` | No question or definition, writes, `SELECT *`, joins with no `ON`, `BETWEEN` on dates, `= NULL` |
+| `current-state-analysis` | Happy path only, guessed waits, missing numbers; shows where the time goes |
+| `options-analysis` | No "do nothing" option, single-figure costs, a sales-pitch recommendation, no unknowns |
+| `root-cause-analysis` | Blaming a person, "remind staff" as the fix, too little evidence |
+| `gap-analysis` | No gap, no number, wrong arithmetic, areas nobody looked at; lists what to close first |
+| `change-impact-assessment` | High-impact groups with no training or support, unknown readiness |
+| `decision-log` | A question instead of a decision, no options, broken supersede links, stale proposals |
+| `user-acceptance-testing` | Gives a go, go with conditions or no-go call; flags untested requirements |
+| `stakeholder-communication` | No ask in the first 60 words, jargon, long sentences, unexplained acronyms |
+| `ba-start-here` | Suggests which skills fit a request, in order, and which domain pack applies |
 
 A check that finds nothing does not prove a document is right. It only proves it is not wrong in these known ways.
 
