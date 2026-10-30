@@ -39,3 +39,13 @@ Unknowns to resolve:
 - The "tribal" steps nobody wrote down. Ask "what do you do when the system won't let you?"
 - Averages that hide a long tail. Show the median and the worst 10%.
 - Measuring only the happy path. Include exceptions: they often cost the most.
+
+## Check the table and see where the time goes
+
+Keep the steps as a CSV with columns `step,role,system,kind,volume_per_week,touch_minutes,wait_minutes,error_rate_pct,evidence`, then run:
+
+```bash
+python scripts/check.py current_state.csv
+```
+
+It flags steps with no role or system, missing or negative numbers, an error rate over 100%, evidence that isn't measured, observed or estimated, long waits that are only guesses, a table with no exception steps (happy path only), and a table that is mostly estimates. It then prints how much of the end-to-end time is work and how much is waiting, the longest wait, and the step that makes the most errors a week.

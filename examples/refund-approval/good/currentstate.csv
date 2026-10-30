@@ -1,0 +1,8 @@
+step,role,system,kind,volume_per_week,touch_minutes,wait_minutes,error_rate_pct,evidence
+Customer requests refund,Customer,Web form,normal,310,3,0,2,measured
+Agent checks the order,Refund agent,Order system,normal,310,4,30,1,observed
+Agent sends large refund for approval by email,Refund agent,Email,normal,40,5,0,0,observed
+Manager approves by email reply,Finance manager,Email,normal,40,3,2400,0,measured
+Agent retypes approved amount,Refund agent,Payment screen,normal,310,4,180,9,observed
+Payment is made,System,Payment provider,normal,310,0,60,0,measured
+Agent fixes a wrongly paid refund,Refund agent,Payment screen,exception,28,25,1440,0,observed

@@ -1,0 +1,4 @@
+step,role,system,kind,volume_per_week,touch_minutes,wait_minutes,error_rate_pct,evidence
+Request,,,normal,300,3,0,2,estimated
+Approve,Manager,Email,normal,many,5,3000,150,estimated
+Pay,Agent,Payment screen,normal,300,-4,60,1,guess

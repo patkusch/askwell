@@ -43,6 +43,7 @@ def description(skill_dir):
 # optional extra files and the flag that passes them. {f} is replaced by the folder path.
 AUDIT = [
     ("problem-statement", "check", ["problem.txt"], [], {}),
+    ("current-state-analysis", "check", ["currentstate.csv"], [], {}),
     ("stakeholder-mapping", "check", ["stakeholders.csv"], [], {}),
     ("stakeholder-interview", "check", ["interview.txt"], [], {}),
     ("workshop-facilitation", "check", ["workshop.json"], [], {}),

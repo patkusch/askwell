@@ -5,6 +5,7 @@ cd "$(dirname "$0")/.." || exit 2
 D="examples/$1"; S=skills; fails=0
 run() { echo "== $1"; shift; "$@"; rc=$?; [ $rc -ne 0 ] && fails=$((fails+1)); echo; }
 run "change-impact-assessment"    python3 $S/change-impact-assessment/scripts/check.py $D/impact.csv
+run "current-state-analysis"      python3 $S/current-state-analysis/scripts/check.py $D/currentstate.csv
 run "gap-analysis"                python3 $S/gap-analysis/scripts/check.py $D/gaps.csv
 run "root-cause-analysis"         python3 $S/root-cause-analysis/scripts/check.py $D/rootcause.txt
 run "options-analysis"            python3 $S/options-analysis/scripts/check.py $D/options.json

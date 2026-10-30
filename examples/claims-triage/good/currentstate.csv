@@ -1,0 +1,7 @@
+step,role,system,kind,volume_per_week,touch_minutes,wait_minutes,error_rate_pct,evidence
+Customer reports loss,Customer,Web form and phone,normal,2100,6,0,3,measured
+Handler checks the policy,Claims handler,Policy platform,normal,2100,4,45,1,observed
+Handler sorts the new claims by hand,Claims handler,Spreadsheet,normal,2100,3,240,8,observed
+Handler calls the customer,Claims handler,Phone,normal,2100,12,1140,2,measured
+Handler records the outcome,Claims handler,Claims system,normal,2100,5,30,1,measured
+Handler re-sorts after an injury is missed,Claims handler,Spreadsheet,exception,170,20,1200,0,observed

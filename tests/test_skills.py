@@ -40,6 +40,7 @@ elic = load(SKILLS / "requirements-elicitation/scripts/check.py")
 comms = load(SKILLS / "stakeholder-communication/scripts/check.py")
 impact = load(SKILLS / "change-impact-assessment/scripts/check.py")
 gapa = load(SKILLS / "gap-analysis/scripts/check.py")
+csa = load(SKILLS / "current-state-analysis/scripts/check.py")
 rca = load(SKILLS / "root-cause-analysis/scripts/check.py")
 optn = load(SKILLS / "options-analysis/scripts/check.py")
 scope = load(SKILLS / "scope-definition/scripts/check.py")
@@ -750,11 +751,11 @@ class Audit(unittest.TestCase):
     def test_good_folder_is_clean(self):
         r = self.audit("refund-approval/good")
         self.assertEqual(r.returncode, 0, r.stdout)
-        self.assertIn("0 check(s) found something, 30 clean, 1 skipped", r.stdout)
+        self.assertIn("0 check(s) found something, 31 clean, 1 skipped", r.stdout)
 
     def test_bad_folder_exit_code_matches_run_all(self):
         r = self.audit("refund-approval/bad")
-        self.assertEqual(r.returncode, 29, r.stdout[-800:])
+        self.assertEqual(r.returncode, 30, r.stdout[-800:])
         self.assertIn("== problem-statement", r.stdout)
 
     def test_verbose_shows_clean_checks_too(self):
@@ -770,13 +771,38 @@ class Audit(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             shutil.copy(EX / "good/problem.txt", d)
             out = subprocess.run([sys.executable, str(ROOT / "scripts/askwell.py"), "audit", d], capture_output=True, text=True).stdout
-        self.assertIn("1 clean, 30 skipped", out.replace("0 check(s) found something, ", ""))
+        self.assertIn("1 clean, 31 skipped", out.replace("0 check(s) found something, ", ""))
 
     def test_every_check_script_is_in_the_audit_table(self):
         cli = load(ROOT / "scripts/askwell.py")
         table = {(skill, stem) for skill, stem, *_ in cli.AUDIT}
         for script in SKILLS.glob("*/scripts/*.py"):
             self.assertIn((script.parent.parent.name, script.stem), table, f"{script} is not in AUDIT")
+
+
+class CurrentState(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(csa.check(rows("currentstate.csv", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(csa.check(rows("currentstate.csv", "bad")))
+        for bit in ("Request: no role", "Request: no system", "volume_per_week is missing", "error rate over 100%",
+                    "only an estimate: measure it", "touch_minutes is negative", "evidence must be",
+                    "happy path only", "2 of 3 rows are only estimates"):
+            self.assertIn(bit, out)
+
+    def test_summary_numbers(self):
+        s = csa.summary(rows("currentstate.csv", "good"))
+        self.assertIn("19 minutes of work, 2670 minutes of waiting", s[0])
+        self.assertIn("Manager approves by email reply", s[1])
+        self.assertIn("Agent retypes approved amount", s[2])
+
+    def test_exception_rows_are_not_in_the_normal_path_total(self):
+        s = csa.summary(rows("currentstate.csv", "good"))
+        self.assertNotIn("1440", s[0])
+
+    def test_negative_rows_are_left_out_of_the_summary(self):
+        self.assertNotIn("4 minutes of work", csa.summary(rows("currentstate.csv", "bad"))[0])
 
 
 class Extras(unittest.TestCase):
@@ -842,7 +868,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 29, r.stdout[-1500:])  # all twenty-nine gated checks find something
+        self.assertEqual(r.returncode, 30, r.stdout[-1500:])  # all thirty gated checks find something
 
 
 if __name__ == "__main__":
