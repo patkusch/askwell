@@ -112,6 +112,22 @@ class Backlog(unittest.TestCase):
         rows = [dict(id="a", name="A", business_value="8", time_criticality="5", risk_reduction="2", job_size="5")]
         self.assertEqual(rank.rank("wsjf", rows)[0]["score"], 3.0)
 
+    def test_ties_are_reported(self):
+        rows_ = [dict(id="a", name="A", reach="100", impact="1", confidence="1", effort="1"),
+                 dict(id="b", name="B", reach="95", impact="1", confidence="1", effort="1"),
+                 dict(id="c", name="C", reach="10", impact="1", confidence="1", effort="1")]
+        self.assertEqual(rank.ties(rank.rank("rice", rows_)), [("a", "b")])
+
+    def test_top_flag_and_tie_line(self):
+        import tempfile
+        with tempfile.NamedTemporaryFile("w", suffix=".csv", delete=False) as t:
+            t.write("id,name,reach,impact,confidence,effort\na,A,100,1,1,1\nb,B,96,1,1,1\nc,C,10,1,1,1\n")
+        r = subprocess.run([sys.executable, str(SKILLS / "backlog-prioritisation/scripts/score.py"), "rice", t.name, "--top", "2"], capture_output=True, text=True)
+        self.assertIn("1. a", r.stdout)
+        self.assertIn("2. b", r.stdout)
+        self.assertNotIn("3. c", r.stdout)
+        self.assertIn("Tie: a and b", r.stdout)
+
     def test_zero_effort_rejected(self):
         rows = [dict(id="a", name="A", reach="1", impact="1", confidence="1", effort="0")]
         with self.assertRaises(ValueError):

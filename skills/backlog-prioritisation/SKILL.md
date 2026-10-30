@@ -50,3 +50,5 @@ python scripts/score.py moscow items.csv
 ```
 
 Columns: `id,name,moscow,effort`. It shows the share of planned effort in Must, Should and Could, and warns when Musts take more than 60%, which leaves no room for surprises.
+
+For RICE and WSJF, `--top 5` shows only the first five. Neighbours whose scores are within 10% are reported as ties: the scores are guesses, so a 4% gap is not a reason to put one first. Choose between them on dependencies and risk.

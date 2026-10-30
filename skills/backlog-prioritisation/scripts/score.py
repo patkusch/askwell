@@ -5,7 +5,7 @@ CSV columns
   rice: id,name,reach,impact,confidence,effort      (confidence 0-1)
   wsjf: id,name,business_value,time_criticality,risk_reduction,job_size
   moscow: id,name,moscow,effort   (moscow = must/should/could/wont)
-Usage: score.py rice|wsjf|moscow items.csv
+Usage: score.py rice|wsjf|moscow items.csv [--top N]
 """
 import csv
 import sys
@@ -32,6 +32,16 @@ def rank(method, rows):
             raise ValueError(f"{r.get('id')}: effort or size is zero")
         scored.append({**r, "score": round(s, 2)})
     return sorted(scored, key=lambda r: -r["score"])
+
+
+def ties(ranked, within=0.10):
+    """Neighbours whose scores are within 10%: the model cannot tell them apart, so decide on dependencies."""
+    out = []
+    for a, b in zip(ranked, ranked[1:]):
+        hi, lo = a["score"], b["score"]
+        if hi > 0 and (hi - lo) / hi <= within:
+            out.append((a["id"], b["id"]))
+    return out
 
 
 def moscow(rows):
@@ -62,5 +72,9 @@ if __name__ == "__main__":
         for w in warns:
             print("WARNING: " + w)
         sys.exit(1 if warns else 0)
-    for i, r in enumerate(rank(method, rows), 1):
+    ranked = rank(method, rows)
+    top = int(sys.argv[sys.argv.index("--top") + 1]) if "--top" in sys.argv else len(ranked)
+    for i, r in enumerate(ranked[:top], 1):
         print(f"{i}. {r['id']}  {r['name']}  score={r['score']}")
+    for a, b in ties(ranked[:top + 1]):
+        print(f"Tie: {a} and {b} are within 10%: choose by dependencies and risk, not by the score")
