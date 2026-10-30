@@ -828,6 +828,16 @@ class Audit(unittest.TestCase):
         self.assertEqual(r.returncode, 33, r.stdout[-800:])
         self.assertIn("== problem-statement", r.stdout)
 
+    def test_json_output(self):
+        r = self.audit("refund-approval/bad", "--json")
+        data = json.loads(r.stdout)
+        self.assertEqual(data["found"], 33)
+        self.assertEqual(r.returncode, 33)
+        self.assertEqual(len(data["checks"]), data["found"] + data["clean"])
+        first = next(c for c in data["checks"] if c["skill"] == "problem-statement")
+        self.assertFalse(first["ok"])
+        self.assertIn("too short", first["output"])
+
     def test_verbose_shows_clean_checks_too(self):
         self.assertIn("(clean)", self.audit("claims-triage/good", "-v").stdout)
 

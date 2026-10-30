@@ -4,7 +4,7 @@
   askwell.py list                     show every skill that has a check
   askwell.py run <skill> [args...]    run that skill's check with your files
   askwell.py skills                   list all skills with what they are for
-  askwell.py audit <folder> [--today YYYY-MM-DD] [-v]
+  askwell.py audit <folder> [--today YYYY-MM-DD] [-v] [--json]
                                       run every check whose file is in the folder
 
 A skill with more than one script is named skill/script, for example
@@ -81,7 +81,7 @@ AUDIT = [
 TAKES_TODAY = {"raid-log", "decision-log"}
 
 
-def audit(folder, today=None, verbose=False):
+def audit(folder, today=None, verbose=False, as_json=False):
     """Run every check that has its file in `folder`. Returns the number that found something."""
     folder = Path(folder)
     if not folder.is_dir():
@@ -89,6 +89,7 @@ def audit(folder, today=None, verbose=False):
         return 2
     found = skipped = clean = 0
     detail = []
+    results = []
     for skill, stem, needs, extra, optional in AUDIT:
         files = [folder / n for n in needs]
         if not all(f.is_file() for f in files):
@@ -110,6 +111,7 @@ def audit(folder, today=None, verbose=False):
             args += ["--today", today]
         r = subprocess.run(args, capture_output=True, text=True)
         out = (r.stdout + r.stderr).strip()
+        results.append({"skill": skill, "script": stem, "ok": r.returncode == 0, "output": out})
         if r.returncode == 0:
             clean += 1
             if verbose:
@@ -117,6 +119,10 @@ def audit(folder, today=None, verbose=False):
         else:
             found += 1
             detail.append((skill, out, False))
+    if as_json:
+        import json
+        print(json.dumps({"found": found, "clean": clean, "skipped": skipped, "checks": results}, indent=2))
+        return found
     print(f"{found} check(s) found something, {clean} clean, {skipped} skipped (no file for them).")
     for skill, out, ok in detail:
         print(f"\n== {skill}" + ("  (clean)" if ok else ""))
@@ -145,7 +151,7 @@ def main(argv):
             print("audit needs a folder. Try: askwell.py audit examples/refund-approval/good", file=sys.stderr)
             return 2
         today = rest[rest.index("--today") + 1] if "--today" in rest else None
-        return audit(rest[0], today, verbose="-v" in rest)
+        return audit(rest[0], today, verbose="-v" in rest, as_json="--json" in rest)
     if cmd == "run":
         if not rest:
             print("run needs a skill name. Try: askwell.py list", file=sys.stderr)
