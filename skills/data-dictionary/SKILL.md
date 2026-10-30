@@ -51,3 +51,13 @@ python scripts/check.py dictionary.csv
 ```
 
 It flags fields with no meaning, no owner or no source; meanings that just repeat the field name; times with no time zone; amounts with no currency; personal, sensitive or financial data with no retention period; free-text fields that may hold sensitive data; and status or type fields with no list of allowed values.
+
+## Check the glossary
+
+Keep business terms in a CSV with columns `term,definition,avoid,example,non_example,owner` (`avoid` lists look-alike words separated by `;`), then run:
+
+```bash
+python scripts/glossary.py glossary.csv --scan requirements.txt
+```
+
+It flags definitions that are too short, only repeat the term or start with it, open-ended ("etc"), terms with no example or no non-example, no owner, duplicates, and a word that is both a term and on someone's avoid list. With `--scan` it also reads a document and reports each avoided word it uses, so the whole team ends up using one word for one thing.

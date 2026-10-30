@@ -1,0 +1,4 @@
+term,definition,avoid,example,non_example,owner
+Customer,A person who holds a policy with us or who is claiming on one,client;caller,A driver reporting a collision on their own policy,A person who only asked for a quote,Head of Claims
+Policyholder,The person named on the policy who bought the cover,insured party,The named driver on a motor policy bought online,A passenger who is not named on the policy,Head of Claims
+Triage band,The urgency group a new claim is placed in so the most urgent is handled first,priority level,Urgent for a claim where someone is hurt,A claim's final settlement amount,Head of Claims

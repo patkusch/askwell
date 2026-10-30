@@ -48,6 +48,7 @@ pstate = load(SKILLS / "problem-statement/scripts/check.py")
 uat = load(SKILLS / "user-acceptance-testing/scripts/summary.py")
 dlog = load(SKILLS / "decision-log/scripts/check.py")
 nfr = load(SKILLS / "nonfunctional-requirements/scripts/check.py")
+gloss = load(SKILLS / "data-dictionary/scripts/glossary.py")
 ddict = load(SKILLS / "data-dictionary/scripts/check.py")
 usecase = load(SKILLS / "use-cases/scripts/check.py")
 import datetime, subprocess, sys
@@ -751,11 +752,11 @@ class Audit(unittest.TestCase):
     def test_good_folder_is_clean(self):
         r = self.audit("refund-approval/good")
         self.assertEqual(r.returncode, 0, r.stdout)
-        self.assertIn("0 check(s) found something, 31 clean, 1 skipped", r.stdout)
+        self.assertIn("0 check(s) found something, 32 clean, 1 skipped", r.stdout)
 
     def test_bad_folder_exit_code_matches_run_all(self):
         r = self.audit("refund-approval/bad")
-        self.assertEqual(r.returncode, 30, r.stdout[-800:])
+        self.assertEqual(r.returncode, 31, r.stdout[-800:])
         self.assertIn("== problem-statement", r.stdout)
 
     def test_verbose_shows_clean_checks_too(self):
@@ -771,7 +772,7 @@ class Audit(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             shutil.copy(EX / "good/problem.txt", d)
             out = subprocess.run([sys.executable, str(ROOT / "scripts/askwell.py"), "audit", d], capture_output=True, text=True).stdout
-        self.assertIn("1 clean, 31 skipped", out.replace("0 check(s) found something, ", ""))
+        self.assertIn("1 clean, 32 skipped", out.replace("0 check(s) found something, ", ""))
 
     def test_every_check_script_is_in_the_audit_table(self):
         cli = load(ROOT / "scripts/askwell.py")
@@ -803,6 +804,32 @@ class CurrentState(unittest.TestCase):
 
     def test_negative_rows_are_left_out_of_the_summary(self):
         self.assertNotIn("4 minutes of work", csa.summary(rows("currentstate.csv", "bad"))[0])
+
+
+class Glossary(unittest.TestCase):
+    def test_good_sets_are_clean_including_the_scan(self):
+        for ex, doc in (("refund-approval", "requirements.txt"), ("claims-triage", "stories.txt")):
+            base = ROOT / "examples" / ex / "good"
+            problems, avoid = gloss.check(list(csv.DictReader(io.StringIO((base / "glossary.csv").read_text()))))
+            self.assertEqual(problems, [], ex)
+            self.assertEqual(gloss.scan((base / doc).read_text(), avoid), [], ex)
+
+    def test_bad(self):
+        problems, avoid = gloss.check(rows("glossary.csv", "bad"))
+        out = "\n".join(problems)
+        for bit in ("Customer: definition is too short", "Customer: no example", "Customer: no non-example", "Customer: no owner",
+                    "Refund: the definition is open-ended", "Refunds: defined twice", "'user' is on the avoid list for Customer"):
+            self.assertIn(bit, out)
+
+    def test_scan_counts_avoided_words(self):
+        _, avoid = gloss.check(rows("glossary.csv", "bad"))
+        found = gloss.scan("The client and the client's user asked. A client left.", avoid)
+        self.assertIn("'client' appears 3 times; the glossary says use 'Customer'", found)
+
+    def test_definition_that_starts_with_the_term(self):
+        r = [dict(term="Claim", definition="Claim is something a customer makes after a loss", avoid="", example="e", non_example="n", owner="o")]
+        problems, _ = gloss.check(r)
+        self.assertTrue(any("starts with the term" in p for p in problems))
 
 
 class Extras(unittest.TestCase):
@@ -868,7 +895,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 30, r.stdout[-1500:])  # all thirty gated checks find something
+        self.assertEqual(r.returncode, 31, r.stdout[-1500:])  # all thirty-one gated checks find something
 
 
 if __name__ == "__main__":

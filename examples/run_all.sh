@@ -24,6 +24,7 @@ run "requirements-traceability"   python3 $S/requirements-traceability/scripts/c
 run "raid-log"                    python3 $S/raid-log/scripts/raid.py $D/raid.csv --today 2026-10-16
 run "sql-for-analysis"            python3 $S/sql-for-analysis/scripts/check.py $D/analysis.sql
 run "kpi-definition"              python3 $S/kpi-definition/scripts/check.py $D/kpis.json
+run "data-dictionary glossary"    python3 $S/data-dictionary/scripts/glossary.py $D/glossary.csv --scan $D/requirements.txt
 run "nonfunctional-requirements" python3 $S/nonfunctional-requirements/scripts/check.py $D/nfr.csv
 run "data-dictionary"             python3 $S/data-dictionary/scripts/check.py $D/dictionary.csv
 run "use-cases"                   python3 $S/use-cases/scripts/check.py $D/usecase.txt

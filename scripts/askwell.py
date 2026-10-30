@@ -59,6 +59,7 @@ AUDIT = [
     ("brd-writing", "check", ["brd.md"], [], {}),
     ("process-mapping", "check", ["process.mmd"], [], {}),
     ("data-dictionary", "check", ["dictionary.csv"], [], {}),
+    ("data-dictionary", "glossary", ["glossary.csv"], [], {"requirements.txt": "--scan"}),
     ("sql-for-analysis", "check", ["analysis.sql"], [], {}),
     ("kpi-definition", "check", ["kpis.json"], [], {}),
     ("options-analysis", "check", ["options.json"], [], {}),

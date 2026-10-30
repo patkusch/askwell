@@ -1,0 +1,4 @@
+term,definition,avoid,example,non_example,owner
+Customer,A person or company that has paid for an order and may ask for a refund,client;account holder,A shopper who bought a kettle on 2 March,A visitor who only browsed the site,Head of Customer Services
+Large refund,A refund request over 500 that needs a manager's approval before payment,big refund;high-value refund,A refund of 650 for a washing machine,A refund of 500 or less,Head of Finance
+Decision,The recorded answer of approved or rejected given to a refund request,outcome,Approved by a manager on 9 March at 14:05,A refund still waiting for a manager,Head of Finance

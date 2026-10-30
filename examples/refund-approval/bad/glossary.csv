@@ -1,0 +1,5 @@
+term,definition,avoid,example,non_example,owner
+Customer,A customer,client;user,,,
+Refund,Refund of money etc,,A refund,,Head of Finance
+Refunds,Money given back to a person who paid for something and asks for it back,payment,,An order,Head of Finance
+User,A customer is the user,client,A person,A robot,Head of IT
