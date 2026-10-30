@@ -41,3 +41,13 @@ Requirements are found, not collected. Use more than one technique, because each
 - Requirements that name a technology. Ask what it is for.
 - "Everybody wants this" with no names. Find one person.
 - The loudest voice winning. Check quieter users too.
+
+## Check the list
+
+Keep it as a CSV with columns `id,need,type,source,who,date,status,priority`, then run:
+
+```bash
+python scripts/check.py needs.csv
+```
+
+It flags needs with no source or no named person to go back to ("users" and "management" don't count), business needs that name a technology, "everyone wants this", missing or bad dates, a status that is not confirmed, assumed or disputed, a Must that is only assumed, and a list that is mostly assumptions.

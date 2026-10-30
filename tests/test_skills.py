@@ -31,6 +31,7 @@ kpi = load(SKILLS / "kpi-definition/scripts/check.py")
 flow = load(SKILLS / "process-mapping/scripts/check.py")
 acts = load(SKILLS / "meeting-minutes/scripts/actions.py")
 stake = load(SKILLS / "stakeholder-mapping/scripts/check.py")
+elic = load(SKILLS / "requirements-elicitation/scripts/check.py")
 comms = load(SKILLS / "stakeholder-communication/scripts/check.py")
 impact = load(SKILLS / "change-impact-assessment/scripts/check.py")
 gapa = load(SKILLS / "gap-analysis/scripts/check.py")
@@ -580,6 +581,23 @@ class Housekeeping(unittest.TestCase):
             self.assertIn(bit, text)
 
 
+class Elicitation(unittest.TestCase):
+    def test_good(self):
+        self.assertEqual(elic.check(rows("needs.csv", "good")), [])
+
+    def test_bad(self):
+        out = "\n".join(elic.check(rows("needs.csv", "bad")))
+        for bit in ("names a technology ('dashboard')", "no source", "not a named person", "a Must that is only assumed",
+                    "everyone wants this", "date missing", "id used twice", "status must be", "priority must be",
+                    "2 of 3 requirements are only assumed"):
+            self.assertIn(bit, out)
+
+    def test_technology_in_a_system_need_is_fine(self):
+        r = [dict(id="N", need="Expose an API for approvals", type="system", source="IT", who="Tom Reyes",
+                  date="2026-09-01", status="confirmed", priority="should")]
+        self.assertEqual(elic.check(r), [])
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))
@@ -634,7 +652,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 23, r.stdout[-1500:])  # all twenty-three gated checks find something
+        self.assertEqual(r.returncode, 24, r.stdout[-1500:])  # all twenty-four gated checks find something
 
 
 if __name__ == "__main__":

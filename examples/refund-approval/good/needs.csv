@@ -1,0 +1,6 @@
+id,need,type,source,who,date,status,priority
+N-01,Managers need to see large refunds waiting in one place,user,Interview,Priya Nair,2026-09-10,confirmed,must
+N-02,Customers need to hear the decision within minutes,business,Complaints log and interview,Sam Okoye,2026-09-12,confirmed,must
+N-03,Every large refund must show who approved it,business,Audit report 2025,Dana Whitlock,2026-09-15,confirmed,must
+N-04,Approved amount must reach the payment step without retyping,system,Observation of five cases,Maria Costa,2026-09-18,confirmed,should
+N-05,Refund history must be kept for seven years,data,Records policy,Dana Whitlock,2026-09-20,assumed,could

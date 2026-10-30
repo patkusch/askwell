@@ -9,6 +9,7 @@ run "gap-analysis"                python3 $S/gap-analysis/scripts/check.py $D/ga
 run "root-cause-analysis"         python3 $S/root-cause-analysis/scripts/check.py $D/rootcause.txt
 run "options-analysis"            python3 $S/options-analysis/scripts/check.py $D/options.json
 run "scope-definition"            python3 $S/scope-definition/scripts/check.py $D/scope.txt
+run "requirements-elicitation"    python3 $S/requirements-elicitation/scripts/check.py $D/needs.csv
 run "problem-statement"           python3 $S/problem-statement/scripts/check.py $D/problem.txt
 run "stakeholder-mapping"          python3 $S/stakeholder-mapping/scripts/check.py $D/stakeholders.csv
 run "requirements-writing"        python3 $S/requirements-writing/scripts/lint.py $D/requirements.txt
