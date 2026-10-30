@@ -49,3 +49,5 @@ python scripts/check.py scenarios.txt
 ```
 
 It finds scenarios missing a Given, When or Then, steps out of order, two behaviours in one scenario, vague results ("works properly"), long chains of results, and sets that never test a failure or have fewer than three scenarios.
+
+It also catches a scenario that repeats an earlier one word for word.

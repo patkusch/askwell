@@ -47,6 +47,12 @@ def check(text):
         for p in check_scenario(b):
             report.append((i, p))
     set_level = []
+    seen = {}
+    for i, b in enumerate(blocks, 1):
+        key = re.sub(r"\s+", " ", b.lower()).strip(" .")
+        if key in seen:
+            set_level.append(f"scenario {i} repeats scenario {seen[key]}: delete it or change the data so it tests something new")
+        seen.setdefault(key, i)
     if blocks and not any(re.search(rf"\b{re.escape(f)}\b", b.lower()) for b in blocks for f in FAILURE):
         set_level.append("no scenario tests a failure (bad input, expired, denied, unavailable)")
     if 0 < len(blocks) < 3:

@@ -213,6 +213,11 @@ class Criteria(unittest.TestCase):
         for bit in ("missing 'When'", "properly", "more than one 'When'", "no scenario tests a failure"):
             self.assertIn(bit, text)
 
+    def test_repeated_scenario(self):
+        t = read("criteria.txt", "good") + "\n\nGiven a refund request of 650,   when the customer submits it, then it appears in the finance manager's waiting list."
+        _, whole = gwt.check(t)
+        self.assertTrue(any("scenario 5 repeats scenario 1" in w for w in whole))
+
     def test_out_of_order(self):
         per, _ = gwt.check("Then x. When y. Given z.\n\nGiven a, when b, then error c.\n\nGiven a, when b, then d.")
         self.assertTrue(any("out of order" in p for _, p in per))
