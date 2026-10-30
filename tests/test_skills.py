@@ -742,6 +742,43 @@ class Router(unittest.TestCase):
         self.assertNotIn("sql-for-analysis", self.picks("the squirrel scored a goal"))
 
 
+class Audit(unittest.TestCase):
+    def audit(self, folder, *extra):
+        return subprocess.run([sys.executable, str(ROOT / "scripts/askwell.py"), "audit", str(EX.parent / folder), "--today", "2026-10-16", *extra],
+                              capture_output=True, text=True)
+
+    def test_good_folder_is_clean(self):
+        r = self.audit("refund-approval/good")
+        self.assertEqual(r.returncode, 0, r.stdout)
+        self.assertIn("0 check(s) found something, 30 clean, 1 skipped", r.stdout)
+
+    def test_bad_folder_exit_code_matches_run_all(self):
+        r = self.audit("refund-approval/bad")
+        self.assertEqual(r.returncode, 29, r.stdout[-800:])
+        self.assertIn("== problem-statement", r.stdout)
+
+    def test_verbose_shows_clean_checks_too(self):
+        self.assertIn("(clean)", self.audit("claims-triage/good", "-v").stdout)
+
+    def test_missing_folder_and_missing_argument(self):
+        self.assertEqual(self.audit("no-such-folder").returncode, 2)
+        r = subprocess.run([sys.executable, str(ROOT / "scripts/askwell.py"), "audit"], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 2)
+
+    def test_a_folder_with_one_file_runs_one_check(self):
+        import tempfile, shutil
+        with tempfile.TemporaryDirectory() as d:
+            shutil.copy(EX / "good/problem.txt", d)
+            out = subprocess.run([sys.executable, str(ROOT / "scripts/askwell.py"), "audit", d], capture_output=True, text=True).stdout
+        self.assertIn("1 clean, 30 skipped", out.replace("0 check(s) found something, ", ""))
+
+    def test_every_check_script_is_in_the_audit_table(self):
+        cli = load(ROOT / "scripts/askwell.py")
+        table = {(skill, stem) for skill, stem, *_ in cli.AUDIT}
+        for script in SKILLS.glob("*/scripts/*.py"):
+            self.assertIn((script.parent.parent.name, script.stem), table, f"{script} is not in AUDIT")
+
+
 class Extras(unittest.TestCase):
     def test_sensitivity(self):
         c = json.loads(read("case.json", "good"))

@@ -53,6 +53,12 @@ python3 scripts/askwell.py run requirements-writing reqs.txt
 python3 scripts/askwell.py skills                        # what each skill is for
 ```
 
+`audit` runs every check whose file is in a folder, using the file names in the examples (`problem.txt`, `stories.txt`, `raid.csv` and so on), skips the rest, and says how many found something:
+
+```bash
+python3 scripts/askwell.py audit my-project/ --today 2026-10-16
+```
+
 A mistyped name gets a "did you mean" suggestion. The exit code is the check's own, so it works in CI.
 
 ## See it work
