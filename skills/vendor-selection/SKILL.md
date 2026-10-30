@@ -41,3 +41,7 @@ The script checks weights add up to 100 and scores are in range.
 ## Is the winner safe?
 
 The script also moves ten points of weight onto, and then off, each criterion in turn and reports every case where a different vendor would win. If the winner changes under small shifts, the vendors are close on what you said mattered, so decide on the factor you care about most. It also prints the lead over second place.
+
+## Knock-outs
+
+Add `"knockouts": {"Vendor A": ["no EU data residency"]}` to the JSON to take a vendor out before scoring because it fails a must-have. Excluded vendors are listed with the reason and are not ranked. If every vendor is knocked out the script stops and says so, because that means the must-have or the search needs to change.

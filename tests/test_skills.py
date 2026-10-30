@@ -142,6 +142,20 @@ class Vendor(unittest.TestCase):
         self.assertEqual(list(vendor.score(self.D)), ["B", "A"])
         self.assertEqual(vendor.score(self.D)["A"], 3.4)
 
+    def test_knockout_removes_a_vendor_before_scoring(self):
+        d = dict(self.D, knockouts={"B": ["no EU data residency"]})
+        self.assertEqual(list(vendor.score(d)), ["A"])
+        self.assertEqual(vendor.excluded(d), {"B": ["no EU data residency"]})
+
+    def test_empty_knockout_list_changes_nothing(self):
+        d = dict(self.D, knockouts={"B": []})
+        self.assertEqual(list(vendor.score(d)), ["B", "A"])
+
+    def test_everyone_knocked_out_is_an_error(self):
+        d = dict(self.D, knockouts={"A": ["x"], "B": ["y"]})
+        with self.assertRaises(ValueError):
+            vendor.score(d)
+
     def test_bad_weights(self):
         with self.assertRaises(ValueError):
             vendor.score({"criteria": {"Fit": 50}, "scores": {"A": {"Fit": 3}}})
