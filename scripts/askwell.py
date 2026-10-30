@@ -4,6 +4,7 @@
   askwell.py list                     show every skill that has a check
   askwell.py run <skill> [args...]    run that skill's check with your files
   askwell.py skills                   list all skills with what they are for
+  askwell.py files                    which file name each check reads (what audit looks for)
   askwell.py audit <folder> [--today YYYY-MM-DD] [-v] [--json]
                                       run every check whose file is in the folder
 
@@ -130,6 +131,15 @@ def audit(folder, today=None, verbose=False, as_json=False):
     return found
 
 
+def files_table():
+    lines = ["| File | Check | Optional extra file |", "|---|---|---|"]
+    for skill, stem, needs, _extra, optional in AUDIT:
+        name = skill if stem in {"check", "lint"} or skill in {"ba-start-here"} else f"{skill}/{stem}"
+        opt = ", ".join(f"`{f}` ({flag})" for f, flag in optional.items()) or ""
+        lines.append(f"| {', '.join(f'`{n}`' for n in needs)} | `{name}` | {opt} |")
+    return "\n".join(lines)
+
+
 def main(argv):
     if not argv or argv[0] in {"-h", "--help", "help"}:
         print(__doc__)
@@ -145,6 +155,9 @@ def main(argv):
         for d in sorted(p for p in ROOT.iterdir() if p.is_dir()):
             desc = description(d)
             print(f"{d.name}\n    {desc[:150]}{'...' if len(desc) > 150 else ''}")
+        return 0
+    if cmd == "files":
+        print(files_table())
         return 0
     if cmd == "audit":
         if not rest or rest[0].startswith("-"):

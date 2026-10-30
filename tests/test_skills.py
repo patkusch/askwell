@@ -838,6 +838,18 @@ class Audit(unittest.TestCase):
         self.assertFalse(first["ok"])
         self.assertIn("too short", first["output"])
 
+    def test_files_guide_is_up_to_date(self):
+        out = subprocess.run([sys.executable, str(ROOT / "scripts/askwell.py"), "files"], capture_output=True, text=True).stdout
+        guide = (ROOT / "examples/README.md").read_text()
+        self.assertTrue(guide.endswith(out), "examples/README.md is stale: rerun askwell.py files and paste the table")
+
+    def test_every_example_file_name_is_in_the_guide(self):
+        guide = (ROOT / "examples/README.md").read_text()
+        for f in (EX / "good").iterdir():
+            if f.name in {"backlog.csv"}:
+                continue
+            self.assertIn(f"`{f.name}`", guide, f"{f.name} is an example file but no check reads it")
+
     def test_verbose_shows_clean_checks_too(self):
         self.assertIn("(clean)", self.audit("claims-triage/good", "-v").stdout)
 
