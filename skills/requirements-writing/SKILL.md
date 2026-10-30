@@ -45,3 +45,9 @@ It flags missing "shall", "should", vague words, open-ended lists, stacked "and"
 - After: The system shall show search results within 2 seconds for 95% of searches. A new user shall complete a booking without help after a 30-minute training session.
 
 It also flags vague quantities ("some", "several", "many", "a lot of"): say how many.
+
+If your requirements are in a spreadsheet with columns `id` and `text`, save it as CSV and add `--csv`: the problems are then reported against the requirement ID, not a line number.
+
+```bash
+python scripts/lint.py requirements.csv --csv
+```

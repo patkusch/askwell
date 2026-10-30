@@ -170,6 +170,20 @@ class Lint(unittest.TestCase):
         self.assertTrue(any("vague quantity 'several'" in p for p in lint.lint("The system shall notify several managers within 5 minutes.")))
         self.assertEqual(lint.lint("The system shall notify the 3 managers on the rota within 5 minutes."), [])
 
+    def test_csv_reports_by_id(self):
+        f = io.StringIO("id,text\nR-01,The system shall respond within 2 seconds for 95% of requests\nR-02,The system should be fast\n")
+        found = lint.lint_csv(f)
+        self.assertTrue(found)
+        self.assertEqual({rid for rid, _, _ in found}, {"R-02"})
+
+    def test_csv_cli_flag(self):
+        import tempfile
+        with tempfile.NamedTemporaryFile("w", suffix=".csv", delete=False) as t:
+            t.write("id,text\nR-9,It should be easy\n")
+        r = subprocess.run([sys.executable, str(SKILLS / "requirements-writing/scripts/lint.py"), t.name, "--csv"], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("R-9: ", r.stdout)
+
     def test_blank_line(self):
         self.assertEqual(lint.lint("   "), [])
 

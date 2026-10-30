@@ -48,12 +48,29 @@ def lint(line):
     return out
 
 
+def lint_csv(f):
+    """Requirements in a CSV with columns id,text. Returns [(id, text, problem)]."""
+    import csv
+    out = []
+    for r in csv.DictReader(f):
+        for p in lint(r.get("text") or ""):
+            out.append(((r.get("id") or "?").strip(), (r.get("text") or "").strip(), p))
+    return out
+
+
 if __name__ == "__main__":
-    src = open(sys.argv[1]) if len(sys.argv) > 1 else sys.stdin
+    args = [a for a in sys.argv[1:] if a != "--csv"]
+    use_csv = "--csv" in sys.argv
+    src = open(args[0], newline="") if args else sys.stdin
     bad = 0
-    for n, line in enumerate(src, 1):
-        for p in lint(line):
+    if use_csv:
+        for rid, text, p in lint_csv(src):
             bad += 1
-            print(f"line {n}: {p}\n    {line.strip()}")
+            print(f"{rid}: {p}\n    {text}")
+    else:
+        for n, line in enumerate(src, 1):
+            for p in lint(line):
+                bad += 1
+                print(f"line {n}: {p}\n    {line.strip()}")
     print("Clean." if not bad else f"{bad} problem(s).")
     sys.exit(1 if bad else 0)
