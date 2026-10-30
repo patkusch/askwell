@@ -907,6 +907,10 @@ class RaidGrid(unittest.TestCase):
         self.assertNotIn("K4", g)           # closed issue
         self.assertEqual(row4.index("K1") > row2.index("K2"), True)  # K1 has the higher impact so sits further right
 
+    def test_column_headings_do_not_run_together(self):
+        header = raid.grid(rows("raid.csv", "bad")).splitlines()[0]
+        self.assertNotRegex(header, r"\dimpact")
+
     def test_two_risks_in_one_square_are_both_shown(self):
         r = [dict(id="A", type="risk", likelihood="3", impact="3", status="open"),
              dict(id="B", type="risk", likelihood="3", impact="3", status="open")]

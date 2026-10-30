@@ -58,7 +58,7 @@ def grid(rows):
             continue
         if 1 <= l <= 5 and 1 <= i <= 5:
             cells.setdefault((l, i), []).append(r["id"])
-    width = max([len(",".join(v)) for v in cells.values()] + [4]) + 2
+    width = max([len(",".join(v)) for v in cells.values()] + [8]) + 2
     lines = ["Likelihood".ljust(11) + "".join(f"impact {i}".center(width) for i in range(1, 6))]
     for l in range(5, 0, -1):
         row = "".join((",".join(cells.get((l, i), [])) or ("*" if l * i >= 15 else ".")).center(width) for i in range(1, 6))
