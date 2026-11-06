@@ -54,6 +54,8 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
    - **Several findings in one cell?** Separate the ids with a space.
    - **Want leads?** If you have it, `conflicts.py` in `requirements-conflict-check` points at likely duplicates, number mismatches, "must" against "must not", and drifting names. It is a help, not a step. Every pass can be done by reading.
 
+   A candidate is a finding with only `id`, `kind`, `requirements`, `quotes`, `what` and `found_by` filled in. Keep your reasoning in a `notes` line of the record. A candidate keeps its id for good, even if it ends up rejected.
+
 4. **Hand every candidate to a second reviewer.** For agents, start a fresh agent and give it only the candidate and the requirements, not the finder's reasoning. A reviewer who is shown the argument tends to agree with it. For people, ask a colleague who did not write the finding. Give them this brief:
 
    ```
@@ -64,6 +66,14 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
    Is something missing that only a named person can tell us?
    Answer with one verdict: confirmed, needs-answer or rejected, and say why.
    ```
+
+   The script prints this brief with the claim and each requirement in full, and leaves out the finder's notes, name and verdict:
+
+   ```bash
+   python scripts/check.py --brief review_findings.json review_requirements.csv F3
+   ```
+
+   Leave off the id to print every finding.
 
 5. **Record one of three verdicts.**
 

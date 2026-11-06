@@ -4,6 +4,8 @@
 Usage: check.py review_findings.json review_requirements.csv review_coverage.csv [--report]
                 [--previous review_previous.json]
        check.py --start review_requirements.csv      prints an empty coverage sheet to fill in
+       check.py --brief review_findings.json review_requirements.csv [F3]
+                                                     prints what the second reviewer may see
 
 review_requirements.csv   columns id,text: the requirements under review, each id once.
 review_findings.json      a list of findings. Each has id, kind, verdict, requirements,
@@ -315,6 +317,33 @@ def blank_coverage(reqs):
     return "\n".join(lines) + "\n"
 
 
+BRIEF = """You did not write this finding. Try to disprove it.
+Read each requirement it names in full, not only the quoted words.
+Is there a reading in which both requirements can be met?
+Does another requirement already settle it?
+Is something missing that only a named person can tell us?
+Answer with one verdict: confirmed, needs-answer or rejected, and say why."""
+
+
+def brief(findings, reqs, only=None):
+    """What the second reviewer gets: the claim and the requirements in full. Nothing else.
+
+    The finder's notes, name and any verdict are left out, so the check starts cold.
+    """
+    reqs = dict(reqs)
+    out = []
+    for f in findings:
+        if not isinstance(f, dict) or (only and val(f, "id") != only):
+            continue
+        quotes = f.get("quotes") if isinstance(f.get("quotes"), dict) else {}
+        out.append(f"{val(f, 'id')} ({val(f, 'kind')}): {val(f, 'what')}")
+        for rid in req_list(f):
+            out.append(f"  {rid} in full: {reqs.get(rid, '(not in the requirements)')}")
+            out.append(f"  {rid} quoted: \"{' '.join(str(quotes.get(rid) or '').split())}\"")
+        out.append("")
+    return "\n".join([BRIEF, ""] + out) if out else ""
+
+
 def load(findings_path, reqs_path, coverage_path):
     with open(findings_path) as f:
         findings = json.load(f)
@@ -330,6 +359,11 @@ if __name__ == "__main__":
     if len(sys.argv) == 3 and sys.argv[1] == "--start":
         print(blank_coverage(read_requirements(sys.argv[2])), end="")
         sys.exit(0)
+    if len(sys.argv) in (4, 5) and sys.argv[1] == "--brief":
+        with open(sys.argv[2]) as bf:
+            text = brief(json.load(bf), read_requirements(sys.argv[3]), sys.argv[4] if len(sys.argv) == 5 else None)
+        print(text or "No such finding.", end="")
+        sys.exit(0 if text else 2)
     args = [a for a in sys.argv[1:] if a != "--report"]
     previous = None
     if "--previous" in args[:-1]:

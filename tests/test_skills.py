@@ -949,6 +949,24 @@ class Review(unittest.TestCase):
         self.assertEqual(review.check(findings, reqs, rows, cols),
                          ["R2: coverage names F99 under number-mismatch, which is not a finding"])
 
+    def test_brief_gives_the_second_reviewer_the_claim_and_nothing_else(self):
+        findings, reqs, _, _ = self.records("good")
+        findings[0]["notes"] = "I am sure about this one because of the meeting on Tuesday."
+        text = review.brief(findings, reqs, "F1")
+        self.assertIn("You did not write this finding. Try to disprove it.", text)
+        self.assertIn("F1 (ownership): A refund over 500 is also over 400", text)
+        self.assertIn("R5 in full: The team leader shall approve any refund over 400 within 1 working day.", text)
+        self.assertIn('R5 quoted: "The team leader shall approve any refund over 400"', text)
+        for hidden in ("Tuesday", "reviewer-1", "reviewer-2", "confirmed", "Head of Finance", "F2 ("):
+            self.assertNotIn(hidden, text.replace(review.BRIEF, ""))
+        self.assertEqual(review.brief(findings, reqs).count(" in full: "), 10)  # every finding, when none is named
+        self.assertEqual(review.brief(findings, reqs, "F99"), "")
+
+    def test_the_brief_in_the_skill_is_the_brief_the_script_prints(self):
+        skill = (SKILLS / "requirements-review/SKILL.md").read_text()
+        for line in review.BRIEF.splitlines():
+            self.assertIn(line, skill)
+
     def test_findings_file_that_is_not_a_list(self):
         _, reqs, rows, cols = self.records("good")
         self.assertEqual(review.check({"id": "F1"}, reqs, rows, cols), ["the findings file must be a list of findings"])
