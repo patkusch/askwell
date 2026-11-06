@@ -208,6 +208,16 @@ def skipped(rows, columns):
     return out
 
 
+def tally(rows, columns):
+    """How many requirement-and-pass checks came out clear, with a finding, or skipped."""
+    t = {"clear": 0, "finding": 0, "skipped": 0}
+    for row in rows:
+        for p in PASSES:
+            low = (row.get(p) or "").strip().lower() if p in columns else ""
+            t["clear" if low == "clear" else "skipped" if low.startswith("skipped") else "finding"] += 1
+    return t
+
+
 def counts(findings):
     return {v: sum(1 for f in findings if val(f, "verdict") == v) for v in VERDICTS}
 
@@ -219,10 +229,12 @@ def cell(text):
 def report(findings, reqs, rows, columns):
     """The review report, written only from the records."""
     reqs = dict(reqs)
-    c = counts(findings)
+    c, t = counts(findings), tally(rows, columns)
     out = ["# Requirements review", "",
            f"{len(reqs)} requirements reviewed in {len(PASSES)} passes. {c['confirmed']} confirmed, "
-           f"{c['needs-answer']} waiting for an answer, {c['rejected']} raised and rejected.", ""]
+           f"{c['needs-answer']} waiting for an answer, {c['rejected']} raised and rejected.", "",
+           f"{sum(t.values())} checks (each requirement in each pass): {t['clear']} clear, "
+           f"{t['finding']} with a finding, {t['skipped']} skipped.", ""]
 
     def table(title, head, picked, cols):
         if not picked:
