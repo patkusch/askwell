@@ -58,8 +58,19 @@ def first_by_id(findings):
     return out
 
 
+NOBODY = {"tbd", "tbc", "unknown", "not known", "n/a", "na", "none", "nobody", "someone", "anyone",
+          "to be decided", "to be confirmed", "to be agreed"}
+
+
 def check_findings(findings, reqs):
     problems = []
+
+    def named(fid, f, key):
+        """True if the field is filled in. A placeholder counts as filled in, and is reported."""
+        if val(f, key) and squash(val(f, key)).strip(" .?!-") in NOBODY | {""}:
+            problems.append(f"{fid}: '{val(f, key)}' names nobody: give a person or the role that is needed")
+        return bool(val(f, key))
+
     seen = set()
     same = {}
     for n, f in enumerate(findings, 1):
@@ -117,7 +128,7 @@ def check_findings(findings, reqs):
                 problems.append(f"{fid}: confirmed but does not say what goes wrong if it is left")
             if val(f, "severity").lower() not in SEVERITIES:
                 problems.append(f"{fid}: severity '{val(f, 'severity')}' is not high, medium or low")
-            if not val(f, "who_decides"):
+            if not named(fid, f, "who_decides"):
                 problems.append(f"{fid}: confirmed but no one is named to decide")
         else:
             if val(f, "severity"):
@@ -125,7 +136,7 @@ def check_findings(findings, reqs):
             if verdict == "needs-answer":
                 if not val(f, "open_question").endswith("?"):
                     problems.append(f"{fid}: needs an answer but does not ask a question")
-                if not val(f, "who_can_answer"):
+                if not named(fid, f, "who_can_answer"):
                     problems.append(f"{fid}: no one is named who can answer")
             elif not val(f, "reason"):
                 problems.append(f"{fid}: rejected without a reason")

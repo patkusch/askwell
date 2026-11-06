@@ -144,6 +144,7 @@ A finding about a requirement that no longer exists is dropped without complaint
 - A quote that is not in the requirement word for word, a requirement with no quote, or a quote of one word (one word is enough only to show a name, in the term-drift pass).
 - A finding with no second reviewer, or found and checked by the same one.
 - A confirmed finding that does not say what goes wrong, how bad, or who decides.
+- "TBD", "unknown" or the like where a person or a role should be.
 - A rating on a finding that is not confirmed.
 - A needs-answer finding with no question or nobody to ask, and a rejected one with no reason.
 - One finding recorded twice.
@@ -162,6 +163,7 @@ A finding about a requirement that no longer exists is dropped without complaint
 
 - **Rating before confirming.** A rating on a hunch makes it look settled. Confirm first.
 - **Needs-answer as a parking place.** It is for one exact missing fact and a named person who knows it. A vague worry is a candidate to reject or to work on.
+- **No list of stakeholders.** Write the role the decision needs, such as "whoever owns the refund approval rules". Do not make up a name or a job title, and do not write TBD: the check reports it. `stakeholder-mapping` gets you the list.
 - **Throwing away rejected findings.** Without the record, the next reviewer raises the same thing and the same hour is spent again.
 - **Picking a winner.** The review says what conflicts and who decides. The owners decide, and the decision goes in the log (`decision-log`).
 - **Requirements that change after the review.** Run the check again. Quotes that no longer match show which findings need a fresh look.

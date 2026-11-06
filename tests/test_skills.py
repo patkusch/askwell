@@ -857,6 +857,7 @@ class Review(unittest.TestCase):
             "finding 4: no one is named who can answer",
             "F5: a duplicate needs two requirements, names 1",
             "F5: the quote from R1 is one word, too short to show anything",
+            "F5: 'TBD' names nobody: give a person or the role that is needed",
             "F7: same kind and same requirements as F6, so one finding is recorded twice",
             "F8: names no requirement",
             "finding 9: not a record",
@@ -979,6 +980,14 @@ class Review(unittest.TestCase):
                 self.assertEqual(r.returncode, 2)
                 self.assertIn("Cannot read the review files", r.stderr)
                 self.assertNotIn("Traceback", r.stderr)
+
+    def test_a_role_is_a_fair_answer_to_who_decides_but_a_placeholder_is_not(self):
+        findings, reqs, rows, cols = self.records("good")
+        findings[0]["who_decides"] = "Whoever owns the refund approval rules"
+        self.assertEqual(review.check(findings, reqs, rows, cols), [])
+        findings[0]["who_decides"] = "To be confirmed."
+        self.assertEqual(review.check(findings, reqs, rows, cols),
+                         ["F1: 'To be confirmed.' names nobody: give a person or the role that is needed"])
 
     def test_findings_file_that_is_not_a_list(self):
         _, reqs, rows, cols = self.records("good")
