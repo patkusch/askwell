@@ -61,8 +61,9 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
    ```
    You did not write this finding. Try to disprove it.
    Read each requirement it names in full, not only the quoted words.
-   Is there a reading in which both requirements can be met?
-   Does another requirement already settle it?
+   For a conflict: is there a reading in which both requirements can be met?
+   For a gap: is the case really uncovered, or does another requirement cover it?
+   For two owners: does anything say whose word counts?
    Is something missing that only a named person can tell us?
    Answer with one verdict: confirmed, needs-answer or rejected, and say why.
    ```
