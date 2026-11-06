@@ -83,6 +83,10 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
    | needs-answer | It turns on one fact the documents do not give | The exact question, and who can answer it. No rating yet |
    | rejected | The second reviewer disproved it | The reason. Keep the record so the next review does not raise it again |
 
+   Confirmed or needs-answer? If the problem is real whichever way the missing fact goes, it is confirmed. If the fact decides whether there is a problem at all, it is needs-answer. A missing decision ("who approves a refund from 50 to 400?") is a confirmed gap: the requirements have to say it either way. A missing fact ("does every customer have a mobile number?") is needs-answer.
+
+   When the answer comes, the finding goes back to a second reviewer with the answer, and ends as confirmed or rejected. Do not settle it yourself because you asked the question.
+
 6. **Run the check.**
 
    ```bash
