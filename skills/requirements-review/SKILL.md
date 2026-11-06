@@ -45,6 +45,8 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
 
 3. **Hunt, one pass at a time.** Read the whole set once for each pass, not once for everything. The script in `requirements-conflict-check` gives leads for four of the passes. Each suspicion is a candidate, not yet a finding. As you finish a pass, fill in its column: `clear`, the finding id, or `skipped: why`. Never leave a cell empty and never write `clear` for a pass you did not do.
 
+   One problem often turns up in more than one pass. Record it once, under the pass that fits best. In the other cells where you met it, write `see F1`, so the sheet does not say `clear` about something you found.
+
 4. **Hand every candidate to a second reviewer.** For agents, start a fresh agent and give it only the candidate and the requirements, not the finder's reasoning. A reviewer who is shown the argument tends to agree with it. For people, ask a colleague who did not write the finding. Give them this brief:
 
    ```

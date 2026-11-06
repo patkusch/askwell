@@ -866,7 +866,7 @@ class Review(unittest.TestCase):
             "R3: coverage names F9 under duplicate, which is not a finding",
             "R3: not checked for gap (empty cell)",
             "R3: skipped for scope-leak without a reason",
-            "R4: coverage puts F6 under gap, but F6 is a term-drift finding about R1, R7",
+            "R4: coverage puts F6 under gap, but F6 is filed as term-drift, about R1, R7",
             "R77: in the coverage sheet but not in the requirements",
             "R2: listed twice in the coverage sheet",
             "a coverage row names no requirement",
@@ -934,6 +934,21 @@ class Review(unittest.TestCase):
         prev = [{"id": "P9", "kind": "gap", "verdict": "rejected", "requirements": ["R40"], "reason": "x"}]
         self.assertEqual(review.check(*self.records("good"), prev), [])
 
+    def test_a_cell_can_point_at_a_problem_recorded_under_another_pass(self):
+        findings, reqs, rows, cols = self.records("good")
+        r2 = next(r for r in rows if r["requirement"] == "R2")
+        self.assertEqual(r2["number-mismatch"], "see F1")  # F1 is an ownership finding about R2 and R5
+        self.assertEqual(review.check(findings, reqs, rows, cols), [])
+        r2["number-mismatch"] = "F1"  # without "see", the finding has to be of that pass
+        self.assertEqual(review.check(findings, reqs, rows, cols),
+                         ["R2: coverage puts F1 under number-mismatch, but F1 is filed as ownership, about R2, R5"])
+        r2["number-mismatch"] = "see F2"  # F2 is about R6 and R7, not R2
+        self.assertEqual(review.check(findings, reqs, rows, cols),
+                         ["R2: coverage puts F2 under number-mismatch, but F2 is filed as hidden-conflict, about R6, R7"])
+        r2["number-mismatch"] = "see F99"
+        self.assertEqual(review.check(findings, reqs, rows, cols),
+                         ["R2: coverage names F99 under number-mismatch, which is not a finding"])
+
     def test_findings_file_that_is_not_a_list(self):
         _, reqs, rows, cols = self.records("good")
         self.assertEqual(review.check({"id": "F1"}, reqs, rows, cols), ["the findings file must be a list of findings"])
@@ -941,7 +956,7 @@ class Review(unittest.TestCase):
     def test_report_is_worst_first_and_lists_what_was_not_looked_at(self):
         text = review.report(*self.records("good"))
         self.assertIn("8 requirements reviewed in 8 passes. 3 confirmed, 1 waiting for an answer, 1 raised and rejected.", text)
-        self.assertIn("64 checks (each requirement in each pass): 46 clear, 10 with a finding, 8 skipped.", text)
+        self.assertIn("64 checks (each requirement in each pass): 44 clear, 12 with a finding, 8 skipped.", text)
         self.assertIn('- F1, R5: "The team leader shall approve any refund over 400"', text)
         self.assertNotIn("- F4, R1:", text)  # only confirmed findings need their words shown
         self.assertLess(text.index("| F1 |"), text.index("| F2 |"))

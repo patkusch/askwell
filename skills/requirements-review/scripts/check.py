@@ -12,7 +12,8 @@ review_findings.json      a list of findings. Each has id, kind, verdict, requir
                             needs-answer  open_question, who_can_answer
                             rejected      reason
 review_coverage.csv       one row per requirement, one column per pass. A cell holds
-                          clear, one or more finding ids, or "skipped: why".
+                          clear, one or more finding ids, "see F1" for a problem that
+                          is recorded under another pass, or "skipped: why".
 
 --previous takes the findings file of an earlier review of the same requirements. A
 finding it rejected must still be on record, and may come back under another verdict
@@ -157,14 +158,15 @@ def check_coverage(rows, columns, findings, reqs):
                 if not low[len("skipped"):].strip(" :-"):
                     problems.append(f"{rid}: skipped for {p} without a reason")
             else:
-                for fid in cell.replace(",", " ").split():
+                see = low.startswith("see ")  # the pass turned up a problem already recorded under another pass
+                for fid in (cell[4:] if see else cell).replace(",", " ").split():
                     f = by_id.get(fid)
                     if f is None:
                         problems.append(f"{rid}: coverage names {fid} under {p}, which is not a finding")
-                    elif val(f, "kind") != p or rid not in req_list(f):
+                    elif rid not in req_list(f) or (val(f, "kind") != p and not see):
                         about = ", ".join(req_list(f)) or "no requirement"
-                        problems.append(f"{rid}: coverage puts {fid} under {p}, but {fid} is a {val(f, 'kind')} finding about {about}")
-                    else:
+                        problems.append(f"{rid}: coverage puts {fid} under {p}, but {fid} is filed as {val(f, 'kind')}, about {about}")
+                    elif not see:
                         shown.add((fid, rid))
     for rid in reqs:
         if rid not in listed:
