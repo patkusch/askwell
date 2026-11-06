@@ -95,7 +95,8 @@
     "checked_by": "reviewer-3",
     "impact": "Readers may take them for two groups.",
     "severity": "low",
-    "who_decides": "Business analyst"
+    "who_decides": "Business analyst",
+    "same_as": "F7"
   },
   {
     "id": "F7",
@@ -124,7 +125,8 @@
     "what": "Two teams seemed to own the approval.",
     "found_by": "reviewer-1",
     "checked_by": "reviewer-2",
-    "reason": "Only one team is named."
+    "reason": "Only one team is named.",
+    "same_as": "F99"
   },
   "F9 looks like a gap, will write up later"
 ]

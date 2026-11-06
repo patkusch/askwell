@@ -12,7 +12,8 @@ review_findings.json      a list of findings. Each has id, kind, verdict, requir
                           quotes, what, found_by, checked_by, and then by verdict:
                             confirmed     impact, severity (high, medium, low), who_decides
                             needs-answer  open_question, who_can_answer
-                            rejected      reason
+                            rejected      reason, or same_as (the id of the finding that
+                                          records the same problem under another pass)
 review_coverage.csv       one row per requirement, one column per pass. A cell holds
                           clear, one or more finding ids, "see F1" for a problem that
                           is recorded under another pass, or "skipped: why".
@@ -73,6 +74,7 @@ def check_findings(findings, reqs):
 
     seen = set()
     same = {}
+    by_id = first_by_id([f for f in findings if isinstance(f, dict)])
     for n, f in enumerate(findings, 1):
         if not isinstance(f, dict):
             problems.append(f"finding {n}: not a record")
@@ -138,8 +140,13 @@ def check_findings(findings, reqs):
                     problems.append(f"{fid}: needs an answer but does not ask a question")
                 if not named(fid, f, "who_can_answer"):
                     problems.append(f"{fid}: no one is named who can answer")
-            elif not val(f, "reason"):
+            elif not val(f, "reason") and not val(f, "same_as"):
                 problems.append(f"{fid}: rejected without a reason")
+        twin = val(f, "same_as")
+        if twin and verdict in VERDICTS and verdict != "rejected":
+            problems.append(f"{fid}: says it is the same problem as {twin} but is not rejected")
+        elif twin and (twin == fid or val(by_id.get(twin, {}), "verdict") not in ("confirmed", "needs-answer")):
+            problems.append(f"{fid}: says it is the same problem as {twin}, but {twin} is not a finding that stands")
     return problems
 
 
@@ -306,7 +313,8 @@ def report(findings, reqs, rows, columns):
           [lambda f: val(f, "id"), ids, lambda f: val(f, "open_question"), lambda f: val(f, "who_can_answer")])
     table("Raised and rejected", ["Finding", "Requirements", "What was claimed", "Why it was rejected"],
           [f for f in findings if val(f, "verdict") == "rejected"],
-          [lambda f: val(f, "id"), ids, lambda f: val(f, "what"), lambda f: val(f, "reason")])
+          [lambda f: val(f, "id"), ids, lambda f: val(f, "what"),
+           lambda f: " ".join(x for x in (f"Same problem as {val(f, 'same_as')}." if val(f, "same_as") else "", val(f, "reason")) if x)])
     gaps = skipped(rows, columns)
     if gaps:
         out.extend(["## Not looked at", ""])

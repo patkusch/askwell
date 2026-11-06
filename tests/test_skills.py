@@ -860,6 +860,8 @@ class Review(unittest.TestCase):
             "F5: 'TBD' names nobody: give a person or the role that is needed",
             "F7: same kind and same requirements as F6, so one finding is recorded twice",
             "F8: names no requirement",
+            "F8: says it is the same problem as F99, but F99 is not a finding that stands",
+            "F6: says it is the same problem as F7 but is not rejected",
             "finding 9: not a record",
             "R4: listed twice in the requirements",
             "R9: has no text to review",
@@ -988,6 +990,20 @@ class Review(unittest.TestCase):
         findings[0]["who_decides"] = "To be confirmed."
         self.assertEqual(review.check(findings, reqs, rows, cols),
                          ["F1: 'To be confirmed.' names nobody: give a person or the role that is needed"])
+
+    def test_a_rival_reading_is_rejected_by_pointing_at_the_finding_that_stands(self):
+        findings, reqs, rows, cols = self.records("good")
+        rival = {"id": "F6", "kind": "number-mismatch", "verdict": "rejected", "requirements": ["R2", "R5"],
+                 "quotes": {"R2": "any refund over 500", "R5": "any refund over 400"},
+                 "what": "500 and 400 may be two versions of one limit.", "found_by": "reviewer-1", "checked_by": "reviewer-2", "same_as": "F1"}
+        findings.append(rival)
+        for row in rows:
+            if row["requirement"] in ("R2", "R5"):
+                row["number-mismatch"] = "F6"
+        self.assertEqual(review.check(findings, reqs, rows, cols), [])  # no separate reason needed
+        self.assertIn("| F6 | R2, R5 | 500 and 400 may be two versions of one limit. | Same problem as F1. |", review.report(findings, reqs, rows, cols))
+        rival["same_as"] = "F4"  # F4 was itself rejected
+        self.assertEqual(review.check(findings, reqs, rows, cols), ["F6: says it is the same problem as F4, but F4 is not a finding that stands"])
 
     def test_findings_file_that_is_not_a_list(self):
         _, reqs, rows, cols = self.records("good")
