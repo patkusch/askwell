@@ -963,7 +963,7 @@ class Review(unittest.TestCase):
         self.assertIn('R5 quoted: "The team leader shall approve any refund over 400"', text)
         for hidden in ("Tuesday", "reviewer-1", "reviewer-2", "confirmed", "Head of Finance", "F2 ("):
             self.assertNotIn(hidden, text.replace(review.BRIEF, ""))
-        self.assertEqual(review.brief(findings, reqs).count(" in full: "), 10)  # every finding, when none is named
+        self.assertEqual(review.brief(findings, reqs).count(" in full: "), 12)  # every finding, when none is named
         self.assertEqual(review.brief(findings, reqs, "F99"), "")
 
     def test_the_brief_in_the_skill_is_the_brief_the_script_prints(self):
@@ -994,17 +994,17 @@ class Review(unittest.TestCase):
 
     def test_a_rival_reading_is_rejected_by_pointing_at_the_finding_that_stands(self):
         findings, reqs, rows, cols = self.records("good")
-        rival = {"id": "F6", "kind": "number-mismatch", "verdict": "rejected", "requirements": ["R2", "R5"],
+        rival = {"id": "F7", "kind": "number-mismatch", "verdict": "rejected", "requirements": ["R2", "R5"],
                  "quotes": {"R2": "any refund over 500", "R5": "any refund over 400"},
                  "what": "500 and 400 may be two versions of one limit.", "found_by": "reviewer-1", "checked_by": "reviewer-2", "same_as": "F1"}
         findings.append(rival)
         for row in rows:
             if row["requirement"] in ("R2", "R5"):
-                row["number-mismatch"] = "F6"
+                row["number-mismatch"] = "F7"
         self.assertEqual(review.check(findings, reqs, rows, cols), [])  # no separate reason needed
-        self.assertIn("| F6 | R2, R5 | 500 and 400 may be two versions of one limit. | Same problem as F1. |", review.report(findings, reqs, rows, cols))
+        self.assertIn("| F7 | R2, R5 | 500 and 400 may be two versions of one limit. | Same problem as F1. |", review.report(findings, reqs, rows, cols))
         rival["same_as"] = "F4"  # F4 was itself rejected
-        self.assertEqual(review.check(findings, reqs, rows, cols), ["F6: says it is the same problem as F4, but F4 is not a finding that stands"])
+        self.assertEqual(review.check(findings, reqs, rows, cols), ["F7: says it is the same problem as F4, but F4 is not a finding that stands"])
 
     def test_a_rejected_finding_needs_a_reason_but_not_a_why_it_stands(self):
         findings, reqs, rows, cols = self.records("good")
@@ -1018,12 +1018,13 @@ class Review(unittest.TestCase):
 
     def test_report_is_worst_first_and_lists_what_was_not_looked_at(self):
         text = review.report(*self.records("good"))
-        self.assertIn("8 requirements reviewed in 8 passes. 3 confirmed, 1 waiting for an answer, 1 raised and rejected.", text)
-        self.assertIn("64 checks (each requirement in each pass): 44 clear, 12 with a finding, 8 skipped.", text)
+        self.assertIn("8 requirements reviewed in 8 passes. 4 confirmed, 1 waiting for an answer, 1 raised and rejected.", text)
+        self.assertIn("64 checks (each requirement in each pass): 42 clear, 14 with a finding, 8 skipped.", text)
         self.assertIn('- F1, R5: "The team leader shall approve any refund over 400"', text)
         self.assertNotIn("- F4, R1:", text)  # only confirmed findings need their words shown
         self.assertLess(text.index("| F1 |"), text.index("| F2 |"))
         self.assertLess(text.index("| F2 |"), text.index("| F5 |"))
+        self.assertLess(text.index("| F3 |"), text.index("| F2 |"))  # both high ones come before the medium one
         self.assertIn("- scope-leak: R1, R2, R3, R4, R5, R6, R7, R8 (scope not signed off yet)", text)
         self.assertNotIn("Not looked at", review.report(*self.records("good", EX.parent / "claims-triage")))
 

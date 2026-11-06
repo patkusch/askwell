@@ -42,7 +42,7 @@
   {
     "id": "F3",
     "kind": "gap",
-    "verdict": "needs-answer",
+    "verdict": "confirmed",
     "requirements": [
       "R3",
       "R5"
@@ -54,9 +54,10 @@
     "what": "Nothing says who approves a refund from 50 to 400.",
     "found_by": "reviewer-2",
     "checked_by": "reviewer-1",
-    "why_it_stands": "No requirement names an approver between 50 and 400. Whether that is meant cannot be told from the requirements.",
-    "open_question": "Is a refund from 50 to 400 meant to need no approval, or is a rule missing?",
-    "who_can_answer": "Refunds team leader"
+    "why_it_stands": "No requirement names an approver from 50 to 400. Even if no approval is meant, the requirements have to say so.",
+    "impact": "A refund from 50 to 400 is either paid with no check or stuck with nobody to act on it.",
+    "severity": "high",
+    "who_decides": "Head of Finance"
   },
   {
     "id": "F4",
@@ -95,5 +96,24 @@
     "severity": "low",
     "who_decides": "Business analyst, with the glossary owner",
     "what_changed": "The glossary agreed since the first review lists customer only, so client is no longer an accepted name."
+  },
+  {
+    "id": "F6",
+    "kind": "gap",
+    "verdict": "needs-answer",
+    "requirements": [
+      "R1",
+      "R8"
+    ],
+    "quotes": {
+      "R1": "email the customer a decision",
+      "R8": "send the customer a text message"
+    },
+    "what": "The decision goes by email and the payment notice by text message, so the system needs an email address and a mobile number for every customer.",
+    "found_by": "reviewer-2",
+    "checked_by": "reviewer-1",
+    "why_it_stands": "It is a problem only if some customers give just one of the two. The requirements do not say.",
+    "open_question": "Does every customer give both an email address and a mobile number?",
+    "who_can_answer": "Customer service manager"
   }
 ]
