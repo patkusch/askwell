@@ -17,6 +17,8 @@ metadata:
 
 3. Write for the person doing the job. Say what to do and why. Name the usual mistakes. Keep it under 500 lines.
 4. If it points to another skill, put the name in backticks. A test checks the name exists.
+5. Add the skill to the README list and raise the skill count in its heading. A test checks both.
+6. Give it routing words in `skills/ba-start-here/scripts/route.py`, so a request in plain words can find it. A test fails if a skill has none.
 
 ## A new check (a script inside a skill)
 
@@ -26,8 +28,11 @@ A check reads a file a person or agent already has and says what is wrong with i
 2. Exit 0 when clean and 1 when it found something. Print one plain line per problem, naming the item.
 3. Mention the script by path in that skill's `SKILL.md`, with the file layout it expects. The validator fails if you don't.
 4. Add a `good` and a `bad` example file in `examples/refund-approval/`. The good one must come out clean. The bad one must have a flaw planted for every message the script can give.
-5. Add the check to `examples/run_all.sh` and raise the expected count in `tests/test_skills.py` by one.
-6. Write tests: the good file is clean, each planted flaw is found by name, and one edge case where a near-miss must not be flagged.
+5. Add the same `good` file to `examples/claims-triage/good/`. A test checks the two examples hold the same files.
+6. Add the check to `examples/run_all.sh` and to the `AUDIT` table in `scripts/askwell.py`, and raise the expected counts in `tests/test_skills.py` by one.
+7. Run `python3 scripts/askwell.py files` and paste the table over the old one in `examples/README.md`.
+8. Add a row to the checks table in the README.
+9. Write tests: the good file is clean, each planted flaw is found by name, and one edge case where a near-miss must not be flagged.
 
 ## Before you push
 
