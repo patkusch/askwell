@@ -94,6 +94,14 @@ examples/run_all.sh refund-approval/bad     # see what each check catches
 examples/run_all.sh claims-triage/good      # the same documents, in insurance
 ```
 
+## Tried live
+
+`requirements-review` was run by two AI agents on the refund requirements: one hunted for problems, the other tried to disprove each claim without seeing the first one's reasoning. They raised 10 candidates, confirmed 7, left 1 waiting for an answer and rejected 2. Their records are in [examples/refund-approval/trial](examples/refund-approval/trial), with a note on what the trial changed in the skill and what it does not show.
+
+```bash
+python3 scripts/askwell.py run requirements-review examples/refund-approval/trial/review_findings.json examples/refund-approval/trial/review_requirements.csv examples/refund-approval/trial/review_coverage.csv --report
+```
+
 ## Other projects like this
 
 Others exist, such as [devfolorunso/business-analyst-agent-skill](https://github.com/devfolorunso/business-analyst-agent-skill) (one large skill with eleven industry guides), [GiangGiangTran/ba-skills](https://github.com/GiangGiangTran/ba-skills), [luckybajaj22031996/pm-ba-claude-skills](https://github.com/luckybajaj22031996/pm-ba-claude-skills) and [phucnt-bazone-vietnam/use-case-writer](https://github.com/phucnt-bazone-vietnam/use-case-writer). From their file lists, they are all written instructions and templates, with no scripts or tests. This project's difference is that the methods are backed by checks that run and are tested. Its industry guides are shorter than devfolorunso's and only list rule names to confirm; they are not legal advice.
