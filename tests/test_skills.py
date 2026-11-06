@@ -904,6 +904,17 @@ class Review(unittest.TestCase):
         findings[0]["checked_by"] = " Reviewer-1 "
         self.assertEqual(review.check(findings, reqs, rows, cols), ["F1: found and checked by the same reviewer (reviewer-1)"])
 
+    def test_start_gives_a_sheet_with_every_cell_still_to_fill(self):
+        r = subprocess.run([sys.executable, str(SKILLS / "requirements-review/scripts/check.py"), "--start",
+                            str(EX / "good/review_requirements.csv")], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0)
+        sheet = list(csv.DictReader(io.StringIO(r.stdout)))
+        self.assertEqual([row["requirement"] for row in sheet], [f"R{n}" for n in range(1, 9)])
+        _, reqs, _, _ = self.records("good")
+        out = review.check([], reqs, sheet, list(sheet[0]))
+        self.assertEqual(len(out), 8 * 8)
+        self.assertIn("R8: not checked for scope-leak (empty cell)", out)
+
     def test_findings_file_that_is_not_a_list(self):
         _, reqs, rows, cols = self.records("good")
         self.assertEqual(review.check({"id": "F1"}, reqs, rows, cols), ["the findings file must be a list of findings"])

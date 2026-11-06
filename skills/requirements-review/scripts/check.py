@@ -2,6 +2,7 @@
 """Check the records of a requirements review: findings quoted, double-checked and accounted for.
 
 Usage: check.py review_findings.json review_requirements.csv review_coverage.csv [--report]
+       check.py --start review_requirements.csv      prints an empty coverage sheet to fill in
 
 review_requirements.csv   columns id,text: the requirements under review, each id once.
 review_findings.json      a list of findings. Each has id, kind, verdict, requirements,
@@ -252,11 +253,22 @@ def report(findings, reqs, rows, columns):
     return "\n".join(out).rstrip() + "\n"
 
 
+def read_requirements(path):
+    with open(path, newline="") as f:
+        return [((r.get("id") or "").strip(), r.get("text") or "") for r in csv.DictReader(f) if (r.get("id") or "").strip()]
+
+
+def blank_coverage(reqs):
+    """An empty coverage sheet: one row per requirement, one empty cell per pass."""
+    lines = [",".join(["requirement"] + PASSES)]
+    lines += [rid + "," * len(PASSES) for rid in dict(reqs)]
+    return "\n".join(lines) + "\n"
+
+
 def load(findings_path, reqs_path, coverage_path):
     with open(findings_path) as f:
         findings = json.load(f)
-    with open(reqs_path, newline="") as f:
-        reqs = [((r.get("id") or "").strip(), r.get("text") or "") for r in csv.DictReader(f) if (r.get("id") or "").strip()]
+    reqs = read_requirements(reqs_path)
     with open(coverage_path, newline="") as f:
         reader = csv.DictReader(f)
         rows = list(reader)
@@ -265,6 +277,9 @@ def load(findings_path, reqs_path, coverage_path):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) == 3 and sys.argv[1] == "--start":
+        print(blank_coverage(read_requirements(sys.argv[2])), end="")
+        sys.exit(0)
     args = [a for a in sys.argv[1:] if a != "--report"]
     if len(args) != 3:
         print("Usage: check.py review_findings.json review_requirements.csv review_coverage.csv [--report]", file=sys.stderr)
