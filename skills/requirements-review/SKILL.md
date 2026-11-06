@@ -20,7 +20,7 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
 
 ## Steps
 
-1. **List what is under review.** Put the requirements in `review_requirements.csv` with the columns `id,text`, one requirement per row. Fix the wording first with `requirements-writing`, so the review is about what the requirements say and not how they are written.
+1. **List what is under review.** Put the requirements in `review_requirements.csv` with the columns `id,text`, one requirement per row. Fix the wording first with `requirements-writing`, so the review is about what the requirements say and not how they are written. If the wording is not yours to change, list the unclear words on the side. This review does not rate wording.
 
 2. **Make the coverage sheet.** `review_coverage.csv` has one row per requirement and one column per pass. There are eight passes:
 
@@ -35,7 +35,7 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
    | ownership | Two people or teams given the same decision, where both could act and nothing says whose word counts |
    | scope-leak | A requirement that relies on something the scope leaves out |
 
-   Start the sheet with every cell empty, so nothing counts as looked at until you fill it in:
+   Start the sheet with every cell empty, so nothing counts as looked at until you fill it in. The first column is called `requirement`:
 
    ```bash
    python scripts/check.py --start review_requirements.csv > review_coverage.csv
@@ -43,9 +43,16 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
 
    To tell the first three apart: if both can be met by two people each doing their part, it is ownership. If the words clash in a case both requirements cover, it is a contradiction. If they clash only once something else happens, such as an account staying open for eight years, it is a hidden conflict.
 
-3. **Hunt, one pass at a time.** Read the whole set once for each pass, not once for everything. The script in `requirements-conflict-check` gives leads for four of the passes. Each suspicion is a candidate, not yet a finding. As you finish a pass, fill in its column: `clear`, the finding id, or `skipped: why`. Never leave a cell empty and never write `clear` for a pass you did not do.
+3. **Hunt, one pass at a time.** Read the whole set once for each pass, not once for everything. Each suspicion is a candidate, not yet a finding. As you finish a pass, fill in its column: `clear`, the finding id, or `skipped: why`. Never leave a cell empty and never write `clear` for a pass you did not do.
 
    One problem often turns up in more than one pass. Record it once, under the pass that fits best. In the other cells where you met it, write `see F1`, so the sheet does not say `clear` about something you found.
+
+   - **How low is the bar?** Raise a candidate when you can say what would go wrong. Leave out a "what if" that no requirement touches.
+   - **What does a gap quote?** A gap is something no requirement says, so name the requirements at its edges and quote those edges. A refund from 50 to 400 with no approver names the rule that stops at 50 and the rule that starts at 400.
+   - **What does `clear` mean for a gap?** That you found no gap touching that requirement.
+   - **No scope statement?** Write `skipped: no scope statement` in the scope-leak column. Do not guess the scope from the requirements.
+   - **Several findings in one cell?** Separate the ids with a space.
+   - **Want leads?** If you have it, `conflicts.py` in `requirements-conflict-check` points at likely duplicates, number mismatches, "must" against "must not", and drifting names. It is a help, not a step. Every pass can be done by reading.
 
 4. **Hand every candidate to a second reviewer.** For agents, start a fresh agent and give it only the candidate and the requirements, not the finder's reasoning. A reviewer who is shown the argument tends to agree with it. For people, ask a colleague who did not write the finding. Give them this brief:
 
