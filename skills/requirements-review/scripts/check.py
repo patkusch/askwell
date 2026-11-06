@@ -250,6 +250,11 @@ def report(findings, reqs, rows, columns):
     table("Confirmed", ["Finding", "Requirements", "What is wrong", "What goes wrong if it is left", "How bad", "Who decides"],
           confirmed, [lambda f: val(f, "id"), ids, lambda f: val(f, "what"), lambda f: val(f, "impact"),
                       lambda f: val(f, "severity").lower(), lambda f: val(f, "who_decides")])
+    if confirmed:
+        out.extend(["The words each confirmed finding rests on:", ""])
+        for f in confirmed:
+            out.extend(f"- {val(f, 'id')}, {rid}: \"{' '.join(str(f['quotes'][rid]).split())}\"" for rid in req_list(f))
+        out.append("")
     table("Waiting for an answer", ["Finding", "Requirements", "Question", "Who can answer"],
           [f for f in findings if val(f, "verdict") == "needs-answer"],
           [lambda f: val(f, "id"), ids, lambda f: val(f, "open_question"), lambda f: val(f, "who_can_answer")])

@@ -923,6 +923,8 @@ class Review(unittest.TestCase):
         text = review.report(*self.records("good"))
         self.assertIn("8 requirements reviewed in 8 passes. 3 confirmed, 1 waiting for an answer, 1 raised and rejected.", text)
         self.assertIn("64 checks (each requirement in each pass): 46 clear, 10 with a finding, 8 skipped.", text)
+        self.assertIn('- F1, R5: "The team leader shall approve any refund over 400"', text)
+        self.assertNotIn("- F4, R1:", text)  # only confirmed findings need their words shown
         self.assertLess(text.index("| F1 |"), text.index("| F2 |"))
         self.assertLess(text.index("| F2 |"), text.index("| F5 |"))
         self.assertIn("- scope-leak: R1, R2, R3, R4, R5, R6, R7, R8 (scope not signed off yet)", text)
