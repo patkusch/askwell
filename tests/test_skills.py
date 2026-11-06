@@ -967,6 +967,19 @@ class Review(unittest.TestCase):
         for line in review.BRIEF.splitlines():
             self.assertIn(line, skill)
 
+    def test_a_missing_or_broken_file_gets_a_plain_message(self):
+        import tempfile
+        script, good = str(SKILLS / "requirements-review/scripts/check.py"), EX / "good"
+        with tempfile.TemporaryDirectory() as d:
+            broken = Path(d) / "review_findings.json"
+            broken.write_text("[{not json")
+            for first in (broken, Path(d) / "nothing-here.json"):
+                r = subprocess.run([sys.executable, script, str(first), str(good / "review_requirements.csv"),
+                                    str(good / "review_coverage.csv")], capture_output=True, text=True)
+                self.assertEqual(r.returncode, 2)
+                self.assertIn("Cannot read the review files", r.stderr)
+                self.assertNotIn("Traceback", r.stderr)
+
     def test_findings_file_that_is_not_a_list(self):
         _, reqs, rows, cols = self.records("good")
         self.assertEqual(review.check({"id": "F1"}, reqs, rows, cols), ["the findings file must be a list of findings"])

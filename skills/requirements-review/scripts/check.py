@@ -374,7 +374,11 @@ if __name__ == "__main__":
     if len(args) != 3:
         print("Usage: check.py review_findings.json review_requirements.csv review_coverage.csv [--report] [--previous review_previous.json]", file=sys.stderr)
         sys.exit(2)
-    findings, reqs, rows, columns = load(*args)
+    try:
+        findings, reqs, rows, columns = load(*args)
+    except (OSError, ValueError) as e:
+        print(f"Cannot read the review files: {e}", file=sys.stderr)
+        sys.exit(2)
     problems = check(findings, reqs, rows, columns, previous)
     if problems:
         print("\n".join(problems))
