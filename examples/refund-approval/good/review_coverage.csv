@@ -1,0 +1,9 @@
+requirement,contradiction,duplicate,hidden-conflict,number-mismatch,term-drift,gap,ownership,scope-leak
+R1,clear,F4,clear,clear,F5,clear,clear,skipped: scope not signed off yet
+R2,F1,clear,clear,clear,clear,clear,clear,skipped: scope not signed off yet
+R3,clear,clear,clear,clear,clear,F3,clear,skipped: scope not signed off yet
+R4,clear,clear,clear,clear,clear,clear,clear,skipped: scope not signed off yet
+R5,F1,clear,clear,clear,clear,F3,clear,skipped: scope not signed off yet
+R6,clear,clear,F2,clear,clear,clear,clear,skipped: scope not signed off yet
+R7,clear,clear,F2,clear,F5,clear,clear,skipped: scope not signed off yet
+R8,clear,F4,clear,clear,clear,clear,clear,skipped: scope not signed off yet

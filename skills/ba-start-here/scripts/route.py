@@ -25,6 +25,7 @@ RULES = {
     "nonfunctional-requirements": ["non-functional", "nonfunctional", "performance requirement", "availability", "security requirement", "accessibility", "service level"],
     "scope-definition": ["scope", "out of scope", "scope creep", "what is in and out"],
     "requirements-conflict-check": ["conflict", "contradict", "review the requirements", "sanity check", "inconsisten"],
+    "requirements-review": ["independent review", "thorough review", "full review", "second reviewer", "double-check", "false alarm", "before sign-off"],
     "requirements-traceability": ["traceability", "rtm", "coverage", "everything we promised"],
     "brd-writing": ["brd", "business requirements document", "requirements document", "frd", "srs"],
     "process-mapping": ["process map", "draw the process", "flowchart", "swimlane", "bpmn", "map the process", "as-is process"],

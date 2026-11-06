@@ -1,0 +1,8 @@
+id,text
+R1,The system shall assign every new motor claim a triage band within 2 minutes of first notice of loss.
+R2,The claims handler shall contact the customer within 4 working hours of a claim in the urgent band.
+R3,"The system shall log each triage band change with the person, the time, the old band and the new band."
+R4,The claims handler shall contact the policyholder within 1 working day of a claim in the urgent band.
+R5,The team leader shall approve any move of a claim out of the urgent band.
+R6,"The system shall move a claim out of the urgent band automatically when the repair estimate is under 1,000."
+R7,The system shall assign a fraud score to every new motor claim.

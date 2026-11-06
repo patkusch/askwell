@@ -53,6 +53,7 @@ nfr = load(SKILLS / "nonfunctional-requirements/scripts/check.py")
 gloss = load(SKILLS / "data-dictionary/scripts/glossary.py")
 ddict = load(SKILLS / "data-dictionary/scripts/check.py")
 usecase = load(SKILLS / "use-cases/scripts/check.py")
+review = load(SKILLS / "requirements-review/scripts/check.py")
 import datetime, subprocess, sys
 
 EX = ROOT / "examples" / "refund-approval"
@@ -788,6 +789,7 @@ class Router(unittest.TestCase):
             "how do we prioritise the backlog with moscow": "backlog-prioritisation",
             "write the minutes from this transcript": "meeting-minutes",
             "we need a UAT plan before go live": "user-acceptance-testing",
+            "do a thorough review of these requirements with a second reviewer": "requirements-review",
         }
         for text, want in cases.items():
             self.assertIn(want, self.picks(text), text)
@@ -819,6 +821,98 @@ class Router(unittest.TestCase):
         self.assertNotIn("sql-for-analysis", self.picks("the squirrel scored a goal"))
 
 
+class Review(unittest.TestCase):
+    def records(self, which, folder=None):
+        d = (folder or EX) / which
+        return review.load(d / "review_findings.json", d / "review_requirements.csv", d / "review_coverage.csv")
+
+    def test_good_records_hold_up_in_both_examples(self):
+        self.assertEqual(review.check(*self.records("good")), [])
+        self.assertEqual(review.check(*self.records("good", EX.parent / "claims-triage")), [])
+
+    def test_bad_records_trip_every_message(self):
+        out = review.check(*self.records("bad"))
+        for line in (
+            "F1: the quote from R5 is not in R5 word for word",
+            "F1: found and checked by the same reviewer (reviewer-1)",
+            "F1: verdict 'likely' is not confirmed, needs-answer or rejected",
+            "F2: no quote from R7",
+            "F2: names R99, which is not in the requirements",
+            "F2: no second reviewer named",
+            "F2: confirmed but does not say what goes wrong if it is left",
+            "F2: severity 'urgent' is not high, medium or low",
+            "F2: confirmed but no one is named to decide",
+            "F2: id used twice",
+            "F2: kind 'vague' is not one of the eight passes",
+            "F2: does not say what is wrong",
+            "F2: has a severity but is not confirmed",
+            "F2: rejected without a reason",
+            "finding 4: no id",
+            "finding 4: no finder named",
+            "finding 4: needs an answer but does not ask a question",
+            "finding 4: no one is named who can answer",
+            "F5: a duplicate needs two requirements, names 1",
+            "F7: same kind and same requirements as F6, so one finding is recorded twice",
+            "F8: names no requirement",
+            "finding 9: not a record",
+            "coverage sheet has no column for ownership",
+            "R3: coverage names F9 under duplicate, which is not a finding",
+            "R3: not checked for gap (empty cell)",
+            "R3: skipped for scope-leak without a reason",
+            "R4: coverage puts F6 under gap, but F6 is a term-drift finding about R1, R7",
+            "R77: in the coverage sheet but not in the requirements",
+            "R2: listed twice in the coverage sheet",
+            "a coverage row names no requirement",
+            "R8: not in the coverage sheet, so it was never reviewed",
+            "F5: the coverage sheet does not show it under duplicate for R1",
+        ):
+            self.assertIn(line, out)
+
+    def test_every_message_the_script_can_give_is_planted_in_the_bad_set(self):
+        src = (SKILLS / "requirements-review/scripts/check.py").read_text()
+        said = len(re.findall(r"problems\.append\(|^    problems = \[f", src, re.M))
+        kinds = {re.sub(r"(F\d+|R\d+|finding \d+|'[^']*'|\(.*\)|names \d)", "_", line) for line in review.check(*self.records("bad"))}
+        self.assertEqual(len(kinds), said, sorted(kinds))
+
+    def test_a_quote_may_differ_in_capitals_and_line_breaks_only(self):
+        findings, reqs, rows, cols = self.records("good")
+        findings[0]["quotes"]["R2"] = "the FINANCE manager shall\n   approve any refund over 500"
+        self.assertEqual(review.check(findings, reqs, rows, cols), [])
+        findings[0]["quotes"]["R2"] = "the finance manager approves any refund over 500"
+        self.assertEqual(review.check(findings, reqs, rows, cols), ["F1: the quote from R2 is not in R2 word for word"])
+
+    def test_a_changed_requirement_shows_which_findings_need_a_fresh_look(self):
+        findings, reqs, rows, cols = self.records("good")
+        reqs["R5"] = "The team leader shall approve any refund over 600 within 1 working day."
+        self.assertEqual(review.check(findings, reqs, rows, cols),
+                         ["F1: the quote from R5 is not in R5 word for word", "F3: the quote from R5 is not in R5 word for word"])
+
+    def test_a_reviewer_cannot_check_their_own_finding_under_another_spelling(self):
+        findings, reqs, rows, cols = self.records("good")
+        findings[0]["checked_by"] = " Reviewer-1 "
+        self.assertEqual(review.check(findings, reqs, rows, cols), ["F1: found and checked by the same reviewer (reviewer-1)"])
+
+    def test_findings_file_that_is_not_a_list(self):
+        _, reqs, rows, cols = self.records("good")
+        self.assertEqual(review.check({"id": "F1"}, reqs, rows, cols), ["the findings file must be a list of findings"])
+
+    def test_report_is_worst_first_and_lists_what_was_not_looked_at(self):
+        text = review.report(*self.records("good"))
+        self.assertIn("8 requirements reviewed in 8 passes. 3 confirmed, 1 waiting for an answer, 1 raised and rejected.", text)
+        self.assertLess(text.index("| F1 |"), text.index("| F2 |"))
+        self.assertLess(text.index("| F2 |"), text.index("| F5 |"))
+        self.assertIn("- scope-leak: R1, R2, R3, R4, R5, R6, R7, R8 (scope not signed off yet)", text)
+        self.assertNotIn("Not looked at", review.report(*self.records("good", EX.parent / "claims-triage")))
+
+    def test_no_report_is_written_from_records_that_fail(self):
+        d = EX / "bad"
+        r = subprocess.run([sys.executable, str(SKILLS / "requirements-review/scripts/check.py"), str(d / "review_findings.json"),
+                            str(d / "review_requirements.csv"), str(d / "review_coverage.csv"), "--report"], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 1)
+        self.assertNotIn("# Requirements review", r.stdout)
+        self.assertIn("No report written: fix the records first.", r.stdout)
+
+
 class Audit(unittest.TestCase):
     def audit(self, folder, *extra):
         return subprocess.run([sys.executable, str(ROOT / "scripts/askwell.py"), "audit", str(EX.parent / folder), "--today", "2026-10-16", *extra],
@@ -827,18 +921,18 @@ class Audit(unittest.TestCase):
     def test_good_folder_is_clean(self):
         r = self.audit("refund-approval/good")
         self.assertEqual(r.returncode, 0, r.stdout)
-        self.assertIn("0 check(s) found something, 34 clean, 1 skipped", r.stdout)
+        self.assertIn("0 check(s) found something, 35 clean, 1 skipped", r.stdout)
 
     def test_bad_folder_exit_code_matches_run_all(self):
         r = self.audit("refund-approval/bad")
-        self.assertEqual(r.returncode, 33, r.stdout[-800:])
+        self.assertEqual(r.returncode, 34, r.stdout[-800:])
         self.assertIn("== problem-statement", r.stdout)
 
     def test_json_output(self):
         r = self.audit("refund-approval/bad", "--json")
         data = json.loads(r.stdout)
-        self.assertEqual(data["found"], 33)
-        self.assertEqual(r.returncode, 33)
+        self.assertEqual(data["found"], 34)
+        self.assertEqual(r.returncode, 34)
         self.assertEqual(len(data["checks"]), data["found"] + data["clean"])
         first = next(c for c in data["checks"] if c["skill"] == "problem-statement")
         self.assertFalse(first["ok"])
@@ -869,7 +963,7 @@ class Audit(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             shutil.copy(EX / "good/problem.txt", d)
             out = subprocess.run([sys.executable, str(ROOT / "scripts/askwell.py"), "audit", d], capture_output=True, text=True).stdout
-        self.assertIn("1 clean, 34 skipped", out.replace("0 check(s) found something, ", ""))
+        self.assertIn("1 clean, 35 skipped", out.replace("0 check(s) found something, ", ""))
 
     def test_every_check_script_is_in_the_audit_table(self):
         cli = load(ROOT / "scripts/askwell.py")
@@ -1144,7 +1238,7 @@ class WorkedExample(unittest.TestCase):
 
     def test_bad_example_trips_every_check(self):
         r = self.run_all("bad")
-        self.assertEqual(r.returncode, 33, r.stdout[-1500:])  # all thirty-three gated checks find something
+        self.assertEqual(r.returncode, 34, r.stdout[-1500:])  # all thirty-four gated checks find something
 
 
 if __name__ == "__main__":

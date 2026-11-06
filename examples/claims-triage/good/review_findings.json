@@ -1,0 +1,75 @@
+[
+  {
+    "id": "F1",
+    "kind": "number-mismatch",
+    "verdict": "confirmed",
+    "requirements": [
+      "R2",
+      "R4"
+    ],
+    "quotes": {
+      "R2": "within 4 working hours of a claim in the urgent band",
+      "R4": "within 1 working day of a claim in the urgent band"
+    },
+    "what": "The time allowed to make first contact on an urgent claim is 4 working hours in R2 and 1 working day in R4.",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-2",
+    "impact": "Handlers and the service report will work to different deadlines, so the same call counts as on time and late.",
+    "severity": "high",
+    "who_decides": "Claims operations manager"
+  },
+  {
+    "id": "F2",
+    "kind": "contradiction",
+    "verdict": "confirmed",
+    "requirements": [
+      "R5",
+      "R6"
+    ],
+    "quotes": {
+      "R5": "The team leader shall approve any move of a claim out of the urgent band",
+      "R6": "move a claim out of the urgent band automatically"
+    },
+    "what": "R5 wants a team leader to approve every move out of the urgent band and R6 makes some of those moves with nobody approving.",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-3",
+    "impact": "Either the automatic move is built and R5 is broken, or it waits for approval and R6 saves no time.",
+    "severity": "medium",
+    "who_decides": "Head of Claims"
+  },
+  {
+    "id": "F3",
+    "kind": "term-drift",
+    "verdict": "needs-answer",
+    "requirements": [
+      "R2",
+      "R4"
+    ],
+    "quotes": {
+      "R2": "contact the customer",
+      "R4": "contact the policyholder"
+    },
+    "what": "The person to contact is the customer in R2 and the policyholder in R4.",
+    "found_by": "reviewer-2",
+    "checked_by": "reviewer-1",
+    "open_question": "On a motor claim, are the customer and the policyholder always the same person?",
+    "who_can_answer": "Claims operations manager"
+  },
+  {
+    "id": "F4",
+    "kind": "duplicate",
+    "verdict": "rejected",
+    "requirements": [
+      "R1",
+      "R7"
+    ],
+    "quotes": {
+      "R1": "assign every new motor claim a triage band",
+      "R7": "assign a fraud score to every new motor claim"
+    },
+    "what": "Both give every new motor claim a rating, so one looked like a repeat of the other.",
+    "found_by": "reviewer-2",
+    "checked_by": "reviewer-3",
+    "reason": "A triage band says how fast to act and a fraud score says how closely to look. They are two different ratings."
+  }
+]

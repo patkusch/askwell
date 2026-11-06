@@ -32,7 +32,7 @@ metadata:
 1. **Understand**: `problem-statement` → `stakeholder-mapping` → `current-state-analysis`
 2. **Find the need**: `stakeholder-interview`, `workshop-facilitation`, `requirements-elicitation`, `root-cause-analysis`
 3. **Define**: `scope-definition` → `requirements-writing` → `user-stories` / `use-cases` → `acceptance-criteria` → `nonfunctional-requirements` → `data-dictionary`
-4. **Check**: `requirements-conflict-check` → `requirements-traceability`
+4. **Check**: `requirements-conflict-check` → `requirements-traceability`. For a large or costly set, use `requirements-review` so every finding is checked by a second reviewer
 5. **Justify and choose**: `options-analysis` → `business-case` → `vendor-selection` → `backlog-prioritisation`
 6. **Deliver**: `user-acceptance-testing` → `change-impact-assessment` → `kpi-definition`
 7. **Throughout**: `raid-log`, `decision-log`, `meeting-minutes`, `stakeholder-communication`

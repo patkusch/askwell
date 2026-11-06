@@ -1,0 +1,94 @@
+[
+  {
+    "id": "F1",
+    "kind": "contradiction",
+    "verdict": "confirmed",
+    "requirements": [
+      "R2",
+      "R5"
+    ],
+    "quotes": {
+      "R2": "The finance manager shall approve any refund over 500",
+      "R5": "The team leader shall approve any refund over 400"
+    },
+    "what": "A refund over 500 has two approvers with two different deadlines.",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-2",
+    "impact": "Nobody knows whose approval counts, so large refunds wait while two people each assume the other has it.",
+    "severity": "high",
+    "who_decides": "Head of Finance"
+  },
+  {
+    "id": "F2",
+    "kind": "hidden-conflict",
+    "verdict": "confirmed",
+    "requirements": [
+      "R6",
+      "R7"
+    ],
+    "quotes": {
+      "R6": "delete refund records 7 years after the refund is paid",
+      "R7": "keep the approval record for every refund for the life of the client account"
+    },
+    "what": "An approval record is part of the refund record, so it must be both deleted after 7 years and kept for as long as the account is open.",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-3",
+    "impact": "For any account open longer than 7 years the system has to break one of the two rules.",
+    "severity": "medium",
+    "who_decides": "Data protection lead"
+  },
+  {
+    "id": "F3",
+    "kind": "gap",
+    "verdict": "needs-answer",
+    "requirements": [
+      "R3",
+      "R5"
+    ],
+    "quotes": {
+      "R3": "any refund under 50 automatically",
+      "R5": "any refund over 400"
+    },
+    "what": "Nothing says who approves a refund from 50 to 400.",
+    "found_by": "reviewer-2",
+    "checked_by": "reviewer-1",
+    "open_question": "Is a refund from 50 to 400 meant to need no approval, or is a rule missing?",
+    "who_can_answer": "Refunds team leader"
+  },
+  {
+    "id": "F4",
+    "kind": "duplicate",
+    "verdict": "rejected",
+    "requirements": [
+      "R1",
+      "R8"
+    ],
+    "quotes": {
+      "R1": "email the customer a decision",
+      "R8": "send the customer a text message when the refund is paid"
+    },
+    "what": "Both tell the customer about the refund, so one looked like a repeat of the other.",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-2",
+    "reason": "R1 is about the decision and R8 is about the payment. They happen at different times and the customer needs both."
+  },
+  {
+    "id": "F5",
+    "kind": "term-drift",
+    "verdict": "confirmed",
+    "requirements": [
+      "R1",
+      "R7"
+    ],
+    "quotes": {
+      "R1": "the customer",
+      "R7": "the client account"
+    },
+    "what": "The person asking for the refund is a customer in R1 and a client in R7.",
+    "found_by": "reviewer-2",
+    "checked_by": "reviewer-3",
+    "impact": "A reader may take client and customer for two different groups and build two sets of records.",
+    "severity": "low",
+    "who_decides": "Business analyst, with the glossary owner"
+  }
+]

@@ -37,6 +37,7 @@ run "decision-log"                python3 $S/decision-log/scripts/check.py $D/de
 run "stakeholder-communication"   python3 $S/stakeholder-communication/scripts/check.py $D/summary.txt
 run "meeting-minutes agenda"      python3 $S/meeting-minutes/scripts/agenda.py $D/agenda.json
 run "meeting-minutes"             python3 $S/meeting-minutes/scripts/actions.py $D/notes.txt
+run "requirements-review"         python3 $S/requirements-review/scripts/check.py $D/review_findings.json $D/review_requirements.csv $D/review_coverage.csv
 [ -f $D/conflict.csv ] && run "conflict-check" python3 $S/requirements-conflict-check/scripts/conflicts.py $D/conflict.csv --terms $D/terms.json
 echo "== business-case"; python3 $S/business-case/scripts/case.py $D/case.json --sensitivity
 exit $fails

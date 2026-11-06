@@ -6,13 +6,13 @@ Skills that help an AI agent do a business analyst's work: find out what people 
 
 It is a business-analysis counterpart to the [scientific-agent-skills](https://github.com/K-Dense-AI/scientific-agent-skills) library. Each skill is a folder with a `SKILL.md` the agent reads when the job matches, so it follows a good method instead of improvising. It works with Claude Code and any agent that reads the open Agent Skills format.
 
-## What's in it (33 skills)
+## What's in it (34 skills)
 
 **Understand the problem**
 `problem-statement` · `stakeholder-mapping` · `stakeholder-interview` · `workshop-facilitation` · `current-state-analysis` · `root-cause-analysis` · `gap-analysis`
 
 **Write the requirements**
-`requirements-elicitation` · `requirements-writing` · `user-stories` · `acceptance-criteria` · `use-cases` · `nonfunctional-requirements` · `scope-definition` · `requirements-conflict-check` · `requirements-traceability` · `brd-writing`
+`requirements-elicitation` · `requirements-writing` · `user-stories` · `acceptance-criteria` · `use-cases` · `nonfunctional-requirements` · `scope-definition` · `requirements-conflict-check` · `requirements-review` · `requirements-traceability` · `brd-writing`
 
 **Model and measure**
 `process-mapping` · `data-dictionary` · `sql-for-analysis` · `kpi-definition`
@@ -36,6 +36,7 @@ Business analysis writing fails in predictable ways: vague requirements, stories
 | `user-stories` | Wrong format, "the system" as the user, a "so that" that repeats the "I want", solutions and oversized stories |
 | `acceptance-criteria` | Missing Given/When/Then parts, vague results, sets with no failure case |
 | `requirements-conflict-check` | Near-duplicates, same limit with different numbers, "must" against "must not", one term with several names |
+| `requirements-review` | Review findings with no word-for-word quote, no second reviewer, or a rating before they are confirmed; requirements nobody looked at |
 | `requirements-traceability` | Requirements with no design or test, "done" with no test, tests nothing uses |
 | `raid-log` | Ranks risks; flags no owner, overdue, stale, unrated, needs the sponsor |
 | `kpi-definition` | KPIs with no baseline, no numeric target, no owner, no guard against gaming |
