@@ -1012,6 +1012,16 @@ class Review(unittest.TestCase):
         del findings[0]["why_it_stands"]
         self.assertEqual(review.check(findings, reqs, rows, cols), ["F1: the second reviewer does not say why it stands"])
 
+    def test_the_records_from_the_live_trial_still_pass(self):
+        findings, reqs, rows, cols = self.records("trial")
+        self.assertEqual(review.check(findings, reqs, rows, cols), [])
+        self.assertEqual(review.counts(findings), {"confirmed": 7, "needs-answer": 1, "rejected": 2})
+        self.assertEqual({f["found_by"] for f in findings}, {"reviewer-1"})
+        self.assertEqual({f["checked_by"] for f in findings}, {"reviewer-2"})
+        note = (EX / "trial/README.md").read_text()
+        self.assertIn("raised 10 candidates", note)
+        self.assertIn("confirmed 7, left 1 waiting for an answer, and rejected 2", note)
+
     def test_findings_file_that_is_not_a_list(self):
         _, reqs, rows, cols = self.records("good")
         self.assertEqual(review.check({"id": "F1"}, reqs, rows, cols), ["the findings file must be a list of findings"])

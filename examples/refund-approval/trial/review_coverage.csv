@@ -1,0 +1,9 @@
+requirement,contradiction,duplicate,hidden-conflict,number-mismatch,term-drift,gap,ownership,scope-leak
+R1,clear,clear,clear,clear,F3,F6 F9,clear,skipped: no scope statement was given so nothing says what the scope leaves out
+R2,clear,clear,clear,F2,clear,F8,F10,skipped: no scope statement was given so nothing says what the scope leaves out
+R3,clear,clear,clear,clear,clear,F5,clear,skipped: no scope statement was given so nothing says what the scope leaves out
+R4,clear,clear,clear,clear,clear,F6,clear,skipped: no scope statement was given so nothing says what the scope leaves out
+R5,clear,clear,clear,F2,clear,F5 F8,F10,skipped: no scope statement was given so nothing says what the scope leaves out
+R6,clear,clear,F1,clear,F4,F7,clear,skipped: no scope statement was given so nothing says what the scope leaves out
+R7,clear,clear,F1,clear,F3 F4,clear,clear,skipped: no scope statement was given so nothing says what the scope leaves out
+R8,clear,clear,clear,clear,F3,F7 F9,clear,skipped: no scope statement was given so nothing says what the scope leaves out

@@ -1,0 +1,9 @@
+id,text
+R1,The system shall email the customer a decision within 5 minutes of a refund request being approved or rejected.
+R2,The finance manager shall approve any refund over 500 within 2 working days.
+R3,The system shall approve any refund under 50 automatically.
+R4,"The system shall record who approved each refund, the time, and the amount."
+R5,The team leader shall approve any refund over 400 within 1 working day.
+R6,The system shall delete refund records 7 years after the refund is paid.
+R7,The system shall keep the approval record for every refund for the life of the client account.
+R8,The system shall send the customer a text message when the refund is paid.

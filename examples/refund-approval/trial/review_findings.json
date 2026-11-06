@@ -1,0 +1,197 @@
+[
+  {
+    "id": "F1",
+    "kind": "hidden-conflict",
+    "requirements": [
+      "R6",
+      "R7"
+    ],
+    "quotes": {
+      "R6": "delete refund records 7 years after the refund is paid",
+      "R7": "keep the approval record for every refund for the life of the client account"
+    },
+    "what": "If a client account stays open more than 7 years after a refund is paid, R6 says delete the refund's records and R7 says keep its approval record. Both cannot be done for the same record. This holds on the plain reading that the approval record is one of the refund records; nothing in the set says it is not.",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-2",
+    "why_it_stands": "I could not find a reading that saves both. An approval record for a refund is, in plain words, a record of that refund, and nothing in the set says R6 leaves it out. F4 is the rival reading of the same problem (maybe they are separate things); I kept this one and rejected F4, and added the doubt to the wording of 'what'.",
+    "verdict": "confirmed",
+    "impact": "The builders must break one of the two rules for every account that lasts more than 7 years. Either records the business said to keep are deleted, which cannot be undone, or records it said to delete are kept.",
+    "severity": "medium",
+    "who_decides": "Not named in the documents I was given. It needs the person who owns the record-keeping rules behind R6 and R7 (how long refund records are kept and when they are deleted)."
+  },
+  {
+    "id": "F2",
+    "kind": "number-mismatch",
+    "requirements": [
+      "R2",
+      "R5"
+    ],
+    "quotes": {
+      "R2": "any refund over 500 within 2 working days",
+      "R5": "any refund over 400 within 1 working day"
+    },
+    "what": "R2 and R5 may be two versions of one rule for large refunds, with two different amounts (500 and 400) and two different time limits (2 working days and 1 working day).",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-2",
+    "verdict": "rejected",
+    "reason": "R2 names the finance manager and R5 names the team leader, so the text reads as two separate rules and the figures 500 and 400 are not shown to be the same limit. The real problem, that a refund over 500 falls under both rules with two time limits, is recorded in F10. Whoever decides F10 will also settle whether one rule was meant to replace the other."
+  },
+  {
+    "id": "F3",
+    "kind": "term-drift",
+    "requirements": [
+      "R1",
+      "R7",
+      "R8"
+    ],
+    "quotes": {
+      "R1": "email the customer",
+      "R7": "the client account",
+      "R8": "send the customer a text message"
+    },
+    "what": "R1 and R8 say 'customer' and R7 says 'client'. It is not clear whether these are the same person, or whether a client account can belong to someone other than the customer who gets the refund.",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-2",
+    "why_it_stands": "The words are there as quoted and nothing in the set says whether a client is the same as a customer. The finding stands whichever way that goes: if they are the same, one thing has two names; if they are different, R7 leans on a 'client account' that no other requirement explains. I could not disprove it, but it is small.",
+    "verdict": "confirmed",
+    "impact": "R7 ties how long records are kept to the 'client account'. If a builder guesses wrong about whose account that is, records are kept for the wrong length of time.",
+    "severity": "low",
+    "who_decides": "Not named in the documents I was given. The author of the requirements can settle it by saying whether client and customer are the same and using one word."
+  },
+  {
+    "id": "F4",
+    "kind": "term-drift",
+    "requirements": [
+      "R6",
+      "R7"
+    ],
+    "quotes": {
+      "R6": "refund records",
+      "R7": "the approval record"
+    },
+    "what": "R6 speaks of 'refund records' and R7 of 'the approval record'. It is not clear whether the approval record is one of the refund records or a separate thing.",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-2",
+    "verdict": "rejected",
+    "reason": "Not a separate finding. The doubt it raises (is the approval record one of the refund records?) is the one point F1 turns on, and I have written it into F1 so it is not lost. Keeping both would record one problem twice."
+  },
+  {
+    "id": "F5",
+    "kind": "gap",
+    "requirements": [
+      "R3",
+      "R5"
+    ],
+    "quotes": {
+      "R3": "any refund under 50",
+      "R5": "any refund over 400"
+    },
+    "what": "Nothing says who approves a refund from 50 up to and including 400. The system approves under 50 and the team leader approves over 400, and no requirement covers the amounts in between.",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-2",
+    "why_it_stands": "I read all eight requirements and none names an approver for a refund of 50 up to and including 400. R3 stops below 50, R5 starts above 400, and R4 expects every refund to have an approver. I have no scope statement, so I cannot rule out that another document covers it, but nothing in this set does.",
+    "verdict": "confirmed",
+    "impact": "A refund between 50 and 400 has no approver. Either those refunds get stuck or the builders guess who approves them.",
+    "severity": "high",
+    "who_decides": "Not named in the documents I was given. It needs the person who owns the refund approval rules."
+  },
+  {
+    "id": "F6",
+    "kind": "gap",
+    "requirements": [
+      "R1",
+      "R4"
+    ],
+    "quotes": {
+      "R1": "approved or rejected",
+      "R4": "record who approved each refund"
+    },
+    "what": "R1 expects that a refund request can be rejected, but R2, R3 and R5 speak only of approving and R4 records only who approved. Nothing says who may reject a request, and a rejection would leave no record of who decided or when.",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-2",
+    "why_it_stands": "R1 is the only requirement that mentions rejecting. R2, R3 and R5 speak only of approving and R4 records only who approved, so nothing gives anyone the job of rejecting or asks for a record of it. One could read 'shall approve' as 'shall decide', which would name the rejecter, but that still leaves rejections unrecorded. I reworded 'what' to say this.",
+    "verdict": "confirmed",
+    "impact": "When a customer disputes a rejection, there is no record of who rejected it or when. The builders also have to guess who is allowed to reject.",
+    "severity": "medium",
+    "who_decides": "Not named in the documents I was given. It needs the person who owns the refund approval rules."
+  },
+  {
+    "id": "F7",
+    "kind": "gap",
+    "requirements": [
+      "R6",
+      "R8"
+    ],
+    "quotes": {
+      "R6": "after the refund is paid",
+      "R8": "when the refund is paid"
+    },
+    "what": "R6 and R8 both depend on the moment the refund is paid, but no requirement says how the system learns a refund was paid or that the payment date is recorded. If paying refunds is this system's job, nothing covers who or what pays or how soon after approval.",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-2",
+    "why_it_stands": "R6 and R8 both start from the moment a refund is paid, and no requirement says how the system knows that moment. R4 lists what is recorded and the payment date is not on the list, yet R6 counts 7 years from it. Whether paying is this system's job is not in the documents, but the finding stands either way, so I narrowed 'what' to the part that is certain.",
+    "verdict": "confirmed",
+    "impact": "The text message in R8 has nothing to set it off and the 7 years in R6 have no start date. A refund that is approved but never marked as paid would never be deleted.",
+    "severity": "medium",
+    "who_decides": "Not named in the documents I was given. It needs whoever sets what this system covers (the project owner), because the first thing to decide is whether paying refunds is this system's job or another system's."
+  },
+  {
+    "id": "F8",
+    "kind": "gap",
+    "requirements": [
+      "R2",
+      "R5"
+    ],
+    "quotes": {
+      "R2": "within 2 working days",
+      "R5": "within 1 working day"
+    },
+    "what": "Nothing says what happens when the finance manager or the team leader does not decide in time. The request has no next step once the time limit passes.",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-2",
+    "why_it_stands": "R2 and R5 set time limits and no requirement says what happens when a limit is missed. R1 only emails the customer once a decision is made, so a late request leaves the customer hearing nothing. It may be that the owners want nothing to happen, but that is their call and the set does not say so.",
+    "verdict": "confirmed",
+    "impact": "A refund over 400 can wait with no end when the approver is away or late. The customer is told nothing, because R1 only sends an email after a decision.",
+    "severity": "medium",
+    "who_decides": "Not named in the documents I was given. It needs the person who owns the refund approval rules."
+  },
+  {
+    "id": "F9",
+    "kind": "gap",
+    "requirements": [
+      "R1",
+      "R8"
+    ],
+    "quotes": {
+      "R1": "email the customer a decision",
+      "R8": "send the customer a text message"
+    },
+    "what": "The decision goes by email and the payment notice by text message, so the system needs both an email address and a mobile number for every customer. Nothing covers a customer who has given only one of them.",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-2",
+    "why_it_stands": "The finding is real only if some customers have given just an email address or just a mobile number. If every customer must give both when the account is opened, there is no gap. The requirements do not say, and I must not guess.",
+    "verdict": "needs-answer",
+    "open_question": "Does every customer who can ask for a refund have both an email address and a mobile number on file?",
+    "who_can_answer": "Not named in the documents I was given. It needs whoever owns customer sign-up or the customer account data and knows which contact details every customer must give."
+  },
+  {
+    "id": "F10",
+    "kind": "ownership",
+    "requirements": [
+      "R2",
+      "R5"
+    ],
+    "quotes": {
+      "R2": "The finance manager shall approve any refund over 500",
+      "R5": "The team leader shall approve any refund over 400"
+    },
+    "what": "A refund over 500 is also over 400, so both the finance manager and the team leader are told to approve it, with two different time limits. Nothing says whether both must approve, in what order, or whose approval counts.",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-2",
+    "why_it_stands": "A refund over 500 is plainly also over 400, so R2 and R5 both apply to it and name two different approvers with two time limits. Both rules can be met if both people approve, so this is not a flat contradiction, but nothing says that both must, in what order, or whose approval is the one R4 records. This is the reading I kept over F2.",
+    "verdict": "confirmed",
+    "impact": "For every refund over 500 nobody knows whose approval counts or which time limit applies. Large refunds wait, or are paid on the wrong person's say-so.",
+    "severity": "high",
+    "who_decides": "Not named in the documents I was given. It needs someone with authority over both the finance manager and the team leader who owns the refund approval rules."
+  }
+]
