@@ -1,0 +1,36 @@
+[
+  {
+    "id": "P1",
+    "kind": "duplicate",
+    "verdict": "rejected",
+    "requirements": [
+      "R1",
+      "R8"
+    ],
+    "what": "Both tell the customer about the refund.",
+    "reason": "R1 is about the decision and R8 is about the payment."
+  },
+  {
+    "id": "P2",
+    "kind": "gap",
+    "verdict": "needs-answer",
+    "requirements": [
+      "R3",
+      "R5"
+    ],
+    "what": "Nothing says who approves a refund from 50 to 400.",
+    "open_question": "Is a refund from 50 to 400 meant to need no approval, or is a rule missing?",
+    "who_can_answer": "Refunds team leader"
+  },
+  {
+    "id": "P3",
+    "kind": "term-drift",
+    "verdict": "rejected",
+    "requirements": [
+      "R1",
+      "R7"
+    ],
+    "what": "Customer in R1, client in R7.",
+    "reason": "Both names were accepted at the time: no glossary had been agreed."
+  }
+]

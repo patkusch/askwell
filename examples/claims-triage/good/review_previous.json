@@ -1,0 +1,25 @@
+[
+  {
+    "id": "P1",
+    "kind": "duplicate",
+    "verdict": "rejected",
+    "requirements": [
+      "R1",
+      "R7"
+    ],
+    "what": "Both give every new motor claim a rating.",
+    "reason": "A triage band and a fraud score are two different ratings."
+  },
+  {
+    "id": "P2",
+    "kind": "term-drift",
+    "verdict": "needs-answer",
+    "requirements": [
+      "R2",
+      "R4"
+    ],
+    "what": "Customer in R2, policyholder in R4.",
+    "open_question": "On a motor claim, are the customer and the policyholder always the same person?",
+    "who_can_answer": "Claims operations manager"
+  }
+]

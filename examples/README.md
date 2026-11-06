@@ -17,7 +17,7 @@ Put your documents in one folder with these names, then run `python3 scripts/ask
 | `nfr.csv` | `nonfunctional-requirements` |  |
 | `scope.txt` | `scope-definition` |  |
 | `conflict.csv` | `requirements-conflict-check/conflicts` | `terms.json` (--terms) |
-| `review_findings.json`, `review_requirements.csv`, `review_coverage.csv` | `requirements-review` |  |
+| `review_findings.json`, `review_requirements.csv`, `review_coverage.csv` | `requirements-review` | `review_previous.json` (--previous) |
 | `matrix.csv` | `requirements-traceability` | `tests.csv` (--tests) |
 | `brd.md` | `brd-writing` |  |
 | `process.mmd` | `process-mapping` |  |

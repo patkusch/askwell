@@ -2,6 +2,7 @@
 """Check the records of a requirements review: findings quoted, double-checked and accounted for.
 
 Usage: check.py review_findings.json review_requirements.csv review_coverage.csv [--report]
+                [--previous review_previous.json]
        check.py --start review_requirements.csv      prints an empty coverage sheet to fill in
 
 review_requirements.csv   columns id,text: the requirements under review, each id once.
@@ -12,6 +13,10 @@ review_findings.json      a list of findings. Each has id, kind, verdict, requir
                             rejected      reason
 review_coverage.csv       one row per requirement, one column per pass. A cell holds
                           clear, one or more finding ids, or "skipped: why".
+
+--previous takes the findings file of an earlier review of the same requirements. A
+finding it rejected must still be on record, and may come back under another verdict
+only with a what_changed line. A question it left open must still be on record.
 
 It checks the records, not the judgement: that each quote is in the requirement word
 for word, that a second person or agent checked each finding, that nothing is rated
@@ -186,15 +191,41 @@ def check_requirements(pairs):
     return reqs, problems
 
 
-def check(findings, reqs, rows, columns):
+def check_previous(previous, findings, reqs):
+    """Nothing an earlier review settled or left open may quietly change or vanish."""
+    problems = []
+    now = {}
+    for f in findings:
+        if isinstance(f, dict):
+            now.setdefault((val(f, "kind"), frozenset(req_list(f))), f)
+    for e in previous if isinstance(previous, list) else []:
+        if not isinstance(e, dict) or val(e, "verdict") not in ("rejected", "needs-answer"):
+            continue
+        ids = req_list(e)
+        if not ids or any(rid not in reqs for rid in ids):
+            continue  # a requirement it was about is gone, so there is nothing to carry over
+        eid = val(e, "id") or "a finding"
+        cur = now.get((val(e, "kind"), frozenset(ids)))
+        if cur is None and val(e, "verdict") == "rejected":
+            problems.append(f"earlier {eid}: was rejected and is missing here, so it can be raised again")
+        elif cur is None:
+            problems.append(f"earlier {eid}: was waiting for an answer and is missing here")
+        elif val(e, "verdict") == "rejected" and val(cur, "verdict") != "rejected" and not val(cur, "what_changed"):
+            problems.append(f"{val(cur, 'id') or 'a finding'}: the earlier review rejected this as {eid}, and it does not say what changed")
+    return problems
+
+
+def check(findings, reqs, rows, columns, previous=None):
     """Every problem in the review records, as plain lines. An empty list means they hold up.
 
     reqs is {id: text}, or the (id, text) rows as read from the file.
+    previous is the findings list of an earlier review, if there was one.
     """
     if not isinstance(findings, list):
         return ["the findings file must be a list of findings"]
     reqs, problems = (reqs, []) if isinstance(reqs, dict) else check_requirements(reqs)
-    return problems + check_findings(findings, reqs) + check_coverage(rows, columns, findings, reqs)
+    problems += check_findings(findings, reqs) + check_coverage(rows, columns, findings, reqs)
+    return problems + (check_previous(previous, findings, reqs) if previous is not None else [])
 
 
 def skipped(rows, columns):
@@ -298,11 +329,17 @@ if __name__ == "__main__":
         print(blank_coverage(read_requirements(sys.argv[2])), end="")
         sys.exit(0)
     args = [a for a in sys.argv[1:] if a != "--report"]
+    previous = None
+    if "--previous" in args[:-1]:
+        i = args.index("--previous")
+        with open(args[i + 1]) as pf:
+            previous = json.load(pf)
+        del args[i:i + 2]
     if len(args) != 3:
-        print("Usage: check.py review_findings.json review_requirements.csv review_coverage.csv [--report]", file=sys.stderr)
+        print("Usage: check.py review_findings.json review_requirements.csv review_coverage.csv [--report] [--previous review_previous.json]", file=sys.stderr)
         sys.exit(2)
     findings, reqs, rows, columns = load(*args)
-    problems = check(findings, reqs, rows, columns)
+    problems = check(findings, reqs, rows, columns, previous)
     if problems:
         print("\n".join(problems))
         print(f"{len(problems)} problem(s) in the review records." + (" No report written: fix the records first." if "--report" in sys.argv else ""))

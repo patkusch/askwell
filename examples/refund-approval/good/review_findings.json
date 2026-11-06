@@ -89,6 +89,7 @@
     "checked_by": "reviewer-3",
     "impact": "A reader may take client and customer for two different groups and build two sets of records.",
     "severity": "low",
-    "who_decides": "Business analyst, with the glossary owner"
+    "who_decides": "Business analyst, with the glossary owner",
+    "what_changed": "The glossary agreed since the first review lists customer only, so client is no longer an accepted name."
   }
 ]

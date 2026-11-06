@@ -1,0 +1,34 @@
+[
+  {
+    "id": "P1",
+    "kind": "contradiction",
+    "verdict": "rejected",
+    "requirements": [
+      "R2",
+      "R5"
+    ],
+    "what": "Two approvers for a refund over 500.",
+    "reason": "The team leader only approves up to 500."
+  },
+  {
+    "id": "P2",
+    "kind": "ownership",
+    "verdict": "rejected",
+    "requirements": [
+      "R4"
+    ],
+    "what": "Nobody owns the approval record.",
+    "reason": "The system keeps it; no owner is needed."
+  },
+  {
+    "id": "P3",
+    "kind": "gap",
+    "verdict": "needs-answer",
+    "requirements": [
+      "R6"
+    ],
+    "what": "Nothing says who deletes the records.",
+    "open_question": "Is deletion automatic or does someone approve it?",
+    "who_can_answer": "Data protection lead"
+  }
+]

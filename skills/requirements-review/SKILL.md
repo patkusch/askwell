@@ -97,6 +97,22 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
 
 A needs-answer finding has `open_question` and `who_can_answer` in place of the last three lines. A rejected finding has `reason`.
 
+## Reviewing the same requirements again
+
+Keep the findings file from the last review as `review_previous.json` and pass it in:
+
+```bash
+python scripts/check.py review_findings.json review_requirements.csv review_coverage.csv --previous review_previous.json
+```
+
+The check then holds the new review to what the old one settled:
+
+- A finding that was rejected stays on record as rejected, so nobody spends the same hour on it again.
+- A rejected finding may come back under another verdict only with a `what_changed` line that says what is different now.
+- A question that was waiting for an answer may not vanish. Answer it, or carry it over.
+
+A finding about a requirement that no longer exists is dropped without complaint.
+
 ## What the check finds
 
 - A quote that is not in the requirement word for word, a requirement with no quote, or a quote of one word (one word is enough only to show a name, in the term-drift pass).
@@ -105,6 +121,7 @@ A needs-answer finding has `open_question` and `who_can_answer` in place of the 
 - A rating on a finding that is not confirmed.
 - A needs-answer finding with no question or nobody to ask, and a rejected one with no reason.
 - One finding recorded twice.
+- With an earlier review passed in: a rejected finding that is missing or back with no reason, and an open question that vanished.
 - A requirement listed twice, or with no text.
 - A requirement that is not in the coverage sheet, an empty cell, or a skip with no reason.
 - A finding the coverage sheet does not show, and a sheet that names a finding that does not exist.

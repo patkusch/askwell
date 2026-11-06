@@ -59,7 +59,7 @@ AUDIT = [
     ("nonfunctional-requirements", "check", ["nfr.csv"], [], {}),
     ("scope-definition", "check", ["scope.txt"], [], {}),
     ("requirements-conflict-check", "conflicts", ["conflict.csv"], [], {"terms.json": "--terms"}),
-    ("requirements-review", "check", ["review_findings.json", "review_requirements.csv", "review_coverage.csv"], [], {}),
+    ("requirements-review", "check", ["review_findings.json", "review_requirements.csv", "review_coverage.csv"], [], {"review_previous.json": "--previous"}),
     ("requirements-traceability", "check", ["matrix.csv"], [], {"tests.csv": "--tests"}),
     ("brd-writing", "check", ["brd.md"], [], {}),
     ("process-mapping", "check", ["process.mmd"], [], {}),

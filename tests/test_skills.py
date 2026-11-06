@@ -826,12 +826,16 @@ class Review(unittest.TestCase):
         d = (folder or EX) / which
         return review.load(d / "review_findings.json", d / "review_requirements.csv", d / "review_coverage.csv")
 
+    def previous(self, which, folder=None):
+        return json.loads(((folder or EX) / which / "review_previous.json").read_text())
+
     def test_good_records_hold_up_in_both_examples(self):
-        self.assertEqual(review.check(*self.records("good")), [])
-        self.assertEqual(review.check(*self.records("good", EX.parent / "claims-triage")), [])
+        self.assertEqual(review.check(*self.records("good"), self.previous("good")), [])
+        claims = EX.parent / "claims-triage"
+        self.assertEqual(review.check(*self.records("good", claims), self.previous("good", claims)), [])
 
     def test_bad_records_trip_every_message(self):
-        out = review.check(*self.records("bad"))
+        out = review.check(*self.records("bad"), self.previous("bad"))
         for line in (
             "F1: the quote from R5 is not in R5 word for word",
             "F1: found and checked by the same reviewer (reviewer-1)",
@@ -868,13 +872,16 @@ class Review(unittest.TestCase):
             "a coverage row names no requirement",
             "R8: not in the coverage sheet, so it was never reviewed",
             "F5: the coverage sheet does not show it under duplicate for R1",
+            "F1: the earlier review rejected this as P1, and it does not say what changed",
+            "earlier P2: was rejected and is missing here, so it can be raised again",
+            "earlier P3: was waiting for an answer and is missing here",
         ):
             self.assertIn(line, out)
 
     def test_every_message_the_script_can_give_is_planted_in_the_bad_set(self):
         src = (SKILLS / "requirements-review/scripts/check.py").read_text()
         said = len(re.findall(r"problems\.append\(|^    problems = \[f", src, re.M))
-        kinds = {re.sub(r"(F\d+|R\d+|finding \d+|'[^']*'|\(.*\)|names \d)", "_", line) for line in review.check(*self.records("bad"))}
+        kinds = {re.sub(r"(F\d+|R\d+|finding \d+|'[^']*'|\(.*\)|names \d)", "_", line) for line in review.check(*self.records("bad"), self.previous("bad"))}
         self.assertEqual(len(kinds), said, sorted(kinds))
 
     def test_a_quote_may_differ_in_capitals_and_line_breaks_only(self):
@@ -914,6 +921,18 @@ class Review(unittest.TestCase):
         out = review.check([], reqs, sheet, list(sheet[0]))
         self.assertEqual(len(out), 8 * 8)
         self.assertIn("R8: not checked for scope-leak (empty cell)", out)
+
+    def test_a_rejected_finding_may_come_back_only_with_what_changed(self):
+        findings, reqs, rows, cols = self.records("good")
+        prev = self.previous("good")
+        del next(f for f in findings if f["id"] == "F5")["what_changed"]
+        self.assertEqual(review.check(findings, reqs, rows, cols, prev),
+                         ["F5: the earlier review rejected this as P3, and it does not say what changed"])
+        self.assertEqual(review.check(findings, reqs, rows, cols), [])  # no earlier review, nothing to carry over
+
+    def test_an_earlier_finding_about_a_requirement_that_is_gone_is_not_carried_over(self):
+        prev = [{"id": "P9", "kind": "gap", "verdict": "rejected", "requirements": ["R40"], "reason": "x"}]
+        self.assertEqual(review.check(*self.records("good"), prev), [])
 
     def test_findings_file_that_is_not_a_list(self):
         _, reqs, rows, cols = self.records("good")
