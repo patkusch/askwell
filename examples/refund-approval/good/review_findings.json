@@ -1,7 +1,7 @@
 [
   {
     "id": "F1",
-    "kind": "contradiction",
+    "kind": "ownership",
     "verdict": "confirmed",
     "requirements": [
       "R2",
@@ -11,7 +11,7 @@
       "R2": "The finance manager shall approve any refund over 500",
       "R5": "The team leader shall approve any refund over 400"
     },
-    "what": "A refund over 500 has two approvers with two different deadlines.",
+    "what": "A refund over 500 is also over 400, so two people are told to approve it, with two different deadlines, and nothing says whose approval counts.",
     "found_by": "reviewer-1",
     "checked_by": "reviewer-2",
     "impact": "Nobody knows whose approval counts, so large refunds wait while two people each assume the other has it.",

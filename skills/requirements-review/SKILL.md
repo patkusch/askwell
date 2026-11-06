@@ -26,13 +26,13 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
 
    | Pass | What it looks for |
    |---|---|
-   | contradiction | Two requirements that cannot both be met |
+   | contradiction | In the same case, one requirement says to do what another forbids or does differently |
    | duplicate | The same requirement written twice in different words |
-   | hidden-conflict | Each is fine alone, impossible together |
+   | hidden-conflict | No clash in the words, but a case comes up where meeting one breaks the other, often with time or volume |
    | number-mismatch | Different figures for the same limit |
    | term-drift | One thing under several names |
-   | gap | A case, a user or a step that nothing covers |
-   | ownership | Two people or teams given the same decision |
+   | gap | A case, a user, a step or a decision that nothing covers, such as a decision nobody is given |
+   | ownership | Two people or teams given the same decision, where both could act and nothing says whose word counts |
    | scope-leak | A requirement that relies on something the scope leaves out |
 
    Start the sheet with every cell empty, so nothing counts as looked at until you fill it in:
@@ -40,6 +40,8 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
    ```bash
    python scripts/check.py --start review_requirements.csv > review_coverage.csv
    ```
+
+   To tell the first three apart: if both can be met by two people each doing their part, it is ownership. If the words clash in a case both requirements cover, it is a contradiction. If they clash only once something else happens, such as an account staying open for eight years, it is a hidden conflict.
 
 3. **Hunt, one pass at a time.** Read the whole set once for each pass, not once for everything. The script in `requirements-conflict-check` gives leads for four of the passes. Each suspicion is a candidate, not yet a finding. As you finish a pass, fill in its column: `clear`, the finding id, or `skipped: why`. Never leave a cell empty and never write `clear` for a pass you did not do.
 
@@ -79,7 +81,7 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
 ```json
 {
   "id": "F1",
-  "kind": "contradiction",
+  "kind": "ownership",
   "verdict": "confirmed",
   "requirements": ["R2", "R5"],
   "quotes": {
