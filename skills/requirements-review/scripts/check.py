@@ -3,7 +3,7 @@
 
 Usage: check.py review_findings.json review_requirements.csv review_coverage.csv [--report]
 
-review_requirements.csv   columns id,text: the requirements under review.
+review_requirements.csv   columns id,text: the requirements under review, each id once.
 review_findings.json      a list of findings. Each has id, kind, verdict, requirements,
                           quotes, what, found_by, checked_by, and then by verdict:
                             confirmed     impact, severity (high, medium, low), who_decides
@@ -170,11 +170,28 @@ def check_coverage(rows, columns, findings, reqs):
     return problems
 
 
+def check_requirements(pairs):
+    """Turn (id, text) rows into {id: text}, and say what is wrong with the list itself."""
+    problems, reqs = [], {}
+    for rid, text in pairs:
+        if rid in reqs:
+            problems.append(f"{rid}: listed twice in the requirements")
+            continue
+        reqs[rid] = text
+        if not text.strip():
+            problems.append(f"{rid}: has no text to review")
+    return reqs, problems
+
+
 def check(findings, reqs, rows, columns):
-    """Every problem in the review records, as plain lines. An empty list means they hold up."""
+    """Every problem in the review records, as plain lines. An empty list means they hold up.
+
+    reqs is {id: text}, or the (id, text) rows as read from the file.
+    """
     if not isinstance(findings, list):
         return ["the findings file must be a list of findings"]
-    return check_findings(findings, reqs) + check_coverage(rows, columns, findings, reqs)
+    reqs, problems = (reqs, []) if isinstance(reqs, dict) else check_requirements(reqs)
+    return problems + check_findings(findings, reqs) + check_coverage(rows, columns, findings, reqs)
 
 
 def skipped(rows, columns):
@@ -198,6 +215,7 @@ def cell(text):
 
 def report(findings, reqs, rows, columns):
     """The review report, written only from the records."""
+    reqs = dict(reqs)
     c = counts(findings)
     out = ["# Requirements review", "",
            f"{len(reqs)} requirements reviewed in {len(PASSES)} passes. {c['confirmed']} confirmed, "
@@ -236,7 +254,7 @@ def load(findings_path, reqs_path, coverage_path):
     with open(findings_path) as f:
         findings = json.load(f)
     with open(reqs_path, newline="") as f:
-        reqs = {(r.get("id") or "").strip(): r.get("text") or "" for r in csv.DictReader(f) if (r.get("id") or "").strip()}
+        reqs = [((r.get("id") or "").strip(), r.get("text") or "") for r in csv.DictReader(f) if (r.get("id") or "").strip()]
     with open(coverage_path, newline="") as f:
         reader = csv.DictReader(f)
         rows = list(reader)
@@ -258,7 +276,7 @@ if __name__ == "__main__":
     if "--report" in sys.argv:
         print(report(findings, reqs, rows, columns), end="")
     else:
-        c = counts(findings)
+        c, reqs = counts(findings), dict(reqs)
         n = sum(len(v) for v in skipped(rows, columns).values())
         print(f"Review records hold up: {c['confirmed']} confirmed, {c['needs-answer']} waiting for an answer, "
               f"{c['rejected']} rejected, {len(reqs)} requirements covered" + (f", {n} cell(s) skipped with a reason." if n else "."))

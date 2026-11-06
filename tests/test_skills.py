@@ -855,6 +855,8 @@ class Review(unittest.TestCase):
             "F7: same kind and same requirements as F6, so one finding is recorded twice",
             "F8: names no requirement",
             "finding 9: not a record",
+            "R4: listed twice in the requirements",
+            "R9: has no text to review",
             "coverage sheet has no column for ownership",
             "R3: coverage names F9 under duplicate, which is not a finding",
             "R3: not checked for gap (empty cell)",
@@ -883,6 +885,7 @@ class Review(unittest.TestCase):
 
     def test_a_changed_requirement_shows_which_findings_need_a_fresh_look(self):
         findings, reqs, rows, cols = self.records("good")
+        reqs = dict(reqs)
         reqs["R5"] = "The team leader shall approve any refund over 600 within 1 working day."
         self.assertEqual(review.check(findings, reqs, rows, cols),
                          ["F1: the quote from R5 is not in R5 word for word", "F3: the quote from R5 is not in R5 word for word"])

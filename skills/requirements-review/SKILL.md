@@ -99,6 +99,7 @@ A needs-answer finding has `open_question` and `who_can_answer` in place of the 
 - A rating on a finding that is not confirmed.
 - A needs-answer finding with no question or nobody to ask, and a rejected one with no reason.
 - One finding recorded twice.
+- A requirement listed twice, or with no text.
 - A requirement that is not in the coverage sheet, an empty cell, or a skip with no reason.
 - A finding the coverage sheet does not show, and a sheet that names a finding that does not exist.
 

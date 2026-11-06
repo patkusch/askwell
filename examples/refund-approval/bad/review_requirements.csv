@@ -7,3 +7,5 @@ R5,The team leader shall approve any refund over 400 within 1 working day.
 R6,The system shall delete refund records 7 years after the refund is paid.
 R7,The system shall keep the approval record for every refund for the life of the client account.
 R8,The system shall send the customer a text message when the refund is paid.
+R4,The system shall record the reason for each refund.
+R9,
