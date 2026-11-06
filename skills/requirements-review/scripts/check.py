@@ -84,6 +84,8 @@ def check_findings(findings, reqs):
                 problems.append(f"{fid}: no quote from {rid}")
             elif squash(quotes[rid]) not in squash(reqs[rid]):
                 problems.append(f"{fid}: the quote from {rid} is not in {rid} word for word")
+            elif kind != "term-drift" and len(str(quotes[rid]).split()) < 2:
+                problems.append(f"{fid}: the quote from {rid} is one word, too short to show anything")
         if kind in PASSES and ids:
             key = (kind, frozenset(ids))
             if key in same:

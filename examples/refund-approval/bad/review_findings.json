@@ -69,7 +69,7 @@
       "R1"
     ],
     "quotes": {
-      "R1": "email the customer a decision"
+      "R1": "customer"
     },
     "what": "The customer is told twice.",
     "found_by": "reviewer-1",

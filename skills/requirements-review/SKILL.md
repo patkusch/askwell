@@ -93,7 +93,7 @@ A needs-answer finding has `open_question` and `who_can_answer` in place of the 
 
 ## What the check finds
 
-- A quote that is not in the requirement word for word, or a requirement with no quote.
+- A quote that is not in the requirement word for word, a requirement with no quote, or a quote of one word (one word is enough only to show a name, in the term-drift pass).
 - A finding with no second reviewer, or found and checked by the same one.
 - A confirmed finding that does not say what goes wrong, how bad, or who decides.
 - A rating on a finding that is not confirmed.

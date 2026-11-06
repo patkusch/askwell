@@ -852,6 +852,7 @@ class Review(unittest.TestCase):
             "finding 4: needs an answer but does not ask a question",
             "finding 4: no one is named who can answer",
             "F5: a duplicate needs two requirements, names 1",
+            "F5: the quote from R1 is one word, too short to show anything",
             "F7: same kind and same requirements as F6, so one finding is recorded twice",
             "F8: names no requirement",
             "finding 9: not a record",
@@ -882,6 +883,14 @@ class Review(unittest.TestCase):
         self.assertEqual(review.check(findings, reqs, rows, cols), [])
         findings[0]["quotes"]["R2"] = "the finance manager approves any refund over 500"
         self.assertEqual(review.check(findings, reqs, rows, cols), ["F1: the quote from R2 is not in R2 word for word"])
+
+    def test_one_word_is_enough_to_show_a_name_but_not_a_conflict(self):
+        findings, reqs, rows, cols = self.records("good")
+        drift = next(f for f in findings if f["kind"] == "term-drift")
+        drift["quotes"] = {"R1": "customer", "R7": "client"}
+        self.assertEqual(review.check(findings, reqs, rows, cols), [])
+        findings[0]["quotes"]["R2"] = "500"
+        self.assertEqual(review.check(findings, reqs, rows, cols), ["F1: the quote from R2 is one word, too short to show anything"])
 
     def test_a_changed_requirement_shows_which_findings_need_a_fresh_look(self):
         findings, reqs, rows, cols = self.records("good")
