@@ -82,8 +82,8 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
 
    | Verdict | Means | Must have |
    |---|---|---|
-   | confirmed | The second reviewer could not disprove it | What goes wrong if it is left, how bad (high, medium or low), who decides |
-   | needs-answer | It turns on one fact the documents do not give | The exact question, and who can answer it. No rating yet |
+   | confirmed | The second reviewer could not disprove it | What the second reviewer tried and why it stands, what goes wrong if it is left, how bad (high, medium or low), who decides |
+   | needs-answer | It turns on one fact the documents do not give | Why it could not be settled, the exact question, and who can answer it. No rating yet |
    | rejected | The second reviewer disproved it | The reason. Keep the record so the next review does not raise it again |
 
    How bad is it? Rate by what happens if nobody fixes it:
@@ -127,13 +127,14 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
   "what": "A refund over 500 has two approvers with two deadlines.",
   "found_by": "reviewer-1",
   "checked_by": "reviewer-2",
+  "why_it_stands": "Looked for a rule that says whose approval counts. There is none.",
   "impact": "Nobody knows whose approval counts, so large refunds wait.",
   "severity": "high",
   "who_decides": "Head of Finance"
 }
 ```
 
-A needs-answer finding has `open_question` and `who_can_answer` in place of the last three lines. A rejected finding has `reason`.
+A needs-answer finding has `open_question` and `who_can_answer` in place of the last three lines, and keeps `why_it_stands`. A rejected finding has `reason`.
 
 ## Reviewing the same requirements again
 
@@ -154,7 +155,7 @@ A finding about a requirement that no longer exists is dropped without complaint
 ## What the check finds
 
 - A quote that is not in the requirement word for word, a requirement with no quote, or a quote of one word (one word is enough only to show a name, in the term-drift pass).
-- A finding with no second reviewer, or found and checked by the same one.
+- A finding with no second reviewer, or found and checked by the same one, or with no word from the second reviewer on why it stands.
 - A confirmed finding that does not say what goes wrong, how bad, or who decides.
 - "TBD", "unknown" or the like where a person or a role should be.
 - A rating on a finding that is not confirmed.

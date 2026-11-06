@@ -858,6 +858,7 @@ class Review(unittest.TestCase):
             "F5: a duplicate needs two requirements, names 1",
             "F5: the quote from R1 is one word, too short to show anything",
             "F5: 'TBD' names nobody: give a person or the role that is needed",
+            "F5: the second reviewer does not say why it stands",
             "F7: same kind and same requirements as F6, so one finding is recorded twice",
             "F8: names no requirement",
             "F8: says it is the same problem as F99, but F99 is not a finding that stands",
@@ -1004,6 +1005,12 @@ class Review(unittest.TestCase):
         self.assertIn("| F6 | R2, R5 | 500 and 400 may be two versions of one limit. | Same problem as F1. |", review.report(findings, reqs, rows, cols))
         rival["same_as"] = "F4"  # F4 was itself rejected
         self.assertEqual(review.check(findings, reqs, rows, cols), ["F6: says it is the same problem as F4, but F4 is not a finding that stands"])
+
+    def test_a_rejected_finding_needs_a_reason_but_not_a_why_it_stands(self):
+        findings, reqs, rows, cols = self.records("good")
+        self.assertNotIn("why_it_stands", next(f for f in findings if f["verdict"] == "rejected"))
+        del findings[0]["why_it_stands"]
+        self.assertEqual(review.check(findings, reqs, rows, cols), ["F1: the second reviewer does not say why it stands"])
 
     def test_findings_file_that_is_not_a_list(self):
         _, reqs, rows, cols = self.records("good")

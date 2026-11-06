@@ -10,8 +10,9 @@ Usage: check.py review_findings.json review_requirements.csv review_coverage.csv
 review_requirements.csv   columns id,text: the requirements under review, each id once.
 review_findings.json      a list of findings. Each has id, kind, verdict, requirements,
                           quotes, what, found_by, checked_by, and then by verdict:
-                            confirmed     impact, severity (high, medium, low), who_decides
-                            needs-answer  open_question, who_can_answer
+                            confirmed     why_it_stands, impact, severity (high, medium,
+                                          low), who_decides
+                            needs-answer  why_it_stands, open_question, who_can_answer
                             rejected      reason, or same_as (the id of the finding that
                                           records the same problem under another pass)
 review_coverage.csv       one row per requirement, one column per pass. A cell holds
@@ -142,6 +143,8 @@ def check_findings(findings, reqs):
                     problems.append(f"{fid}: no one is named who can answer")
             elif not val(f, "reason") and not val(f, "same_as"):
                 problems.append(f"{fid}: rejected without a reason")
+        if verdict in ("confirmed", "needs-answer") and not val(f, "why_it_stands"):
+            problems.append(f"{fid}: the second reviewer does not say why it stands")
         twin = val(f, "same_as")
         if twin and verdict in VERDICTS and verdict != "rejected":
             problems.append(f"{fid}: says it is the same problem as {twin} but is not rejected")

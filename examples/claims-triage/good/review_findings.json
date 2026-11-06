@@ -14,6 +14,7 @@
     "what": "The time allowed to make first contact on an urgent claim is 4 working hours in R2 and 1 working day in R4.",
     "found_by": "reviewer-1",
     "checked_by": "reviewer-2",
+    "why_it_stands": "Both requirements cover the same event, first contact on an urgent claim. No reading makes 4 working hours and 1 working day the same limit.",
     "impact": "Handlers and the service report will work to different deadlines, so the same call counts as on time and late.",
     "severity": "high",
     "who_decides": "Claims operations manager"
@@ -33,6 +34,7 @@
     "what": "R5 wants a team leader to approve every move out of the urgent band and R6 makes some of those moves with nobody approving.",
     "found_by": "reviewer-1",
     "checked_by": "reviewer-3",
+    "why_it_stands": "Looked for an exception in R5 for automatic moves. R5 says any move.",
     "impact": "Either the automatic move is built and R5 is broken, or it waits for approval and R6 saves no time.",
     "severity": "medium",
     "who_decides": "Head of Claims"
@@ -52,6 +54,7 @@
     "what": "The person to contact is the customer in R2 and the policyholder in R4.",
     "found_by": "reviewer-2",
     "checked_by": "reviewer-1",
+    "why_it_stands": "The two words may or may not mean the same person. Nothing in the requirements says.",
     "open_question": "On a motor claim, are the customer and the policyholder always the same person?",
     "who_can_answer": "Claims operations manager"
   },

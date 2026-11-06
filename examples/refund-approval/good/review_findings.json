@@ -14,6 +14,7 @@
     "what": "A refund over 500 is also over 400, so two people are told to approve it, with two different deadlines, and nothing says whose approval counts.",
     "found_by": "reviewer-1",
     "checked_by": "reviewer-2",
+    "why_it_stands": "Looked for a rule that says whose approval counts, or that the team leader stops at 500. There is none.",
     "impact": "Nobody knows whose approval counts, so large refunds wait while two people each assume the other has it.",
     "severity": "high",
     "who_decides": "Head of Finance"
@@ -33,6 +34,7 @@
     "what": "An approval record is part of the refund record, so it must be both deleted after 7 years and kept for as long as the account is open.",
     "found_by": "reviewer-1",
     "checked_by": "reviewer-3",
+    "why_it_stands": "Looked for a reading where the approval record is not a refund record. R4 makes it part of what is recorded for each refund.",
     "impact": "For any account open longer than 7 years the system has to break one of the two rules.",
     "severity": "medium",
     "who_decides": "Data protection lead"
@@ -52,6 +54,7 @@
     "what": "Nothing says who approves a refund from 50 to 400.",
     "found_by": "reviewer-2",
     "checked_by": "reviewer-1",
+    "why_it_stands": "No requirement names an approver between 50 and 400. Whether that is meant cannot be told from the requirements.",
     "open_question": "Is a refund from 50 to 400 meant to need no approval, or is a rule missing?",
     "who_can_answer": "Refunds team leader"
   },
@@ -87,6 +90,7 @@
     "what": "The person asking for the refund is a customer in R1 and a client in R7.",
     "found_by": "reviewer-2",
     "checked_by": "reviewer-3",
+    "why_it_stands": "Both words are used for the person who gets the refund, and the glossary allows only one.",
     "impact": "A reader may take client and customer for two different groups and build two sets of records.",
     "severity": "low",
     "who_decides": "Business analyst, with the glossary owner",

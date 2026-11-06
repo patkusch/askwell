@@ -93,6 +93,7 @@
     "what": "Customer in R1, client in R7.",
     "found_by": "reviewer-2",
     "checked_by": "reviewer-3",
+    "why_it_stands": "Both words are used for one person.",
     "impact": "Readers may take them for two groups.",
     "severity": "low",
     "who_decides": "Business analyst",
@@ -113,6 +114,7 @@
     "what": "Two names for one person.",
     "found_by": "reviewer-3",
     "checked_by": "reviewer-2",
+    "why_it_stands": "Both words are used for one person.",
     "impact": "Readers may take them for two groups.",
     "severity": "low",
     "who_decides": "Business analyst"
