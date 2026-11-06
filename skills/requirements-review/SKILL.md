@@ -76,6 +76,8 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
 
    Leave off the id to print every finding.
 
+   The second reviewer may correct a candidate that is right in substance: its pass, its wording, its quotes, or the requirements it names. The id stays. They also get any scope statement or glossary the project has, because a gap or a drifting name cannot be tested without them.
+
 5. **Record one of three verdicts.**
 
    | Verdict | Means | Must have |
@@ -83,6 +85,14 @@ For a quick look by one reviewer, use `requirements-conflict-check`. Use this sk
    | confirmed | The second reviewer could not disprove it | What goes wrong if it is left, how bad (high, medium or low), who decides |
    | needs-answer | It turns on one fact the documents do not give | The exact question, and who can answer it. No rating yet |
    | rejected | The second reviewer disproved it | The reason. Keep the record so the next review does not raise it again |
+
+   How bad is it? Rate by what happens if nobody fixes it:
+
+   | Rating | What happens |
+   |---|---|
+   | high | The thing cannot be built as written, or people lose money, break a rule, or are treated wrongly |
+   | medium | It gets built, then has to be reworked, or staff need a workaround |
+   | low | It confuses a reader but the build comes out the same |
 
    Two candidates that turn out to be one problem: keep the one under the pass that fits best. Reject the other with `same_as` set to the id of the one you kept, so the record shows it was merged and not disproved.
 
