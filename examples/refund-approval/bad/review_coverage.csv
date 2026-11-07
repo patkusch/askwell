@@ -1,11 +1,11 @@
-requirement,contradiction,duplicate,hidden-conflict,number-mismatch,term-drift,gap,scope-leak
-R1,clear,clear,clear,clear,F6 F7,clear,clear
-R2,F1,clear,clear,clear,clear,clear,clear
-R3,clear,F9,clear,clear,clear,,skipped
-R4,clear,clear,clear,clear,clear,F6,clear
-R5,F1,clear,clear,clear,clear,clear,clear
-R6,clear,clear,F2,clear,clear,clear,clear
-R7,clear,clear,F2,clear,F6 F7,clear,clear
-R77,clear,clear,clear,clear,clear,clear,clear
-R2,F1,clear,clear,clear,clear,clear,clear
-,clear,clear,clear,clear,clear,clear,clear
+requirement,contradiction,duplicate,hidden-conflict,number-mismatch,term-drift,gap,scope-leak,wording
+R1,clear,clear,clear,clear,F6 F7,clear,clear,clear
+R2,F1,clear,clear,clear,clear,clear,clear,clear
+R3,clear,F9,clear,clear,clear,,skipped,clear
+R4,clear,clear,clear,clear,clear,F6,clear,clear
+R5,F1,clear,clear,clear,clear,clear,clear,clear
+R6,clear,clear,F2,clear,clear,clear,clear,clear
+R7,clear,clear,F2,clear,F6 F7,clear,clear,clear
+R77,clear,clear,clear,clear,clear,clear,clear,clear
+R2,F1,clear,clear,clear,clear,clear,clear,clear
+,clear,clear,clear,clear,clear,clear,clear,clear

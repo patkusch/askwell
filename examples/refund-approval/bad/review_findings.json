@@ -58,8 +58,9 @@
     },
     "what": "Nothing says who approves a refund from 50 to 400.",
     "checked_by": "reviewer-2",
-    "open_question": "Approval for mid-sized refunds is unclear.",
-    "severity": "medium"
+    "open_question": "Is a refund from 50 to 400 meant to need no approval? And who pays it?",
+    "severity": "medium",
+    "who_can_answer": "reviewer-2"
   },
   {
     "id": "F5",
@@ -105,6 +106,7 @@
     "verdict": "confirmed",
     "requirements": [
       "R7",
+      "R1",
       "R1"
     ],
     "quotes": {
@@ -130,5 +132,21 @@
     "reason": "Only one team is named.",
     "same_as": "F99"
   },
-  "F9 looks like a gap, will write up later"
+  "F9 looks like a gap, will write up later",
+  {
+    "id": "F10",
+    "kind": "gap",
+    "verdict": "needs-answer",
+    "requirements": [
+      "R8"
+    ],
+    "quotes": {
+      "R8": "send the customer a text message"
+    },
+    "what": "Nothing says which number the text goes to.",
+    "found_by": "reviewer-1",
+    "checked_by": "reviewer-2",
+    "why_it_stands": "No requirement names a mobile number.",
+    "open_question": "The number is unclear."
+  }
 ]

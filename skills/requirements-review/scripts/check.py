@@ -95,6 +95,9 @@ def check_findings(findings, reqs):
             problems.append(f"{fid}: does not say what is wrong")
 
         ids = req_list(f)
+        for rid in sorted({r for r in ids if ids.count(r) > 1}):
+            problems.append(f"{fid}: names {rid} twice")
+        ids = list(dict.fromkeys(ids))
         if kind in NEED_TWO and len(ids) < 2:
             problems.append(f"{fid}: a {kind} needs two requirements, names {len(ids)}")
         elif not ids:
@@ -139,8 +142,12 @@ def check_findings(findings, reqs):
             if verdict == "needs-answer":
                 if not val(f, "open_question").endswith("?"):
                     problems.append(f"{fid}: needs an answer but does not ask a question")
+                elif val(f, "open_question").count("?") > 1:
+                    problems.append(f"{fid}: asks more than one question; one exact fact per finding")
                 if not named(fid, f, "who_can_answer"):
                     problems.append(f"{fid}: no one is named who can answer")
+                elif squash(val(f, "who_can_answer")) in {squash(finder), squash(checker)} - {""}:
+                    problems.append(f"{fid}: the reviewer who asked cannot be the one who answers ({val(f, 'who_can_answer')})")
             elif not val(f, "reason") and not val(f, "same_as"):
                 problems.append(f"{fid}: rejected without a reason")
         if verdict in ("confirmed", "needs-answer") and not val(f, "why_it_stands"):
@@ -155,6 +162,9 @@ def check_findings(findings, reqs):
 
 def check_coverage(rows, columns, findings, reqs):
     problems = [f"coverage sheet has no column for {p}" for p in PASSES if p not in columns]
+    for c in columns:
+        if c not in PASSES and c != "requirement":
+            problems.append(f"coverage sheet has a column '{c}' that is not a pass")
     by_id = first_by_id([f for f in findings if isinstance(f, dict)])
     listed, shown = set(), set()
     for row in rows:

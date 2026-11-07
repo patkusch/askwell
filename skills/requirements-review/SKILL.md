@@ -159,7 +159,8 @@ A finding about a requirement that no longer exists is dropped without complaint
 - A confirmed finding that does not say what goes wrong, how bad, or who decides.
 - "TBD", "unknown" or the like where a person or a role should be.
 - A rating on a finding that is not confirmed.
-- A needs-answer finding with no question or nobody to ask, and a rejected one with no reason.
+- A needs-answer finding with no question, more than one question, nobody to ask, or one of the two reviewers as the person to ask; and a rejected one with no reason.
+- A requirement named twice in one finding, and a coverage column that is not one of the eight passes.
 - One finding recorded twice.
 - With an earlier review passed in: a rejected finding that is missing or back with no reason, and an open question that vanished.
 - A requirement listed twice, or with no text.
