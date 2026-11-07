@@ -1044,6 +1044,21 @@ class Review(unittest.TestCase):
         self.assertIn("Reviewed by: reviewer-1, reviewer-2, reviewer-3.", text)
         self.assertNotIn("Not looked at", review.report(*self.records("good", EX.parent / "claims-triage")))
 
+    def test_json_output_for_other_tools(self):
+        script = str(SKILLS / "requirements-review/scripts/check.py")
+        for which, ok in (("good", True), ("bad", False)):
+            d = EX / which
+            r = subprocess.run([sys.executable, script, str(d / "review_findings.json"), str(d / "review_requirements.csv"),
+                                str(d / "review_coverage.csv"), "--json"], capture_output=True, text=True)
+            data = json.loads(r.stdout)
+            self.assertEqual((data["ok"], r.returncode), (ok, 0 if ok else 1))
+            self.assertEqual(bool(data["problems"]), not ok)
+        self.assertEqual(data["counts"]["rejected"], 2)  # the bad set
+        good = json.loads(subprocess.run([sys.executable, script, str(EX / "good/review_findings.json"), str(EX / "good/review_requirements.csv"),
+                                          str(EX / "good/review_coverage.csv"), "--json"], capture_output=True, text=True).stdout)
+        self.assertEqual(good["checks"], {"clear": 42, "finding": 14, "skipped": 8})
+        self.assertEqual(good["requirements"], 8)
+
     def test_no_report_is_written_from_records_that_fail(self):
         d = EX / "bad"
         r = subprocess.run([sys.executable, str(SKILLS / "requirements-review/scripts/check.py"), str(d / "review_findings.json"),

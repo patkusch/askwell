@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check the records of a requirements review: findings quoted, double-checked and accounted for.
 
-Usage: check.py review_findings.json review_requirements.csv review_coverage.csv [--report]
+Usage: check.py review_findings.json review_requirements.csv review_coverage.csv [--report] [--json]
                 [--previous review_previous.json]
        check.py --start review_requirements.csv      prints an empty coverage sheet to fill in
        check.py --brief review_findings.json review_requirements.csv [F3]
@@ -26,7 +26,8 @@ only with a what_changed line. A question it left open must still be on record.
 It checks the records, not the judgement: that each quote is in the requirement word
 for word, that a second person or agent checked each finding, that nothing is rated
 before it is confirmed, and that every requirement was looked at in every pass.
---report prints the review report, and only when the records pass.
+--report prints the review report, and only when the records pass. --json prints the problems and
+counts as JSON for other tools.
 """
 import csv
 import json
@@ -285,7 +286,7 @@ def tally(rows, columns):
 
 
 def counts(findings):
-    return {v: sum(1 for f in findings if val(f, "verdict") == v) for v in VERDICTS}
+    return {v: sum(1 for f in findings if isinstance(f, dict) and val(f, "verdict") == v) for v in VERDICTS}
 
 
 def cell(text):
@@ -404,7 +405,7 @@ if __name__ == "__main__":
             text = brief(json.load(bf), read_requirements(sys.argv[3]), sys.argv[4] if len(sys.argv) == 5 else None)
         print(text or "No such finding.", end="")
         sys.exit(0 if text else 2)
-    args = [a for a in sys.argv[1:] if a != "--report"]
+    args = [a for a in sys.argv[1:] if a not in ("--report", "--json")]
     previous = None
     if "--previous" in args[:-1]:
         i = args.index("--previous")
@@ -420,6 +421,10 @@ if __name__ == "__main__":
         print(f"Cannot read the review files: {e}", file=sys.stderr)
         sys.exit(2)
     problems = check(findings, reqs, rows, columns, previous)
+    if "--json" in sys.argv:
+        print(json.dumps({"ok": not problems, "problems": problems, "counts": counts(findings), "requirements": len(dict(reqs)),
+                          "checks": tally(rows, columns)}, indent=2))
+        sys.exit(1 if problems else 0)
     if problems:
         print("\n".join(problems))
         print(f"{len(problems)} problem(s) in the review records." + (" No report written: fix the records first." if "--report" in sys.argv else ""))
