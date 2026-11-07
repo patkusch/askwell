@@ -328,6 +328,13 @@ def report(findings, reqs, rows, columns):
           [f for f in findings if val(f, "verdict") == "rejected"],
           [lambda f: val(f, "id"), ids, lambda f: val(f, "what"),
            lambda f: " ".join(x for x in (f"Same problem as {val(f, 'same_as')}." if val(f, "same_as") else "", val(f, "reason")) if x)])
+    touched = {rid for f in findings if val(f, "verdict") != "rejected" for rid in req_list(f)}
+    clean = [rid for rid in reqs if rid not in touched]
+    if clean:
+        out.extend(["## Nothing against them", "", ", ".join(clean), ""])
+    names = sorted({val(f, k) for f in findings for k in ("found_by", "checked_by") if val(f, k)})
+    if names:
+        out.extend([f"Reviewed by: {', '.join(names)}.", ""])
     gaps = skipped(rows, columns)
     if gaps:
         out.extend(["## Not looked at", ""])

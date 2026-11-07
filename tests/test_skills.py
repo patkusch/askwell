@@ -1040,6 +1040,8 @@ class Review(unittest.TestCase):
         self.assertLess(text.index("| F2 |"), text.index("| F5 |"))
         self.assertLess(text.index("| F3 |"), text.index("| F2 |"))  # both high ones come before the medium one
         self.assertIn("- scope-leak: R1, R2, R3, R4, R5, R6, R7, R8 (scope not signed off yet)", text)
+        self.assertIn("## Nothing against them\n\nR4\n", text)  # R8 is only in a rejected finding, R4 in none
+        self.assertIn("Reviewed by: reviewer-1, reviewer-2, reviewer-3.", text)
         self.assertNotIn("Not looked at", review.report(*self.records("good", EX.parent / "claims-triage")))
 
     def test_no_report_is_written_from_records_that_fail(self):
