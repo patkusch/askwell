@@ -23,6 +23,7 @@ metadata:
 | "What goes first?" | Planning | `backlog-prioritisation` |
 | "Draw how it works" | Modelling | `process-mapping` |
 | "Review these requirements" | Quality check | `requirements-conflict-check`, `requirements-writing` |
+| "Review these requirements properly, before sign-off" | Independent review | `requirements-review` (a second reviewer tries to disprove each finding) |
 | "Are we ready to go live?" | Delivery | `user-acceptance-testing`, `change-impact-assessment` |
 | "Write the update / minutes" | Reporting | `stakeholder-communication`, `meeting-minutes` |
 | Regulated or specialist field | Context | `domain-packs` as well |
