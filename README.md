@@ -36,7 +36,7 @@ Business analysis writing fails in predictable ways: vague requirements, stories
 | `user-stories` | Wrong format, "the system" as the user, a "so that" that repeats the "I want", solutions and oversized stories |
 | `acceptance-criteria` | Missing Given/When/Then parts, vague results, sets with no failure case |
 | `requirements-conflict-check` | Near-duplicates, same limit with different numbers, "must" against "must not", one term with several names |
-| `requirements-review` | Review findings with no word-for-word quote, no second reviewer, or a rating before they are confirmed; requirements nobody looked at |
+| `requirements-review` | Review findings with no word-for-word quote, no second reviewer, or a rating before they are confirmed; requirements nobody looked at; writes the report from the records and holds a new review to what the last one settled |
 | `requirements-traceability` | Requirements with no design or test, "done" with no test, tests nothing uses |
 | `raid-log` | Ranks risks; flags no owner, overdue, stale, unrated, needs the sponsor |
 | `kpi-definition` | KPIs with no baseline, no numeric target, no owner, no guard against gaming |
