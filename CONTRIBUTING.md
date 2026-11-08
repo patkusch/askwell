@@ -34,6 +34,10 @@ A check reads a file a person or agent already has and says what is wrong with i
 8. Add a row to the checks table in the README.
 9. Write tests: the good file is clean, each planted flaw is found by name, and one edge case where a near-miss must not be flagged.
 
+## Adding a message to the requirements-review check
+
+Its test counts every `problems.append(` in `skills/requirements-review/scripts/check.py` and compares the count with the distinct messages the bad set trips. So a new message must be added with `.append` (not a list comprehension), and a flaw that trips it must be planted in `examples/refund-approval/bad/`. If the count and the planted set disagree, the test prints both lists.
+
 ## Before you push
 
 ```bash
