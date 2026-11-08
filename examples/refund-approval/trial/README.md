@@ -8,6 +8,12 @@ These are the records they wrote. Two things were changed afterwards: the second
 python3 skills/requirements-review/scripts/check.py examples/refund-approval/trial/review_findings.json examples/refund-approval/trial/review_requirements.csv examples/refund-approval/trial/review_coverage.csv --report
 ```
 
+To see exactly what the second agent was allowed to see for one finding, print its brief from these records:
+
+```bash
+python3 skills/requirements-review/scripts/check.py --brief examples/refund-approval/trial/review_findings.json examples/refund-approval/trial/review_requirements.csv F5
+```
+
 ## What happened
 
 - The first agent raised 10 candidates.
