@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "askwell"
+abstract: "Business-analyst skills for AI agents, each backed by a small check that runs and is tested."
+type: software
+authors:
+  - family-names: "Kusch"
+    given-names: "Patricia"
+repository-code: "https://github.com/patkusch/askwell"
+license: MIT
