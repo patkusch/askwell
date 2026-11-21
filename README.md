@@ -135,3 +135,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for how to add a skill or a check, and wh
 ## Licence
 
 MIT.
+
+---
+
+[Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md)
